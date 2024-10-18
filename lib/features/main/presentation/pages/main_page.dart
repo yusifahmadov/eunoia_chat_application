@@ -1,3 +1,5 @@
+import 'package:eunoia_chat_application/core/extensions/localization_extension.dart';
+import 'package:eunoia_chat_application/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -31,28 +33,32 @@ class _MainPageViewState extends State<MainPageView> {
         items: [
           BottomNavigationBarItem(
             activeIcon: SvgPicture.asset(
-              "assets/icons/home.svg",
+              "assets/icons/chatbubbles.svg",
               width: 25,
               height: 25,
+              color: Theme.of(context).colorScheme.primary,
             ),
-            label: 'Əsas',
+            label: mainContext?.localization?.messages,
             icon: SvgPicture.asset(
-              "assets/icons/home-outline.svg",
+              "assets/icons/chatbubbles.svg",
               width: 25,
               height: 25,
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
             ),
           ),
           BottomNavigationBarItem(
-            label: 'Profil',
+            label: mainContext?.localization?.profile,
             activeIcon: SvgPicture.asset(
               "assets/icons/person.svg",
               width: 25,
               height: 25,
+              color: Theme.of(context).colorScheme.primary,
             ),
             icon: SvgPicture.asset(
-              "assets/icons/person-outline.svg",
+              "assets/icons/person.svg",
               width: 25,
               height: 25,
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
             ),
           )
         ]);
