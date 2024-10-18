@@ -1,3 +1,4 @@
+import 'package:eunoia_chat_application/features/user/data/models/user_model.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/auth_response.dart';
 
 class AuthResponseModel extends AuthResponse {
@@ -8,7 +9,7 @@ class AuthResponseModel extends AuthResponse {
     return AuthResponseModel(
       accessToken: json['access_token'],
       refreshToken: json['refresh_token'],
-      user: json['user'],
+      user: UserModel.fromJson(json['user'] as Map<String, dynamic>),
     );
   }
 
