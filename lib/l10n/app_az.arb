@@ -1,0 +1,20 @@
+{
+    "language": "Azərbaycan",
+    "login_success": "Uğurla daxil oldunuz",
+    "login_failed": "Daxil olmaq alınmadı",
+    "logout_success": "Uğurla çıxdınız",
+    "logout_failed": "Çıxış alınmadı",
+    "register_success": "Uğurla qeydiyyatdan keçdiniz",
+    "register_failed": "Qeydiyyatdan keçmə alınmadı",
+    "update_success": "Uğurla yeniləndi",
+    "update_failed": "Yenilənmə alınmadı",
+    "delete_success": "Uğurla silindi",
+    "delete_failed": "Silinmə alınmadı",
+    "login": "Daxil ol",
+    "logout": "Çıx",
+    "sign_in": "Daxil ol",
+    "sign_up": "Qeydiyyatdan keç",
+    "register": "Qeydiyyatdan keç",
+    "update": "Yenilə"
+
+}
