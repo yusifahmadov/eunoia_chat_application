@@ -86,11 +86,9 @@ class ConversationCubit extends Cubit<ConversationState>
 
     final index = fetchedData.indexWhere((element) => element.id == conversation.id);
     if (index == -1) return;
-    final tmpConversation = fetchedData[index];
 
     fetchedData.removeAt(index);
-    fetchedData.insert(
-        0, conversation.copyWith(lastMessage: tmpConversation.lastMessage));
+    fetchedData.insert(0, conversation);
     emit(ConversationsLoaded(conversations: fetchedData));
   }
 }

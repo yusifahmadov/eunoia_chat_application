@@ -18,6 +18,7 @@ abstract class SupabaseRepository {
           callback: (payload) {
             conversationModel = ConversationModel.fromJson(payload.newRecord);
             if (conversationModel != null) {
+              print(payload.newRecord);
               callBackFunc(conversation: conversationModel!);
             }
           },

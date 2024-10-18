@@ -7,12 +7,14 @@ class ConversationModel extends Conversation {
       required super.title,
       required super.senderProfilePhoto,
       required super.createdAt,
+      required super.updatedAt,
       required super.creatorId,
       required super.lastMessage});
 
   factory ConversationModel.fromJson(Map<String, dynamic> json) {
     return ConversationModel(
       id: json['id'] as int,
+      updatedAt: DateTime.parse(json['updated_at']),
       creatorId: json['creator_id'] as String,
       lastMessage: json['last_message'] != null
           ? MessageModel.fromJson(json['last_message'] as Map<String, dynamic>)
@@ -31,6 +33,7 @@ class ConversationModel extends Conversation {
       'last_message': (super.lastMessage)?.toJson(),
       'profile_photo': super.senderProfilePhoto,
       'creator_id': super.creatorId,
+      'updated_at': super.updatedAt.toIso8601String(),
     };
   }
 }

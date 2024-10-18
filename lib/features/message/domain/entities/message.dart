@@ -7,6 +7,7 @@ class Message extends Equatable {
   final DateTime createdAt;
   final int conversationId;
   final String senderId;
+  final String? senderName;
   final bool isRead;
   const Message({
     required this.id,
@@ -14,6 +15,7 @@ class Message extends Equatable {
     required this.createdAt,
     required this.conversationId,
     required this.senderId,
+    required this.senderName,
     required this.isRead,
   });
   @override

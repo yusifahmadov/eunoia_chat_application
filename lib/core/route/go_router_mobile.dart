@@ -52,7 +52,8 @@ class AppRouter {
                     routes: const [],
                     pageBuilder: (context, state) => NoTransitionPage(
                         child: MessageProviderWidget(
-                      conversation: state.extra as Conversation,
+                      conversation: (state.extra as List)[0] as Conversation,
+                      userId: (state.extra as List)[1] as String,
                     )),
                   ),
                 ],

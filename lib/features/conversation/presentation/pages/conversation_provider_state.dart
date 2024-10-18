@@ -1,3 +1,4 @@
+import 'package:eunoia_chat_application/core/mixins/page_scrolling_mixin.dart';
 import 'package:eunoia_chat_application/features/conversation/presentation/cubit/conversation_cubit.dart';
 import 'package:eunoia_chat_application/features/conversation/presentation/pages/conversation_page.dart';
 import 'package:eunoia_chat_application/features/conversation/presentation/pages/conversation_provider.dart';
@@ -11,12 +12,15 @@ class ConversationProviderWidget extends StatefulWidget {
   State<ConversationProviderWidget> createState() => ConversationProviderState();
 }
 
-class ConversationProviderState extends State<ConversationProviderWidget> {
+class ConversationProviderState extends State<ConversationProviderWidget>
+    with PageScrollingMixin {
   final chatCubit = getIt<ConversationCubit>();
 
   @override
   void initState() {
-    chatCubit.getConversations();
+    initializeScrolling(function: () async {
+      chatCubit.getConversations();
+    });
     chatCubit.listenConversations();
     super.initState();
   }
