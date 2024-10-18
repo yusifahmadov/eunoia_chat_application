@@ -7,6 +7,7 @@ import 'package:eunoia_chat_application/features/main/presentation/widgets/custo
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 extension _AdvancedContext on BuildContext {
   ConversationProviderState get state => ConversationProvider.of(this);
@@ -60,7 +61,10 @@ class ConversationPage extends StatelessWidget {
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                           trailing: const CustomSvgIcon(text: 'arrow-redo-outline'),
-                          onTap: () {},
+                          onTap: () {
+                            context.go('/conversations/${conversation.id}',
+                                extra: conversation);
+                          },
                         ),
                       );
                     }),

@@ -32,7 +32,7 @@ class SignInPage extends StatelessWidget {
               bloc: authCubit,
               listener: (context, state) {
                 if (state is AuthenticationAuthenticated) {
-                  context.go('/home');
+                  context.go('/conversations');
                 }
               },
               child: Column(

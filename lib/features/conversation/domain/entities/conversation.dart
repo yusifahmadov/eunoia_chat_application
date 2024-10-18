@@ -7,11 +7,13 @@ class Conversation extends Equatable {
   final DateTime createdAt;
   final MessageModel? lastMessage;
   final String? senderProfilePhoto;
+  final String? creatorId;
   const Conversation({
     required this.id,
     required this.title,
     required this.createdAt,
     required this.lastMessage,
+    this.creatorId,
     this.senderProfilePhoto,
   });
 
@@ -24,9 +26,11 @@ class Conversation extends Equatable {
     DateTime? createdAt,
     MessageModel? lastMessage,
     String? senderProfilePhoto,
+    String? creatorId,
   }) {
     return Conversation(
       id: id ?? this.id,
+      creatorId: creatorId ?? this.creatorId,
       title: title ?? this.title,
       createdAt: createdAt ?? this.createdAt,
       lastMessage: lastMessage ?? this.lastMessage,

@@ -13,6 +13,9 @@ import 'package:eunoia_chat_application/features/message/data/datasources/messag
 import 'package:eunoia_chat_application/features/message/data/datasources/message_remote_data_source_impl.dart';
 import 'package:eunoia_chat_application/features/message/data/repositories/message_repository_impl.dart';
 import 'package:eunoia_chat_application/features/message/domain/repositories/message_repository.dart';
+import 'package:eunoia_chat_application/features/message/domain/usecases/get_messages_usecase.dart';
+import 'package:eunoia_chat_application/features/message/domain/usecases/listen_messages_usecase.dart';
+import 'package:eunoia_chat_application/features/message/domain/usecases/send_message_usecase.dart';
 import 'package:eunoia_chat_application/features/message/presentation/cubit/message_cubit.dart';
 import 'package:eunoia_chat_application/features/user/data/datasources/user_remote_data_source.dart';
 import 'package:eunoia_chat_application/features/user/data/datasources/user_remote_data_source_impl.dart';
@@ -39,7 +42,11 @@ initCubits() {
   getIt.registerFactory(
       () => UserCubit(userLoginUsecase: getIt(), userRegisterUsecase: getIt()));
   getIt.registerFactory(() => MainCubit());
-  getIt.registerFactory(() => MessageCubit());
+  getIt.registerFactory(() => MessageCubit(
+        getMessagesUsecase: getIt(),
+        sendMessageUsecase: getIt(),
+        listenMessagesUsecase: getIt(),
+      ));
 
   getIt.registerFactory(() => ConversationCubit(
         getConversationsUsecase: getIt(),
@@ -67,6 +74,9 @@ initUseCases() {
   getIt.registerLazySingleton(() => UserRegisterUsecase(userRepository: getIt()));
   getIt.registerLazySingleton(() => GetConversationsUsecase(repository: getIt()));
   getIt.registerLazySingleton(() => ListenConversationsUsecase(repository: getIt()));
+  getIt.registerLazySingleton(() => GetMessagesUsecase(messageRepository: getIt()));
+  getIt.registerLazySingleton(() => SendMessageUsecase(messageRepository: getIt()));
+  getIt.registerLazySingleton(() => ListenMessagesUsecase(messageRepository: getIt()));
 }
 
 initRepositories() {
@@ -78,7 +88,7 @@ initRepositories() {
     () => ConversationRepositoryImpl(remoteDataSource: getIt()),
   );
   getIt.registerLazySingleton<MessageRepository>(
-    () => MessageRepositoryImpl(),
+    () => MessageRepositoryImpl(remoteDataSource: getIt()),
   );
 }
 

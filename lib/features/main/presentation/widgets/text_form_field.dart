@@ -18,6 +18,7 @@ class CustomTextField extends TextFormField {
       bool? numberInputType,
       int? minLine,
       bool? obscureText,
+      super.focusNode,
       int? maxLine,
       super.onFieldSubmitted,
       bool? clickable,

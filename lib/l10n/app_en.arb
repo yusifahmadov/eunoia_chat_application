@@ -17,6 +17,7 @@
     "register": "Register",
     "messages": "Messages",
     "profile": "Profile",
-    "user_not_found": "User not found"
+    "user_not_found": "User not found",
+    "send_message": "Message"
     
 }
