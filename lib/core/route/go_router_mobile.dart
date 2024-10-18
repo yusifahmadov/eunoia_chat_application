@@ -1,7 +1,6 @@
 import 'package:eunoia_chat_application/core/route/error_screen.dart';
 import 'package:eunoia_chat_application/core/route/transition.dart';
 import 'package:eunoia_chat_application/core/shared_preferences/custom_shared_preferences.dart';
-import 'package:eunoia_chat_application/features/main/presentation/pages/home_page.dart';
 import 'package:eunoia_chat_application/features/user/presentation/pages/auth_page.dart';
 import 'package:eunoia_chat_application/features/user/presentation/pages/signin/signin_provider_state.dart';
 import 'package:eunoia_chat_application/features/user/presentation/pages/signup/signup_provider_state.dart';
@@ -22,11 +21,6 @@ class AppRouter {
             }
             return '/auth';
           },
-        ),
-        GoRoute(
-          path: '/',
-          pageBuilder: (context, state) => const NoTransitionPage(child: HomePage()),
-          routes: const [],
         ),
         GoRoute(
           path: '/auth',

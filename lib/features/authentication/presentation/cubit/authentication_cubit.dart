@@ -1,8 +1,10 @@
 import 'package:equatable/equatable.dart';
+import 'package:eunoia_chat_application/core/extensions/localization_extension.dart';
 import 'package:eunoia_chat_application/core/flasher/custom_flasher.dart';
 import 'package:eunoia_chat_application/core/shared_preferences/custom_shared_preferences.dart';
 import 'package:eunoia_chat_application/features/user/data/models/auth_response_model.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/auth_response.dart';
+import 'package:eunoia_chat_application/injection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -42,7 +44,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
     emit(AuthenticationLoading());
     final prefs = await SharedPreferences.getInstance();
     prefs.remove('user');
-    CustomFlasher.showSuccess('Çıxış edildi!');
+    CustomFlasher.showSuccess(mainContext?.localization?.logout_success);
 
     emit(AuthenticationUnauthenticated());
   }
