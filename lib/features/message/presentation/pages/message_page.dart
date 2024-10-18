@@ -35,8 +35,10 @@ class MessagePage extends StatelessWidget {
           ),
           title: const _AppBarTitle(),
         ),
-        body: const CustomScrollView(
-          slivers: [
+        body: CustomScrollView(
+          reverse: true,
+          controller: context.state.scrollController,
+          slivers: const [
             _BlocBuilder(),
           ],
         ));
@@ -66,18 +68,11 @@ class _BlocBuilder extends StatelessWidget {
               itemCount: context.state.messageCubit.fetchedData.length,
               itemBuilder: (context, index) {
                 final message = context.state.messageCubit.fetchedData[index];
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    message.senderId != context.state.widget.conversation.creatorId
-                        ? const Spacer()
-                        : const SizedBox(),
-                    _MessageContainer(message: message),
-                    message.senderId == context.state.widget.conversation.creatorId
-                        ? const Spacer()
-                        : const SizedBox()
-                  ],
-                );
+                return Align(
+                    alignment: message.senderId == context.state.widget.userId
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
+                    child: _MessageContainer(message: message));
               }),
         );
       },
@@ -95,20 +90,17 @@ class _MessageContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      flex: 3,
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 10),
-        child: ThemedContainer(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: message.senderId == context.state.widget.conversation.creatorId
-                ? Theme.of(context).colorScheme.primaryContainer
-                : Theme.of(context).colorScheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Text(message.message),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: ThemedContainer(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: message.senderId == context.state.widget.userId
+              ? Theme.of(context).colorScheme.primaryContainer
+              : Theme.of(context).colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(10),
         ),
+        child: Text(message.message),
       ),
     );
   }

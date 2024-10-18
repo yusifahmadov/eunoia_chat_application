@@ -4,6 +4,7 @@ class MessageModel extends Message {
   const MessageModel(
       {required super.id,
       required super.message,
+      required super.senderName,
       required super.createdAt,
       required super.conversationId,
       required super.senderId,
@@ -12,6 +13,7 @@ class MessageModel extends Message {
   factory MessageModel.fromJson(Map<String, dynamic> json) {
     return MessageModel(
       id: json['id'] as int,
+      senderName: json['sender_name'] as String?,
       message: json['message_text'] as String,
       createdAt: DateTime.parse(json['created_at']),
       conversationId: json['conversation_id'] as int,
@@ -28,6 +30,7 @@ class MessageModel extends Message {
       'conversationId': super.conversationId,
       'sender_id': super.senderId,
       'is_read': super.isRead,
+      'sender_name': super.senderName,
     };
   }
 }

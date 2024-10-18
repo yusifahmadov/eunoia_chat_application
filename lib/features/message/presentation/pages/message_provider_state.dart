@@ -8,9 +8,11 @@ import 'package:eunoia_chat_application/injection.dart';
 import 'package:flutter/material.dart';
 
 class MessageProviderWidget extends StatefulWidget {
-  const MessageProviderWidget({super.key, required this.conversation});
+  const MessageProviderWidget(
+      {super.key, required this.conversation, required this.userId});
 
   final Conversation conversation;
+  final String userId;
 
   @override
   State<MessageProviderWidget> createState() => MessageProviderState();

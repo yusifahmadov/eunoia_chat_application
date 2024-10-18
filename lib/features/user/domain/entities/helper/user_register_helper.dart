@@ -36,8 +36,7 @@ class UserRegisterHelper extends Equatable {
       'email': email,
       'password': password,
       'data': {
-        'first_name': firstName,
-        'last_name': lastName,
+        'name': '$firstName $lastName',
       },
     };
   }

@@ -80,7 +80,7 @@ class MessageCubit extends Cubit<MessageState>
         conversationId: conversationId,
         callBackFunc: ({required message}) {
           emit(MessageLoading());
-          fetchedData.add(message);
+          fetchedData.insert(0, message);
           emit(MessageLoaded(messages: fetchedData));
         },
       ),
