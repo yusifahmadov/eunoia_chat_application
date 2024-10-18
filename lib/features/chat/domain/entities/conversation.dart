@@ -3,17 +3,34 @@ import 'package:eunoia_chat_application/features/chat/data/models/message_model.
 
 class Conversation extends Equatable {
   final int id;
-  final String conversationName;
+  final String title;
   final DateTime createdAt;
-  final MessageModel lastMessage;
-
+  final MessageModel? lastMessage;
+  final String? senderProfilePhoto;
   const Conversation({
     required this.id,
-    required this.conversationName,
+    required this.title,
     required this.createdAt,
     required this.lastMessage,
+    this.senderProfilePhoto,
   });
 
   @override
-  List<Object?> get props => [id, conversationName, createdAt, lastMessage];
+  List<Object?> get props => [id, title, createdAt, lastMessage];
+
+  copyWith({
+    int? id,
+    String? title,
+    DateTime? createdAt,
+    MessageModel? lastMessage,
+    String? senderProfilePhoto,
+  }) {
+    return Conversation(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      createdAt: createdAt ?? this.createdAt,
+      lastMessage: lastMessage ?? this.lastMessage,
+      senderProfilePhoto: senderProfilePhoto ?? this.senderProfilePhoto,
+    );
+  }
 }

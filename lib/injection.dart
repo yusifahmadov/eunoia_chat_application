@@ -1,6 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:eunoia_chat_application/core/dio/interceptor.dart';
 import 'package:eunoia_chat_application/features/authentication/presentation/cubit/authentication_cubit.dart';
+import 'package:eunoia_chat_application/features/chat/data/datasources/chat_remote_data_source.dart';
+import 'package:eunoia_chat_application/features/chat/data/datasources/chat_remote_data_source_impl.dart';
+import 'package:eunoia_chat_application/features/chat/data/repositories/chat_repository_impl.dart';
+import 'package:eunoia_chat_application/features/chat/domain/repositories/chat_repository.dart';
+import 'package:eunoia_chat_application/features/chat/domain/usecases/get_conversations_usecase.dart';
+import 'package:eunoia_chat_application/features/chat/domain/usecases/listen_conversations_usecase.dart';
+import 'package:eunoia_chat_application/features/chat/presentation/cubit/chat_cubit.dart';
 import 'package:eunoia_chat_application/features/main/presentation/cubit/main_cubit.dart';
 import 'package:eunoia_chat_application/features/user/data/datasources/user_remote_data_source.dart';
 import 'package:eunoia_chat_application/features/user/data/datasources/user_remote_data_source_impl.dart';
@@ -27,6 +34,8 @@ initCubits() {
   getIt.registerFactory(
       () => UserCubit(userLoginUsecase: getIt(), userRegisterUsecase: getIt()));
   getIt.registerFactory(() => MainCubit());
+  getIt.registerFactory(() =>
+      ChatCubit(getConversationsUsecase: getIt(), listenConversationsUsecase: getIt()));
   getIt.registerFactory(() => AuthenticationCubit());
 }
 
@@ -34,16 +43,24 @@ initDataSources() {
   getIt.registerLazySingleton<UserRemoteDataSource>(
     () => UserRemoteDataSourceImpl(),
   );
+  getIt.registerLazySingleton<ChatRemoteDataSource>(
+    () => ChatRemoteDataSourceImpl(),
+  );
 }
 
 initUseCases() {
   getIt.registerLazySingleton(() => UserLoginUsecase(userRepository: getIt()));
   getIt.registerLazySingleton(() => UserRegisterUsecase(userRepository: getIt()));
+  getIt.registerLazySingleton(() => GetConversationsUsecase(repository: getIt()));
+  getIt.registerLazySingleton(() => ListenConversationsUsecase(repository: getIt()));
 }
 
 initRepositories() {
   getIt.registerLazySingleton<UserRepository>(
     () => UserRepositoryImpl(userRemoteDataSource: getIt()),
+  );
+  getIt.registerLazySingleton<ChatRepository>(
+    () => ChatRepositoryImpl(remoteDataSource: getIt()),
   );
 }
 

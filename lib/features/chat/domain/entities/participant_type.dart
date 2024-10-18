@@ -1,0 +1,5 @@
+enum ParticipantType {
+  single,
+
+  group
+}

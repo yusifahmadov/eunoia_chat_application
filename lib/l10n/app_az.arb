@@ -17,6 +17,7 @@
     "register": "Qeydiyyatdan keç",
     "update": "Yenilə",
     "messages": "Mesajlar",
-    "profile": "Profil"
+    "profile": "Profil",
+    "user_not_found": "İstifadəçi tapılmadı"
 
 }
