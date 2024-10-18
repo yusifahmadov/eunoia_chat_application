@@ -3,6 +3,7 @@ import 'package:eunoia_chat_application/core/route/go_router_mobile.dart';
 import 'package:eunoia_chat_application/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 class App extends StatelessWidget {
@@ -19,11 +20,13 @@ class App extends StatelessWidget {
             builder: (context, snapshot) {
               return MaterialApp.router(
                 localizationsDelegates: const [
+                  AppLocalizations.delegate,
                   GlobalMaterialLocalizations.delegate,
                   GlobalWidgetsLocalizations.delegate,
                   GlobalCupertinoLocalizations.delegate,
                 ],
                 supportedLocales: const [
+                  Locale('en'),
                   Locale('az'),
                 ],
                 builder: EasyLoading.init(
@@ -38,7 +41,7 @@ class App extends StatelessWidget {
                     );
                   },
                 ),
-                locale: const Locale('az'),
+                locale: const Locale('en'),
                 theme: ThemeManager.craeteTheme(
                     mainCubit.themeValue ? AppThemeDark() : AppThemeLight()),
                 routeInformationProvider: AppRouter.router.routeInformationProvider,

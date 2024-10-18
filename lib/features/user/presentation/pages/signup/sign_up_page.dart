@@ -1,4 +1,5 @@
 import 'package:eunoia_chat_application/core/constant/empty_box.dart';
+import 'package:eunoia_chat_application/core/extensions/localization_extension.dart';
 import 'package:eunoia_chat_application/features/main/presentation/utility/custom_border_radius.dart';
 import 'package:eunoia_chat_application/features/main/presentation/utility/custom_input_decoration.dart';
 import 'package:eunoia_chat_application/features/main/presentation/widgets/custom_button.dart';
@@ -49,26 +50,7 @@ class SignUpPage extends StatelessWidget {
                   height: 20,
                 ),
                 const _SignUpButton(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Already have an account?",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium!
-                            .copyWith(color: Theme.of(context).colorScheme.onSurface)),
-                    TextButton(
-                        onPressed: () {
-                          context.pop();
-                        },
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.all(0),
-                          minimumSize: const Size(0, 0),
-                        ),
-                        child:
-                            Text("Log in", style: Theme.of(context).textTheme.bodyLarge))
-                  ],
-                )
+                const _SwitchToSignIn()
               ],
             ),
           ),
@@ -76,10 +58,35 @@ class SignUpPage extends StatelessWidget {
   }
 }
 
+class _SwitchToSignIn extends StatelessWidget {
+  const _SwitchToSignIn();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text("Already have an account?",
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(color: Theme.of(context).colorScheme.onSurface)),
+        TextButton(
+            onPressed: () {
+              context.pop();
+            },
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.all(0),
+              minimumSize: const Size(0, 0),
+            ),
+            child: Text("Log in", style: Theme.of(context).textTheme.bodyLarge))
+      ],
+    );
+  }
+}
+
 class _SignUpButton extends StatelessWidget {
-  const _SignUpButton({
-    super.key,
-  });
+  const _SignUpButton();
 
   @override
   Widget build(BuildContext context) {
@@ -87,16 +94,14 @@ class _SignUpButton extends StatelessWidget {
       onPressed: () {
         context.inherited.register();
       },
-      text: "Signup",
+      text: context.localization!.sign_up,
       maxSize: true,
     );
   }
 }
 
 class _TextFields extends StatelessWidget {
-  const _TextFields({
-    super.key,
-  });
+  const _TextFields();
 
   @override
   Widget build(BuildContext context) {
