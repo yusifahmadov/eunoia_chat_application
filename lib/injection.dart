@@ -1,15 +1,17 @@
 import 'package:dio/dio.dart';
+import 'package:eunoia_chat_application/core/dio/interceptor.dart';
+import 'package:eunoia_chat_application/features/authentication/presentation/cubit/authentication_cubit.dart';
+import 'package:eunoia_chat_application/features/main/presentation/cubit/main_cubit.dart';
+import 'package:eunoia_chat_application/features/user/data/datasources/user_remote_data_source.dart';
+import 'package:eunoia_chat_application/features/user/data/datasources/user_remote_data_source_impl.dart';
+import 'package:eunoia_chat_application/features/user/data/repositories/user_repository_impl.dart';
+import 'package:eunoia_chat_application/features/user/domain/repositories/user_repository.dart';
+import 'package:eunoia_chat_application/features/user/domain/usecases/user_login_usecase.dart';
+import 'package:eunoia_chat_application/features/user/domain/usecases/user_register_usecase.dart';
+import 'package:eunoia_chat_application/features/user/presentation/cubit/user_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get_it/get_it.dart';
-import 'package:zenith_planner_app/core/dio/interceptor.dart';
-import 'package:zenith_planner_app/features/user/data/datasources/user_remote_data_source.dart';
-import 'package:zenith_planner_app/features/user/data/datasources/user_remote_data_source_impl.dart';
-import 'package:zenith_planner_app/features/user/data/repositories/user_repository_impl.dart';
-import 'package:zenith_planner_app/features/user/domain/repositories/user_repository.dart';
-import 'package:zenith_planner_app/features/user/domain/usecases/user_login_usecase.dart';
-import 'package:zenith_planner_app/features/user/domain/usecases/user_register_usecase.dart';
-import 'package:zenith_planner_app/features/user/presentation/cubit/user_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -24,6 +26,8 @@ Future<void> init() async {
 initCubits() {
   getIt.registerFactory(
       () => UserCubit(userLoginUsecase: getIt(), userRegisterUsecase: getIt()));
+  getIt.registerFactory(() => MainCubit());
+  getIt.registerFactory(() => AuthenticationCubit());
 }
 
 initDataSources() {
@@ -45,6 +49,7 @@ initRepositories() {
 
 final navigatorKey = GlobalKey<NavigatorState>();
 final mainContext = navigatorKey.currentContext;
+final dio = Dio();
 initExternals() {
   getIt.registerLazySingleton(() => navigatorKey);
 

@@ -14,7 +14,7 @@ class CustomInterceptor extends Interceptor {
       options.headers['Authorization'] =
           "Bearer ${AuthResponseModel.fromJson(user).accessToken}";
     }
-    options.headers['apikey'] = dotenv.get('SUPABSE_API_KEY');
+    options.headers['apikey'] = dotenv.get('SUPABASE_API_KEY');
 
     super.onRequest(options, handler);
   }
