@@ -17,7 +17,7 @@ class UserRepositoryImpl implements UserRepository {
     try {
       return Right(await userRemoteDataSource.login(body));
     } on DioException catch (e) {
-      return Left(ResponseI(message: e.message ?? "Error happened!"));
+      return Left(ResponseI(message: e.response.toString()));
     }
   }
 
@@ -26,7 +26,7 @@ class UserRepositoryImpl implements UserRepository {
     try {
       return Right(await userRemoteDataSource.register(body));
     } on DioException catch (e) {
-      return Left(ResponseI(message: e.message ?? "Error happened!"));
+      return Left(ResponseI(message: e.response.toString()));
     }
   }
 }
