@@ -18,6 +18,7 @@
     "update": "Yenilə",
     "messages": "Mesajlar",
     "profile": "Profil",
-    "user_not_found": "İstifadəçi tapılmadı"
+    "user_not_found": "İstifadəçi tapılmadı",
+    "send_message": "Mesaj göndər"
 
 }

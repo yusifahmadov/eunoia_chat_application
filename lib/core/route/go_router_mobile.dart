@@ -1,8 +1,10 @@
 import 'package:eunoia_chat_application/core/route/error_screen.dart';
 import 'package:eunoia_chat_application/core/route/transition.dart';
 import 'package:eunoia_chat_application/core/shared_preferences/custom_shared_preferences.dart';
+import 'package:eunoia_chat_application/features/conversation/domain/entities/conversation.dart';
 import 'package:eunoia_chat_application/features/conversation/presentation/pages/conversation_provider_state.dart';
 import 'package:eunoia_chat_application/features/main/presentation/pages/main_page.dart';
+import 'package:eunoia_chat_application/features/message/presentation/pages/message_provider_state.dart';
 import 'package:eunoia_chat_application/features/user/presentation/pages/auth_page.dart';
 import 'package:eunoia_chat_application/features/user/presentation/pages/profile/profile_page.dart';
 import 'package:eunoia_chat_application/features/user/presentation/pages/signin/signin_provider_state.dart';
@@ -24,7 +26,7 @@ class AppRouter {
           path: '/',
           redirect: (context, state) async {
             if (await CustomSharedPreferences.readUser('user') != null) {
-              return '/home';
+              return '/conversations';
             }
             return '/auth';
           },
@@ -42,10 +44,20 @@ class AppRouter {
             StatefulShellBranch(navigatorKey: _shellHomeNavigatorKey, routes: [
               GoRoute(
                 parentNavigatorKey: _shellHomeNavigatorKey,
-                path: '/home',
+                path: '/conversations',
+                routes: [
+                  GoRoute(
+                    path: ':id',
+                    parentNavigatorKey: navigatorKey,
+                    routes: const [],
+                    pageBuilder: (context, state) => NoTransitionPage(
+                        child: MessageProviderWidget(
+                      conversation: state.extra as Conversation,
+                    )),
+                  ),
+                ],
                 pageBuilder: (context, state) =>
                     const NoTransitionPage(child: ConversationProviderWidget()),
-                routes: const [],
               ),
             ]),
             StatefulShellBranch(navigatorKey: _shellProfileNavigatorKey, routes: [

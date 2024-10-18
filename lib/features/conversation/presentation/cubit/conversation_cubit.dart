@@ -38,7 +38,7 @@ class ConversationCubit extends Cubit<ConversationState>
           ConversationsError(message: mainContext!.localization?.user_not_found ?? ""));
     }
     if (!hasMore) return;
-
+    if (helper != null) helperClass = helper;
     if (refreshScroll) refresh();
 
     emit(ConversationsLoading());
