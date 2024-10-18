@@ -14,7 +14,8 @@
     "logout": "Logout",
     "sign_in": "Sign in",
     "sign_up": "Sign up",
-    "register": "Register"
-
+    "register": "Register",
+    "messages": "Messages",
+    "profile": "Profile"
     
 }

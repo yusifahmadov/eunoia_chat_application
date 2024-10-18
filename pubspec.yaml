@@ -28,6 +28,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: 0.19.0
+  realtime_client: 2.4.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

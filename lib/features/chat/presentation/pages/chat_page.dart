@@ -1,3 +1,4 @@
+import 'package:eunoia_chat_application/core/extensions/localization_extension.dart';
 import 'package:flutter/material.dart';
 
 class ChatPage extends StatelessWidget {
@@ -7,7 +8,7 @@ class ChatPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chat'),
+        title: Text(context.localization?.messages ?? ""),
       ),
     );
   }
