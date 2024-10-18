@@ -1,3 +1,4 @@
+import 'package:eunoia_chat_application/core/constant/constants.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatelessWidget {
@@ -7,7 +8,11 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: GestureDetector(
+            onTap: () {
+              authCubit.logout();
+            },
+            child: const Text('Profile')),
       ),
     );
   }
