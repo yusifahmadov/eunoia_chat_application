@@ -1,21 +1,27 @@
-class UserRegisterHelper {
-  final String name;
+import 'package:equatable/equatable.dart';
+
+class UserRegisterHelper extends Equatable {
+  final String firstName;
+  final String lastName;
   final String email;
   final String password;
 
-  UserRegisterHelper({
-    required this.name,
-    required this.email,
-    required this.password,
+  const UserRegisterHelper({
+    this.firstName = '',
+    this.lastName = '',
+    this.email = '',
+    this.password = '',
   });
 
   copyWith({
-    String? name,
+    String? firstName,
+    String? lastName,
     String? email,
     String? password,
   }) {
     return UserRegisterHelper(
-      name: name ?? this.name,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
       email: email ?? this.email,
       password: password ?? this.password,
     );
@@ -23,24 +29,12 @@ class UserRegisterHelper {
 
   @override
   String toString() =>
-      'UserRegisterHelper(name: $name, email: $email, password: $password)';
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is UserRegisterHelper &&
-        other.name == name &&
-        other.email == email &&
-        other.password == password;
-  }
-
-  @override
-  int get hashCode => name.hashCode ^ email.hashCode ^ password.hashCode;
+      'UserRegisterHelper(firstName: $firstName, lastName: $lastName, email: $email, password: $password)';
 
   toJson() {
     return {
-      'name': name,
+      'first_name': firstName,
+      'last_name': lastName,
       'email': email,
       'password': password,
     };
@@ -48,9 +42,13 @@ class UserRegisterHelper {
 
   factory UserRegisterHelper.fromMap(Map<String, dynamic> map) {
     return UserRegisterHelper(
-      name: map['name'],
+      firstName: map['first_name'],
+      lastName: map['last_name'],
       email: map['email'],
       password: map['password'],
     );
   }
+
+  @override
+  List<Object?> get props => [];
 }

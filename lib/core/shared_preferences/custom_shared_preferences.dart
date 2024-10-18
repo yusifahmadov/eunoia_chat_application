@@ -32,4 +32,6 @@ class CustomSharedPreferences {
     }
     return null;
   }
+
+  static void removeUser(String s) {}
 }
