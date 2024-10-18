@@ -1,7 +1,7 @@
 import 'package:eunoia_chat_application/core/route/error_screen.dart';
 import 'package:eunoia_chat_application/core/route/transition.dart';
 import 'package:eunoia_chat_application/core/shared_preferences/custom_shared_preferences.dart';
-import 'package:eunoia_chat_application/features/chat/presentation/pages/chat_provider_state.dart';
+import 'package:eunoia_chat_application/features/conversation/presentation/pages/conversation_provider_state.dart';
 import 'package:eunoia_chat_application/features/main/presentation/pages/main_page.dart';
 import 'package:eunoia_chat_application/features/user/presentation/pages/auth_page.dart';
 import 'package:eunoia_chat_application/features/user/presentation/pages/profile/profile_page.dart';
@@ -44,7 +44,7 @@ class AppRouter {
                 parentNavigatorKey: _shellHomeNavigatorKey,
                 path: '/home',
                 pageBuilder: (context, state) =>
-                    const NoTransitionPage(child: ChatProviderWidget()),
+                    const NoTransitionPage(child: ConversationProviderWidget()),
                 routes: const [],
               ),
             ]),
