@@ -76,8 +76,6 @@ class ConversationCubit extends Cubit<ConversationState>
   }
 
   void refreshConversations({required Conversation conversation}) async {
-    emit(ConversationsLoading());
-
     final String? id = (await SharedPreferencesUserManager.getUser())?.user.id;
     if (id == null) {
       return emit(
@@ -86,6 +84,7 @@ class ConversationCubit extends Cubit<ConversationState>
 
     final index = fetchedData.indexWhere((element) => element.id == conversation.id);
     if (index == -1) return;
+    emit(ConversationsLoading());
 
     fetchedData.removeAt(index);
     fetchedData.insert(0, conversation);

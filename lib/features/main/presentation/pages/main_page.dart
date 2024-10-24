@@ -47,7 +47,7 @@ class _MainPageViewState extends State<MainPageView> {
             ),
           ),
           BottomNavigationBarItem(
-            label: mainContext?.localization?.profile,
+            label: mainContext?.localization?.contacts,
             activeIcon: SvgPicture.asset(
               "assets/icons/person.svg",
               width: 25,
@@ -60,7 +60,22 @@ class _MainPageViewState extends State<MainPageView> {
               height: 25,
               color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
             ),
-          )
+          ),
+          BottomNavigationBarItem(
+            label: mainContext?.localization?.settings,
+            activeIcon: SvgPicture.asset(
+              "assets/icons/cog-outline.svg",
+              width: 25,
+              height: 25,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            icon: SvgPicture.asset(
+              "assets/icons/cog-outline.svg",
+              width: 25,
+              height: 25,
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+            ),
+          ),
         ]);
   }
 }

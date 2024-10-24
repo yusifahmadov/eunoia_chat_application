@@ -19,6 +19,10 @@
     "messages": "Mesajlar",
     "profile": "Profil",
     "user_not_found": "İstifadəçi tapılmadı",
-    "send_message": "Mesaj göndər"
+    "send_message": "Mesaj göndər",
+    "contact": "Əlaqə",
+    "contacts": "Əlaqələr",
+    "no_contacts": "Əlaqələr yoxdur",
+    "settings": "Parametrlər"
 
 }

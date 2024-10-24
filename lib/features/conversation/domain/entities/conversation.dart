@@ -9,12 +9,14 @@ class Conversation extends Equatable {
   final String? senderProfilePhoto;
   final String? creatorId;
   final DateTime updatedAt;
+  final int totalMessageCount;
   const Conversation({
     required this.id,
     required this.title,
     required this.createdAt,
     required this.lastMessage,
     required this.updatedAt,
+    required this.totalMessageCount,
     this.creatorId,
     this.senderProfilePhoto,
   });
@@ -31,12 +33,14 @@ class Conversation extends Equatable {
     String? senderProfilePhoto,
     String? creatorId,
     DateTime? updatedAt,
+    int? totalMessageCount,
   }) {
     return Conversation(
       id: id ?? this.id,
       creatorId: creatorId ?? this.creatorId,
       updatedAt: updatedAt ?? this.updatedAt,
       title: title ?? this.title,
+      totalMessageCount: totalMessageCount ?? this.totalMessageCount,
       createdAt: createdAt ?? this.createdAt,
       lastMessage: lastMessage ?? this.lastMessage,
       senderProfilePhoto: senderProfilePhoto ?? this.senderProfilePhoto,

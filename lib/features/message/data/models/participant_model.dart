@@ -5,6 +5,7 @@ class ParticipantModel extends Participant {
   const ParticipantModel(
       {required super.id,
       required super.joinedAt,
+      required super.readMessageCount,
       required super.conversationId,
       required super.userId,
       required super.type});
@@ -12,6 +13,7 @@ class ParticipantModel extends Participant {
   factory ParticipantModel.fromJson(Map<String, dynamic> json) {
     return ParticipantModel(
       id: json['id'] as int,
+      readMessageCount: json['read_message_count'] as int,
       joinedAt: DateTime.parse(json['joined_at']),
       conversationId: json['conversation_id'] as int,
       userId: json['user_id'] as int,
@@ -26,6 +28,7 @@ class ParticipantModel extends Participant {
       'conversation_id': super.conversationId,
       'user_id': super.userId,
       'type': super.type,
+      'read_message_count': super.readMessageCount,
     };
   }
 }

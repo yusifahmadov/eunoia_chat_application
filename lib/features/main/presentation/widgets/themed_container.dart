@@ -20,11 +20,11 @@ class ThemedContainer extends Container {
           decoration: decoration != null
               ? decoration.copyWith(
                   color: decoration.color ??
-                      Theme.of(mainContext!).colorScheme.primaryContainer,
+                      Theme.of(mainContext!).colorScheme.surfaceContainerHigh,
                 ) // Merge with the theme's color
               : BoxDecoration(
                   // If no decoration is provided, create one with the theme color
-                  color: Theme.of(mainContext!).colorScheme.primaryContainer,
+                  color: Theme.of(mainContext!).colorScheme.surface,
                 ),
         );
 }

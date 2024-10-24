@@ -18,6 +18,10 @@
     "messages": "Messages",
     "profile": "Profile",
     "user_not_found": "User not found",
-    "send_message": "Message"
+    "send_message": "Message",
+    "contact": "Contact",
+    "contacts": "Contacts",
+    "no_contacts": "No contacts",
+    "settings": "Settings"
     
 }

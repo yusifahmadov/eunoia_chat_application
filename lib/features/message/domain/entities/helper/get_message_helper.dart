@@ -10,9 +10,9 @@ class GetMessageHelper {
   });
 
   copyWith({
-    int? conversationId,
     int? limit,
     int? offset,
+    int? conversationId,
   }) {
     return GetMessageHelper(
       conversationId: conversationId ?? this.conversationId,

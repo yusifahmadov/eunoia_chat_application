@@ -1,5 +1,5 @@
 import 'package:eunoia_chat_application/core/mixins/page_scrolling_mixin.dart';
-import 'package:eunoia_chat_application/features/conversation/domain/entities/conversation.dart';
+import 'package:eunoia_chat_application/features/message/domain/entities/helper/read_messages_helper.dart';
 import 'package:eunoia_chat_application/features/message/domain/entities/helper/send_message_helper.dart';
 import 'package:eunoia_chat_application/features/message/presentation/cubit/message_cubit.dart';
 import 'package:eunoia_chat_application/features/message/presentation/pages/message_page.dart';
@@ -9,11 +9,10 @@ import 'package:flutter/material.dart';
 
 class MessageProviderWidget extends StatefulWidget {
   const MessageProviderWidget(
-      {super.key, required this.conversation, required this.userId});
+      {super.key, required this.userId, required this.conversationId});
 
-  final Conversation conversation;
   final String userId;
-
+  final int conversationId;
   @override
   State<MessageProviderWidget> createState() => MessageProviderState();
 }
@@ -22,22 +21,37 @@ class MessageProviderState extends State<MessageProviderWidget> with PageScrolli
   final messageCubit = getIt<MessageCubit>();
   final messageController = TextEditingController();
   final focusNode = FocusNode();
+  int conversationId = 0;
   @override
   void initState() {
     messageCubit.helperClass =
-        messageCubit.helperClass.copyWith(conversationId: widget.conversation.id);
+        messageCubit.helperClass.copyWith(conversationId: widget.conversationId);
+
     initializeScrolling(function: () async {
-      messageCubit.getMessages();
+      await messageCubit.getMessages();
     });
-    messageCubit.listenMessages(conversationId: widget.conversation.id);
+
+    messageCubit.listenMessages(conversationId: conversationId);
+    // readMessagesByConversation();
     super.initState();
   }
 
   Future<void> sendMessage({required String message}) async {
     if (message == '') return;
     await messageCubit.sendMessage(
-        message: SendMessageHelper(
-            senderId: '', conversationId: widget.conversation.id, messageText: message));
+        message: SendMessageHelper(senderId: '', messageText: message));
+  }
+
+  readMessagesByConversation() async {
+    await messageCubit.readMessagesByConversation(
+        helper:
+            ReadMessagesHelper(userId: widget.userId, conversationId: conversationId));
+  }
+
+  @override
+  void dispose() {
+    messageCubit.closeConversationChannels(conversationId: conversationId);
+    super.dispose();
   }
 
   @override

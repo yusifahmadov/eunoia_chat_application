@@ -4,6 +4,7 @@ import 'package:eunoia_chat_application/core/response/response.dart';
 import 'package:eunoia_chat_application/features/message/data/datasources/message_remote_data_source.dart';
 import 'package:eunoia_chat_application/features/message/domain/entities/helper/get_message_helper.dart';
 import 'package:eunoia_chat_application/features/message/domain/entities/helper/listen_message_helper.dart';
+import 'package:eunoia_chat_application/features/message/domain/entities/helper/read_messages_helper.dart';
 import 'package:eunoia_chat_application/features/message/domain/entities/helper/send_message_helper.dart';
 import 'package:eunoia_chat_application/features/message/domain/entities/message.dart';
 import 'package:eunoia_chat_application/features/message/domain/repositories/message_repository.dart';
@@ -37,6 +38,25 @@ class MessageRepositoryImpl implements MessageRepository {
       {required ListenMessageHelper body}) async {
     try {
       return Right(await remoteDataSource.listenMessages(body: body));
+    } on DioException catch (e) {
+      return Left(ResponseI(message: e.response.toString()));
+    }
+  }
+
+  @override
+  Future<Either<ResponseI, void>> readMessages({required ReadMessagesHelper body}) async {
+    try {
+      return Right(await remoteDataSource.readMessages(body: body));
+    } on DioException catch (e) {
+      return Left(ResponseI(message: e.response.toString()));
+    }
+  }
+
+  @override
+  Future<Either<ResponseI, void>> readMessagesByConversation(
+      {required ReadMessagesHelper body}) async {
+    try {
+      return Right(await remoteDataSource.readMessagesByConversation(body: body));
     } on DioException catch (e) {
       return Left(ResponseI(message: e.response.toString()));
     }
