@@ -1,6 +1,13 @@
 import 'package:dio/dio.dart';
 import 'package:eunoia_chat_application/core/dio/interceptor.dart';
 import 'package:eunoia_chat_application/features/authentication/presentation/cubit/authentication_cubit.dart';
+import 'package:eunoia_chat_application/features/contact/data/datasources/contact_remote_data_source.dart';
+import 'package:eunoia_chat_application/features/contact/data/datasources/contact_remote_data_source_impl.dart';
+import 'package:eunoia_chat_application/features/contact/data/repositories/contact_repository_impl.dart';
+import 'package:eunoia_chat_application/features/contact/domain/repositories/contact_repository.dart';
+import 'package:eunoia_chat_application/features/contact/domain/usecases/check_contact_usecase.dart';
+import 'package:eunoia_chat_application/features/contact/domain/usecases/get_contact_usecase.dart';
+import 'package:eunoia_chat_application/features/contact/presentation/cubit/contact_cubit.dart';
 import 'package:eunoia_chat_application/features/conversation/data/datasources/conversation_remote_data_source.dart';
 import 'package:eunoia_chat_application/features/conversation/data/datasources/conversation_remote_data_source_impl.dart';
 import 'package:eunoia_chat_application/features/conversation/data/repositories/conversation_repository_impl.dart';
@@ -15,6 +22,8 @@ import 'package:eunoia_chat_application/features/message/data/repositories/messa
 import 'package:eunoia_chat_application/features/message/domain/repositories/message_repository.dart';
 import 'package:eunoia_chat_application/features/message/domain/usecases/get_messages_usecase.dart';
 import 'package:eunoia_chat_application/features/message/domain/usecases/listen_messages_usecase.dart';
+import 'package:eunoia_chat_application/features/message/domain/usecases/read_messages_by_conversation_usecase.dart';
+import 'package:eunoia_chat_application/features/message/domain/usecases/read_messages_usecase.dart';
 import 'package:eunoia_chat_application/features/message/domain/usecases/send_message_usecase.dart';
 import 'package:eunoia_chat_application/features/message/presentation/cubit/message_cubit.dart';
 import 'package:eunoia_chat_application/features/user/data/datasources/user_remote_data_source.dart';
@@ -42,9 +51,15 @@ initCubits() {
   getIt.registerFactory(
       () => UserCubit(userLoginUsecase: getIt(), userRegisterUsecase: getIt()));
   getIt.registerFactory(() => MainCubit());
+  getIt.registerFactory(() => ContactCubit(
+        getContactUsecase: getIt(),
+        checkContactUsecase: getIt(),
+      ));
   getIt.registerFactory(() => MessageCubit(
+        readMessagesUsecase: getIt(),
         getMessagesUsecase: getIt(),
         sendMessageUsecase: getIt(),
+        readMessagesByConversationUsecase: getIt(),
         listenMessagesUsecase: getIt(),
       ));
 
@@ -67,6 +82,9 @@ initDataSources() {
   getIt.registerLazySingleton<MessageRemoteDataSource>(
     () => MessageRemoteDataSourceImpl(),
   );
+  getIt.registerLazySingleton<ContactRemoteDataSource>(
+    () => ContactRemoteDataSourceImpl(),
+  );
 }
 
 initUseCases() {
@@ -77,6 +95,11 @@ initUseCases() {
   getIt.registerLazySingleton(() => GetMessagesUsecase(messageRepository: getIt()));
   getIt.registerLazySingleton(() => SendMessageUsecase(messageRepository: getIt()));
   getIt.registerLazySingleton(() => ListenMessagesUsecase(messageRepository: getIt()));
+  getIt.registerLazySingleton(() => ReadMessagesUsecase(messageRepository: getIt()));
+  getIt.registerLazySingleton(() => GetContactUsecase(contactRepository: getIt()));
+  getIt.registerLazySingleton(() => CheckContactUsecase(contactRepository: getIt()));
+  getIt.registerLazySingleton(
+      () => ReadMessagesByConversationUsecase(messageRepository: getIt()));
 }
 
 initRepositories() {
@@ -89,6 +112,9 @@ initRepositories() {
   );
   getIt.registerLazySingleton<MessageRepository>(
     () => MessageRepositoryImpl(remoteDataSource: getIt()),
+  );
+  getIt.registerLazySingleton<ContactRepository>(
+    () => ContactRepositoryImpl(contactRemoteDataSource: getIt()),
   );
 }
 

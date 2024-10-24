@@ -8,9 +8,11 @@ class Participant extends Equatable {
   final ParticipantType type;
   final DateTime joinedAt;
   final DateTime? leftAt;
+  final int readMessageCount;
 
   const Participant({
     required this.id,
+    required this.readMessageCount,
     required this.conversationId,
     required this.userId,
     required this.type,

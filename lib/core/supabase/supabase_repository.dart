@@ -6,19 +6,19 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 abstract class SupabaseRepository {
   static late final RealtimeClient socket;
   static final supabase = Supabase.instance.client;
-  static Future<ConversationModel?> listenConversations(
-      {required void Function({required ConversationModel conversation})
-          callBackFunc}) async {
+  static Future<ConversationModel?> listenConversations({
+    required void Function({required ConversationModel conversation}) callBackFunc,
+  }) async {
     ConversationModel? conversationModel;
 
     supabase
         .channel('conversation')
         .onPostgresChanges(
           event: PostgresChangeEvent.all,
-          callback: (payload) {
+          callback: (payload) async {
             conversationModel = ConversationModel.fromJson(payload.newRecord);
+
             if (conversationModel != null) {
-              print(payload.newRecord);
               callBackFunc(conversation: conversationModel!);
             }
           },
@@ -35,7 +35,7 @@ abstract class SupabaseRepository {
     MessageModel? messageModel;
 
     supabase
-        .channel('messages')
+        .channel('${conversationId}_messages')
         .onPostgresChanges(
           event: PostgresChangeEvent.all,
           callback: (payload) {
@@ -52,22 +52,9 @@ abstract class SupabaseRepository {
     return messageModel;
   }
 
-  leaveMessageChannel() async {
-    for (var i = 0; i < socket.getChannels().length; i++) {
-      await socket.getChannels()[i].unsubscribe();
-    }
+  static leaveMessageChannel({required int conversationId}) async {
+    await supabase.channel('${conversationId}_messages').unsubscribe();
   }
-
-  // static Future<void> initSocket() async {
-  //   socket = RealtimeClient(
-  //     'wss://${dotenv.get('SUPABASE_API_REALTIME_ENDPOINT')}/realtime/v1',
-  //     params: {'apikey': dotenv.get('SUPABASE_API_KEY')},
-  //   );
-
-  //   final AuthResponseModel user = AuthResponseModel.fromJson(
-  //       await CustomSharedPreferences.readUser("user") as Map<String, dynamic>);
-  //   socket.setAuth(user.accessToken);
-  // }
 
   static closeSocket() async {
     for (var i = 0; i < socket.getChannels().length; i++) {

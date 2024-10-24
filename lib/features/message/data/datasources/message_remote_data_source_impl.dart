@@ -4,6 +4,7 @@ import 'package:eunoia_chat_application/features/message/data/datasources/messag
 import 'package:eunoia_chat_application/features/message/data/models/message_model.dart';
 import 'package:eunoia_chat_application/features/message/domain/entities/helper/get_message_helper.dart';
 import 'package:eunoia_chat_application/features/message/domain/entities/helper/listen_message_helper.dart';
+import 'package:eunoia_chat_application/features/message/domain/entities/helper/read_messages_helper.dart';
 import 'package:eunoia_chat_application/features/message/domain/entities/helper/send_message_helper.dart';
 import 'package:eunoia_chat_application/injection.dart';
 
@@ -31,5 +32,25 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
   Future<MessageModel?> listenMessages({required ListenMessageHelper body}) async {
     return await SupabaseRepository.listenMessages(
         callBackFunc: body.callBackFunc, conversationId: body.conversationId);
+  }
+
+  @override
+  Future<void> readMessages({required ReadMessagesHelper body}) {
+    final response = getIt<Dio>().post(
+      '/rest/v1/rpc/mark_messages_as_read',
+      data: body.toJson(),
+    );
+
+    return response.then((value) => null);
+  }
+
+  @override
+  Future<void> readMessagesByConversation({required ReadMessagesHelper body}) {
+    final response = getIt<Dio>().post(
+      '/rest/v1/rpc/mark_messages_as_read_by_conversation',
+      data: body.toJsonForReadAll(),
+    );
+
+    return response.then((value) => null);
   }
 }

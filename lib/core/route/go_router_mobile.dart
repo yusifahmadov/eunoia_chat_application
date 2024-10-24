@@ -1,7 +1,7 @@
 import 'package:eunoia_chat_application/core/route/error_screen.dart';
 import 'package:eunoia_chat_application/core/route/transition.dart';
 import 'package:eunoia_chat_application/core/shared_preferences/custom_shared_preferences.dart';
-import 'package:eunoia_chat_application/features/conversation/domain/entities/conversation.dart';
+import 'package:eunoia_chat_application/features/contact/presentation/pages/contact_provider_state.dart';
 import 'package:eunoia_chat_application/features/conversation/presentation/pages/conversation_provider_state.dart';
 import 'package:eunoia_chat_application/features/main/presentation/pages/main_page.dart';
 import 'package:eunoia_chat_application/features/message/presentation/pages/message_provider_state.dart';
@@ -16,6 +16,7 @@ import 'package:go_router/go_router.dart';
 class AppRouter {
   static final _shellProfileNavigatorKey = GlobalKey<NavigatorState>();
   static final _shellHomeNavigatorKey = GlobalKey<NavigatorState>();
+  static final _shellContactsNavigatorKey = GlobalKey<NavigatorState>();
 
   static GoRouter router = GoRouter(
       errorBuilder: (context, state) => const ErrorScreen(),
@@ -47,18 +48,27 @@ class AppRouter {
                 path: '/conversations',
                 routes: [
                   GoRoute(
-                    path: ':id',
+                    path: 'details/:id',
                     parentNavigatorKey: navigatorKey,
                     routes: const [],
                     pageBuilder: (context, state) => NoTransitionPage(
                         child: MessageProviderWidget(
-                      conversation: (state.extra as List)[0] as Conversation,
-                      userId: (state.extra as List)[1] as String,
+                      userId: (state.extra as List)[0] as String,
+                      conversationId: (state.extra as List)[1] as int,
                     )),
                   ),
                 ],
                 pageBuilder: (context, state) =>
                     const NoTransitionPage(child: ConversationProviderWidget()),
+              ),
+            ]),
+            StatefulShellBranch(navigatorKey: _shellContactsNavigatorKey, routes: [
+              GoRoute(
+                path: '/contacts',
+                parentNavigatorKey: _shellContactsNavigatorKey,
+                routes: const [],
+                pageBuilder: (context, state) =>
+                    const NoTransitionPage(child: ContactProviderWidget()),
               ),
             ]),
             StatefulShellBranch(navigatorKey: _shellProfileNavigatorKey, routes: [
@@ -68,7 +78,7 @@ class AppRouter {
                 pageBuilder: (context, state) =>
                     const NoTransitionPage(child: ProfilePage()),
               ),
-            ])
+            ]),
           ],
         ),
         GoRoute(

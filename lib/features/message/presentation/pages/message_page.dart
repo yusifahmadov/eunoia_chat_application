@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eunoia_chat_application/core/constant/empty_box.dart';
 import 'package:eunoia_chat_application/core/extensions/localization_extension.dart';
 import 'package:eunoia_chat_application/features/main/presentation/utility/custom_input_decoration.dart';
@@ -11,7 +10,6 @@ import 'package:eunoia_chat_application/features/message/presentation/pages/mess
 import 'package:eunoia_chat_application/features/message/presentation/pages/message_provider_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
 extension _AdvancedContext on BuildContext {
@@ -126,19 +124,9 @@ class _AppBarTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return const Row(
       children: [
-        CircleAvatar(
-          child: context.state.widget.conversation.senderProfilePhoto != null
-              ? CachedNetworkImage(
-                  imageUrl: context.state.widget.conversation.senderProfilePhoto!,
-                )
-              : SvgPicture.asset(
-                  'assets/icons/no-profile-picture.svg',
-                ),
-        ),
-        const EmptyWidthBox(width: 10),
-        Text(context.state.widget.conversation.title),
+        EmptyWidthBox(width: 10),
       ],
     );
   }

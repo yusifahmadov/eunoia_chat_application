@@ -12,8 +12,8 @@ class CustomSvgIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return SvgPicture.asset(
       'assets/icons/$text.svg',
-      width: width ?? 20,
-      height: height ?? 20,
+      width: width ?? 25,
+      height: height ?? 25,
       color: color ?? Theme.of(context).colorScheme.onPrimaryContainer,
     );
   }
