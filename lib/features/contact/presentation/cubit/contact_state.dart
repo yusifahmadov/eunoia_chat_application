@@ -12,7 +12,7 @@ class ContactInitial extends ContactState {}
 class ContactsLoading extends ContactState {}
 
 class ContactsLoaded extends ContactState {
-  final List<EunoiaContact> contacts;
+  final List<User> contacts;
 
   const ContactsLoaded({required this.contacts});
 

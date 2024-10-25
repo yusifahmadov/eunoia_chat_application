@@ -42,9 +42,15 @@ class ContactPage extends StatelessWidget {
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
                 title: CustomTextField(
-                  onChanged: (value) async {},
-                  decoration:
-                      CustomInputDecoration(context: context, hintText: 'Search (soon)'),
+                  onChanged: (value) async {
+                    context.state.search(
+                      onChanged: () async {
+                        context.state.searchContacts(query: value);
+                      },
+                    );
+                  },
+                  decoration: CustomInputDecoration(
+                      context: context, hintText: context.localization?.search),
                 ),
               ),
             ),
@@ -54,7 +60,7 @@ class ContactPage extends StatelessWidget {
             builder: (context, state) {
               if (context.state.contactCubit.fetchedData.isEmpty) {
                 return SliverFillRemaining(
-                  child: Center(child: Text(context.localization?.no_contacts ?? "")),
+                  child: Center(child: Text(context.localization?.search ?? "")),
                 );
               }
 
@@ -76,10 +82,11 @@ class ContactPage extends StatelessWidget {
                               : SvgPicture.asset('assets/icons/no-profile-picture.svg'),
                         ),
                         tileColor: Theme.of(context).colorScheme.surface,
-                        title: Text(context.state.contactCubit.fetchedData[index].name,
+                        title: Text(
+                            context.state.contactCubit.fetchedData[index].username ?? "",
                             style: Theme.of(context).textTheme.headlineLarge),
                         subtitle: Text(
-                            context.state.contactCubit.fetchedData[index].phoneNumber,
+                            context.state.contactCubit.fetchedData[index].bio ?? "",
                             style: Theme.of(context).textTheme.bodyMedium),
                       );
                     }),

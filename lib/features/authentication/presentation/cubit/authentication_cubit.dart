@@ -37,6 +37,8 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
   Future<AuthResponse?> readUserInformation() async {
     final user = AuthResponseModel.fromJson(
         await CustomSharedPreferences.readUser("user") as Map<String, dynamic>);
+
+    print(user.accessToken);
     return user;
   }
 

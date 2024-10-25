@@ -92,7 +92,7 @@ class _ConversationTile extends StatelessWidget {
                 title: Row(
                   children: [
                     Text(
-                      conversation.title,
+                      conversation.title ?? "",
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                     const Spacer(),
@@ -120,7 +120,8 @@ class _ConversationTile extends StatelessWidget {
                 onTap: () async {
                   context.go('/conversations/details/${conversation.id}', extra: [
                     (await SharedPreferencesUserManager.getUser())?.user.id,
-                    conversation.id
+                    conversation.id,
+                    conversation.senderProfilePhoto
                   ]);
                 },
               ),

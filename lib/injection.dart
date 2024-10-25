@@ -7,6 +7,7 @@ import 'package:eunoia_chat_application/features/contact/data/repositories/conta
 import 'package:eunoia_chat_application/features/contact/domain/repositories/contact_repository.dart';
 import 'package:eunoia_chat_application/features/contact/domain/usecases/check_contact_usecase.dart';
 import 'package:eunoia_chat_application/features/contact/domain/usecases/get_contact_usecase.dart';
+import 'package:eunoia_chat_application/features/contact/domain/usecases/search_contact_usecase.dart';
 import 'package:eunoia_chat_application/features/contact/presentation/cubit/contact_cubit.dart';
 import 'package:eunoia_chat_application/features/conversation/data/datasources/conversation_remote_data_source.dart';
 import 'package:eunoia_chat_application/features/conversation/data/datasources/conversation_remote_data_source_impl.dart';
@@ -30,6 +31,8 @@ import 'package:eunoia_chat_application/features/user/data/datasources/user_remo
 import 'package:eunoia_chat_application/features/user/data/datasources/user_remote_data_source_impl.dart';
 import 'package:eunoia_chat_application/features/user/data/repositories/user_repository_impl.dart';
 import 'package:eunoia_chat_application/features/user/domain/repositories/user_repository.dart';
+import 'package:eunoia_chat_application/features/user/domain/usecases/get_user_usecase.dart';
+import 'package:eunoia_chat_application/features/user/domain/usecases/refresh_token_usecase.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/user_login_usecase.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/user_register_usecase.dart';
 import 'package:eunoia_chat_application/features/user/presentation/cubit/user_cubit.dart';
@@ -48,11 +51,15 @@ Future<void> init() async {
 }
 
 initCubits() {
-  getIt.registerFactory(
-      () => UserCubit(userLoginUsecase: getIt(), userRegisterUsecase: getIt()));
+  getIt.registerFactory(() => UserCubit(
+      userLoginUsecase: getIt(),
+      userRegisterUsecase: getIt(),
+      getUserUsecase: getIt(),
+      refreshTokenUsecase: getIt()));
   getIt.registerFactory(() => MainCubit());
   getIt.registerFactory(() => ContactCubit(
         getContactUsecase: getIt(),
+        searchContactUsecase: getIt(),
         checkContactUsecase: getIt(),
       ));
   getIt.registerFactory(() => MessageCubit(
@@ -98,6 +105,9 @@ initUseCases() {
   getIt.registerLazySingleton(() => ReadMessagesUsecase(messageRepository: getIt()));
   getIt.registerLazySingleton(() => GetContactUsecase(contactRepository: getIt()));
   getIt.registerLazySingleton(() => CheckContactUsecase(contactRepository: getIt()));
+  getIt.registerLazySingleton(() => SearchContactUsecase(contactRepository: getIt()));
+  getIt.registerLazySingleton(() => RefreshTokenUsecase(userRepository: getIt()));
+  getIt.registerLazySingleton(() => GetUserUsecase(userRepository: getIt()));
   getIt.registerLazySingleton(
       () => ReadMessagesByConversationUsecase(messageRepository: getIt()));
 }

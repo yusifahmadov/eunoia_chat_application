@@ -32,3 +32,15 @@ class UserRegisterError extends UserState {
   final String message;
   const UserRegisterError({required this.message});
 }
+
+class UserDetailLoading extends UserState {}
+
+class UserDetailSuccess extends UserState {
+  final List<User> users;
+  const UserDetailSuccess({required this.users});
+}
+
+class UserDetailError extends UserState {
+  final String message;
+  const UserDetailError({required this.message});
+}

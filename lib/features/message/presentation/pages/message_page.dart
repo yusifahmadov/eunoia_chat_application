@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eunoia_chat_application/core/constant/empty_box.dart';
 import 'package:eunoia_chat_application/core/extensions/localization_extension.dart';
 import 'package:eunoia_chat_application/features/main/presentation/utility/custom_input_decoration.dart';
@@ -8,8 +9,10 @@ import 'package:eunoia_chat_application/features/message/domain/entities/message
 import 'package:eunoia_chat_application/features/message/presentation/cubit/message_cubit.dart';
 import 'package:eunoia_chat_application/features/message/presentation/pages/message_provider.dart';
 import 'package:eunoia_chat_application/features/message/presentation/pages/message_provider_state.dart';
+import 'package:eunoia_chat_application/features/user/presentation/cubit/user_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
 extension _AdvancedContext on BuildContext {
@@ -124,10 +127,31 @@ class _AppBarTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
-      children: [
-        EmptyWidthBox(width: 10),
-      ],
+    return BlocBuilder<UserCubit, UserState>(
+      bloc: context.state.userCubit,
+      builder: (context, state) {
+        if (state is UserDetailLoading) {
+          return const CircularProgressIndicator();
+        }
+        if (state is UserDetailError) {
+          return Text(state.message);
+        } else if (state is UserDetailSuccess) {
+          return Row(
+            children: [
+              CircleAvatar(
+                child: state.users.isNotEmpty && state.users[0].profilePhoto != null
+                    ? CachedNetworkImage(imageUrl: state.users[0].profilePhoto!)
+                    : SvgPicture.asset(
+                        'assets/icons/no-profile-picture.svg',
+                      ),
+              ),
+              const EmptyWidthBox(width: 10),
+              Text(state.users.isNotEmpty ? state.users[0].username ?? "" : ""),
+            ],
+          );
+        }
+        return const SizedBox();
+      },
     );
   }
 }
