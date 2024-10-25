@@ -1,21 +1,21 @@
 class GetContactsHelper {
-  final List<String> phoneNumbers;
+  final String username;
   final int limit;
   final int offset;
 
   GetContactsHelper({
-    required this.phoneNumbers,
+    required this.username,
     this.limit = 30,
     this.offset = 0,
   });
 
   GetContactsHelper copyWith({
-    List<String>? phoneNumbers,
+    String? username,
     int? limit,
     int? offset,
   }) {
     return GetContactsHelper(
-      phoneNumbers: phoneNumbers ?? this.phoneNumbers,
+      username: username ?? this.username,
       limit: limit ?? this.limit,
       offset: offset ?? this.offset,
     );
@@ -23,9 +23,9 @@ class GetContactsHelper {
 
   toJson() {
     return {
-      'phone_numbers': phoneNumbers,
-      'limit_count': limit,
-      'offset_count': offset,
+      'username_input': username,
+      'limit_input': limit,
+      'offset_input': offset,
     };
   }
 }

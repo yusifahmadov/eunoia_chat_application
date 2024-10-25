@@ -3,7 +3,7 @@ import 'package:eunoia_chat_application/features/message/data/models/message_mod
 
 class Conversation extends Equatable {
   final int id;
-  final String title;
+  final String? title;
   final DateTime createdAt;
   final MessageModel? lastMessage;
   final String? senderProfilePhoto;

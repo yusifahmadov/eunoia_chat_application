@@ -47,7 +47,7 @@ class _MainPageViewState extends State<MainPageView> {
             ),
           ),
           BottomNavigationBarItem(
-            label: mainContext?.localization?.contacts,
+            label: mainContext?.localization?.search,
             activeIcon: SvgPicture.asset(
               "assets/icons/person.svg",
               width: 25,

@@ -5,6 +5,7 @@ import 'package:eunoia_chat_application/features/contact/data/datasources/contac
 import 'package:eunoia_chat_application/features/contact/domain/entities/contact.dart';
 import 'package:eunoia_chat_application/features/contact/domain/entities/helper/get_contacts_helper.dart';
 import 'package:eunoia_chat_application/features/contact/domain/repositories/contact_repository.dart';
+import 'package:eunoia_chat_application/features/user/data/models/user_model.dart';
 
 class ContactRepositoryImpl implements ContactRepository {
   ContactRemoteDataSource contactRemoteDataSource;
@@ -25,6 +26,16 @@ class ContactRepositoryImpl implements ContactRepository {
   Future<Either<ResponseI, int>> checkContact({required String contactId}) async {
     try {
       return Right(await contactRemoteDataSource.checkContact(contactId: contactId));
+    } on DioException catch (e) {
+      return Left(ResponseI(message: e.response.toString()));
+    }
+  }
+
+  @override
+  Future<Either<ResponseI, List<UserModel>>> searchContacts(
+      {required GetContactsHelper body}) async {
+    try {
+      return Right(await contactRemoteDataSource.searchContacts(body: body));
     } on DioException catch (e) {
       return Left(ResponseI(message: e.response.toString()));
     }

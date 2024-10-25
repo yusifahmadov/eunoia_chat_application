@@ -21,7 +21,7 @@ class ConversationModel extends Conversation {
       lastMessage: json['last_message'] != null
           ? MessageModel.fromJson(json['last_message'] as Map<String, dynamic>)
           : null,
-      title: json['title'] as String,
+      title: json['title'] as String?,
       createdAt: DateTime.parse(json['created_at']),
       senderProfilePhoto: json['profile_photo'] as String?,
     );

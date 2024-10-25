@@ -24,8 +24,12 @@ class ContactProviderState extends State<ContactProviderWidget>
     initializeScrolling(function: () async {
       await contactCubit.getContacts();
     });
-    contactCubit.getLocalContacts();
     super.initState();
+  }
+
+  searchContacts({required String query}) async {
+    contactCubit.helperClass = contactCubit.helperClass.copyWith(username: query);
+    contactCubit.getContacts(refreshScroll: true);
   }
 
   checkContact({required String id}) async {
