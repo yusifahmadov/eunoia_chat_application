@@ -6,7 +6,7 @@ import 'package:eunoia_chat_application/features/conversation/presentation/pages
 import 'package:eunoia_chat_application/features/main/presentation/pages/main_page.dart';
 import 'package:eunoia_chat_application/features/message/presentation/pages/message_provider_state.dart';
 import 'package:eunoia_chat_application/features/user/presentation/pages/auth_page.dart';
-import 'package:eunoia_chat_application/features/user/presentation/pages/profile/profile_page.dart';
+import 'package:eunoia_chat_application/features/user/presentation/pages/profile/profile_page_provider_state.dart';
 import 'package:eunoia_chat_application/features/user/presentation/pages/signin/signin_provider_state.dart';
 import 'package:eunoia_chat_application/features/user/presentation/pages/signup/signup_provider_state.dart';
 import 'package:eunoia_chat_application/injection.dart';
@@ -76,7 +76,7 @@ class AppRouter {
                 parentNavigatorKey: _shellProfileNavigatorKey,
                 path: '/profile',
                 pageBuilder: (context, state) =>
-                    const NoTransitionPage(child: ProfilePage()),
+                    const NoTransitionPage(child: ProfilePageProviderWidget()),
               ),
             ]),
           ],

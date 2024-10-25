@@ -13,4 +13,5 @@ abstract class UserRepository {
       {required String refreshToken});
 
   Future<Either<ResponseI, List<User>>> getUser({required int conversationId});
+  Future<Either<ResponseI, User>> getCurrentUser();
 }

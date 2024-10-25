@@ -50,4 +50,13 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
 
     return (response.data as List).map((e) => UserModel.fromJson(e)).toList();
   }
+
+  @override
+  Future<UserModel> getCurrentUser() async {
+    final response = await getIt<Dio>().get(
+      '/rest/v1/rpc/get_current_user',
+    );
+
+    return UserModel.fromJson(response.data);
+  }
 }

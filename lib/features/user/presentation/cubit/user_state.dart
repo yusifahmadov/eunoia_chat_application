@@ -44,3 +44,15 @@ class UserDetailError extends UserState {
   final String message;
   const UserDetailError({required this.message});
 }
+
+class CurrentUserLoading extends UserState {}
+
+class CurrentUserSuccess extends UserState {
+  final User user;
+  const CurrentUserSuccess({required this.user});
+}
+
+class CurrentUserError extends UserState {
+  final String message;
+  const CurrentUserError({required this.message});
+}
