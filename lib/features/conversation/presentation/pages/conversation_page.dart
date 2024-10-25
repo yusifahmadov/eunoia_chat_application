@@ -102,13 +102,9 @@ class _ConversationTile extends StatelessWidget {
                 ),
                 subtitle: Row(
                   children: [
-                    Text(
-                      conversation.lastMessage?.senderName ?? "",
-                      style: Theme.of(context).textTheme.bodySmall,
-                    ),
                     Flexible(
                       child: Text(
-                        ": ${conversation.lastMessage?.message ?? ""}",
+                        conversation.lastMessage?.message ?? "",
                         style: Theme.of(context).textTheme.bodySmall,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,

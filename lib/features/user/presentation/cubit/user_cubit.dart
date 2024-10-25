@@ -70,16 +70,19 @@ class UserCubit extends Cubit<UserState> {
     return token;
   }
 
-  getUser({required String id}) async {
-    final response = await getUserUsecase(id);
-
+  Future<List<User>> getUser({required int conversationId}) async {
+    final response = await getUserUsecase(conversationId);
+    List<User> tmpList = [];
     response.fold(
       (error) async {
+        tmpList = [];
         emit(UserDetailError(message: error.message));
       },
       (user) async {
+        tmpList = user;
         emit(UserDetailSuccess(users: user));
       },
     );
+    return tmpList;
   }
 }

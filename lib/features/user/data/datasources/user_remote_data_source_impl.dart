@@ -40,9 +40,12 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   }
 
   @override
-  Future<List<UserModel>> getUser(String id) async {
-    final response = await getIt<Dio>().get(
-      '/rest/v1/users?id=eq.$id',
+  Future<List<UserModel>> getUser(int conversationId) async {
+    final response = await getIt<Dio>().post(
+      '/rest/v1/rpc/get_participants_data',
+      data: {
+        'p_conversation_id': conversationId,
+      },
     );
 
     return (response.data as List).map((e) => UserModel.fromJson(e)).toList();
