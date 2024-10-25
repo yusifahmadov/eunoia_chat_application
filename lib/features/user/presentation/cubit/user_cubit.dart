@@ -2,12 +2,14 @@ import 'package:equatable/equatable.dart';
 import 'package:eunoia_chat_application/core/constant/constants.dart';
 import 'package:eunoia_chat_application/core/extensions/localization_extension.dart';
 import 'package:eunoia_chat_application/core/flasher/custom_flasher.dart';
+import 'package:eunoia_chat_application/core/response/no_params.dart';
 import 'package:eunoia_chat_application/core/shared_preferences/custom_shared_preferences.dart';
 import 'package:eunoia_chat_application/features/user/data/models/auth_response_model.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/auth_response.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/helper/user_login_helper.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/helper/user_register_helper.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/user.dart';
+import 'package:eunoia_chat_application/features/user/domain/usecases/get_current_user_usecase.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/get_user_usecase.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/refresh_token_usecase.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/user_login_usecase.dart';
@@ -22,11 +24,13 @@ class UserCubit extends Cubit<UserState> {
   UserRegisterUsecase userRegisterUsecase;
   RefreshTokenUsecase refreshTokenUsecase;
   GetUserUsecase getUserUsecase;
+  GetCurrentUserUsecase getCurrentUserUsecase;
   UserCubit({
     required this.userLoginUsecase,
     required this.userRegisterUsecase,
     required this.refreshTokenUsecase,
     required this.getUserUsecase,
+    required this.getCurrentUserUsecase,
   }) : super(UserInitial());
 
   login({required UserLoginHelper body}) async {
@@ -84,5 +88,16 @@ class UserCubit extends Cubit<UserState> {
       },
     );
     return tmpList;
+  }
+
+  getCurrentUserInformation() async {
+    emit(CurrentUserLoading());
+
+    final response = await getCurrentUserUsecase(NoParams());
+
+    response.fold(
+      (e) => emit(CurrentUserError(message: e.message)),
+      (user) => emit(CurrentUserSuccess(user: user)),
+    );
   }
 }

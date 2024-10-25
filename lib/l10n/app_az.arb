@@ -24,6 +24,9 @@
     "contacts": "Əlaqələr",
     "no_contacts": "Əlaqələr yoxdur",
     "settings": "Parametrlər",
-    "search": "Axtar"
+    "search": "Axtar",
+    "edit": "Redaktə et",
+    "change_profile_photo": "Profil şəklini dəyiş",
+    "change_language": "Dili dəyiş"
 
 }

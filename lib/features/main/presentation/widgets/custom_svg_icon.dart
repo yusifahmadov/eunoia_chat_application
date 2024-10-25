@@ -14,7 +14,7 @@ class CustomSvgIcon extends StatelessWidget {
       'assets/icons/$text.svg',
       width: width ?? 25,
       height: height ?? 25,
-      color: color ?? Theme.of(context).colorScheme.onPrimaryContainer,
+      color: color ?? Theme.of(context).colorScheme.primary,
     );
   }
 }

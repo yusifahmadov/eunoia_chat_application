@@ -10,15 +10,15 @@ class TextThemeDark implements ITextTheme {
       titleSmall: GoogleFonts.workSans(fontWeight: FontWeight.w500, fontSize: 13),
       headlineLarge: GoogleFonts.workSans(fontWeight: FontWeight.w700, fontSize: 18),
       bodyLarge: GoogleFonts.workSans(
-        fontSize: 15,
+        fontSize: 16,
         fontWeight: FontWeight.w400,
       ),
       bodyMedium: GoogleFonts.workSans(
-        fontSize: 14,
+        fontSize: 15,
         fontWeight: FontWeight.w400,
       ),
       bodySmall: GoogleFonts.workSans(
-        fontSize: 13,
+        fontSize: 14,
         fontWeight: FontWeight.w300,
       ),
     ).apply();

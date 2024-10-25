@@ -31,6 +31,7 @@ import 'package:eunoia_chat_application/features/user/data/datasources/user_remo
 import 'package:eunoia_chat_application/features/user/data/datasources/user_remote_data_source_impl.dart';
 import 'package:eunoia_chat_application/features/user/data/repositories/user_repository_impl.dart';
 import 'package:eunoia_chat_application/features/user/domain/repositories/user_repository.dart';
+import 'package:eunoia_chat_application/features/user/domain/usecases/get_current_user_usecase.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/get_user_usecase.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/refresh_token_usecase.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/user_login_usecase.dart';
@@ -53,6 +54,7 @@ Future<void> init() async {
 initCubits() {
   getIt.registerFactory(() => UserCubit(
       userLoginUsecase: getIt(),
+      getCurrentUserUsecase: getIt(),
       userRegisterUsecase: getIt(),
       getUserUsecase: getIt(),
       refreshTokenUsecase: getIt()));
@@ -101,6 +103,7 @@ initUseCases() {
   getIt.registerLazySingleton(() => ListenConversationsUsecase(repository: getIt()));
   getIt.registerLazySingleton(() => GetMessagesUsecase(messageRepository: getIt()));
   getIt.registerLazySingleton(() => SendMessageUsecase(messageRepository: getIt()));
+  getIt.registerLazySingleton(() => GetCurrentUserUsecase(userRepository: getIt()));
   getIt.registerLazySingleton(() => ListenMessagesUsecase(messageRepository: getIt()));
   getIt.registerLazySingleton(() => ReadMessagesUsecase(messageRepository: getIt()));
   getIt.registerLazySingleton(() => GetContactUsecase(contactRepository: getIt()));

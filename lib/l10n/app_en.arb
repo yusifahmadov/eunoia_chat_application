@@ -23,6 +23,9 @@
     "contacts": "Contacts",
     "no_contacts": "No contacts",
     "settings": "Settings",
-    "search": "Search"
+    "search": "Search",
+    "edit": "Edit",
+    "change_profile_photo": "Change profile photo",
+    "change_language": "Change language"
     
 }

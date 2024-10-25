@@ -75,14 +75,20 @@ class _ConversationTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverPadding(
       padding: const EdgeInsets.all(20),
-      sliver: SliverList.builder(
+      sliver: SliverList.separated(
+          separatorBuilder: (context, index) => const Divider(),
           itemCount: context.state.chatCubit.fetchedData.length,
           itemBuilder: (context, index) {
             final conversation = context.state.chatCubit.fetchedData[index];
             return Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: ListTile(
+                dense: true,
+                visualDensity: const VisualDensity(vertical: 1),
+                contentPadding: const EdgeInsets.all(0),
+                tileColor: Theme.of(context).colorScheme.surface,
                 leading: CircleAvatar(
+                  radius: 30,
                   child: conversation.senderProfilePhoto != null
                       ? CachedNetworkImage(imageUrl: conversation.senderProfilePhoto!)
                       : SvgPicture.asset(
