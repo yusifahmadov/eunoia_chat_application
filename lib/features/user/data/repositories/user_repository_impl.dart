@@ -43,9 +43,9 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<ResponseI, List<User>>> getUser({required String id}) async {
+  Future<Either<ResponseI, List<User>>> getUser({required int conversationId}) async {
     try {
-      return Right(await userRemoteDataSource.getUser(id));
+      return Right(await userRemoteDataSource.getUser(conversationId));
     } on DioException catch (e) {
       return Left(ResponseI(message: e.response.toString()));
     }

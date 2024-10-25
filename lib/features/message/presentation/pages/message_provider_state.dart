@@ -4,6 +4,7 @@ import 'package:eunoia_chat_application/features/message/domain/entities/helper/
 import 'package:eunoia_chat_application/features/message/presentation/cubit/message_cubit.dart';
 import 'package:eunoia_chat_application/features/message/presentation/pages/message_page.dart';
 import 'package:eunoia_chat_application/features/message/presentation/pages/message_provider.dart';
+import 'package:eunoia_chat_application/features/user/domain/entities/user.dart';
 import 'package:eunoia_chat_application/features/user/presentation/cubit/user_cubit.dart';
 import 'package:eunoia_chat_application/injection.dart';
 import 'package:flutter/material.dart';
@@ -28,11 +29,13 @@ class MessageProviderState extends State<MessageProviderWidget> with PageScrolli
   final messageController = TextEditingController();
   final focusNode = FocusNode();
   int conversationId = 0;
-
+  List<User> users = [];
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      (await userCubit.getUser(id: widget.userId));
+      if (widget.conversationId != null) {
+        users = (await userCubit.getUser(conversationId: widget.conversationId!));
+      }
     });
 
     messageCubit.helperClass =
@@ -47,10 +50,13 @@ class MessageProviderState extends State<MessageProviderWidget> with PageScrolli
     super.initState();
   }
 
-  Future<void> sendMessage({required String message}) async {
+  Future<void> sendMessage({
+    required String message,
+  }) async {
     if (message == '') return;
     await messageCubit.sendMessage(
-        message: SendMessageHelper(senderId: '', messageText: message));
+        message: SendMessageHelper(
+            senderId: '', messageText: message, receiverId: users[0].id));
   }
 
   readMessagesByConversation() async {

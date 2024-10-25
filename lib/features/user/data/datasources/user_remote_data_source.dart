@@ -7,5 +7,5 @@ abstract class UserRemoteDataSource {
   Future<AuthResponseModel> login(UserLoginHelper body);
   Future<AuthResponseModel> register(UserRegisterHelper body);
   Future<AuthResponseModel> refreshToken(String refreshToken);
-  Future<List<UserModel>> getUser(String id);
+  Future<List<UserModel>> getUser(int conversationId);
 }

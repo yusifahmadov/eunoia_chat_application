@@ -12,5 +12,5 @@ abstract class UserRepository {
   Future<Either<ResponseI, AuthResponseModel>> refreshToken(
       {required String refreshToken});
 
-  Future<Either<ResponseI, List<User>>> getUser({required String id});
+  Future<Either<ResponseI, List<User>>> getUser({required int conversationId});
 }
