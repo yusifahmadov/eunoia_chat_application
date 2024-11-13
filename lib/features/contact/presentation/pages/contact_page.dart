@@ -1,15 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:eunoia_chat_application/core/extensions/localization_extension.dart';
-import 'package:eunoia_chat_application/features/contact/presentation/cubit/contact_cubit.dart';
-import 'package:eunoia_chat_application/features/contact/presentation/pages/contact_provider.dart';
-import 'package:eunoia_chat_application/features/contact/presentation/pages/contact_provider_state.dart';
-import 'package:eunoia_chat_application/features/main/presentation/utility/custom_input_decoration.dart';
-import 'package:eunoia_chat_application/features/main/presentation/widgets/custom_svg_icon.dart';
-import 'package:eunoia_chat_application/features/main/presentation/widgets/text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../../core/extensions/localization_extension.dart';
+import '../../../main/presentation/utility/custom_input_decoration.dart';
+import '../../../main/presentation/widgets/custom_svg_icon.dart';
+import '../../../main/presentation/widgets/text_form_field.dart';
+import '../cubit/contact_cubit.dart';
+import 'contact_provider.dart';
+import 'contact_provider_state.dart';
 
 extension _AdvancedContext on BuildContext {
   ContactProviderState get state => ContactProvider.of(this);

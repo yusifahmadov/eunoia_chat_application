@@ -1,7 +1,8 @@
 import 'dart:convert';
 
-import 'package:eunoia_chat_application/features/user/domain/entities/auth_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../features/user/domain/entities/auth_response.dart';
 
 /// A utility class for managing user data using shared preferences.
 ///

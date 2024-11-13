@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:eunoia_chat_application/features/user/data/models/user_model.dart';
+
+import '../../data/models/user_model.dart';
 
 class AuthResponse extends Equatable {
   final String accessToken;

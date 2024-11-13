@@ -1,5 +1,5 @@
-import 'package:eunoia_chat_application/features/conversation/data/models/conversation_model.dart';
-import 'package:eunoia_chat_application/features/conversation/domain/entities/helper/get_conversations_helper.dart';
+import '../../domain/entities/helper/get_conversations_helper.dart';
+import '../models/conversation_model.dart';
 
 abstract class ConversationRemoteDataSource {
   Future<List<ConversationModel>> getConversations(

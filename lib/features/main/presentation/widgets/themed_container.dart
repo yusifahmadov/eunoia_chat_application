@@ -1,5 +1,6 @@
-import 'package:eunoia_chat_application/injection.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../injection.dart';
 
 class ThemedContainer extends Container {
   ThemedContainer({

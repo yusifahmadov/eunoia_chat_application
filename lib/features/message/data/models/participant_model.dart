@@ -1,5 +1,5 @@
-import 'package:eunoia_chat_application/features/message/domain/entities/participant.dart';
-import 'package:eunoia_chat_application/features/message/domain/entities/participant_type.dart';
+import '../../domain/entities/participant.dart';
+import '../../domain/entities/participant_type.dart';
 
 class ParticipantModel extends Participant {
   const ParticipantModel(

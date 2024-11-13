@@ -1,8 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:eunoia_chat_application/core/response/response.dart';
-import 'package:eunoia_chat_application/core/usecase/usecase.dart';
-import 'package:eunoia_chat_application/features/conversation/domain/entities/conversation.dart';
-import 'package:eunoia_chat_application/features/conversation/domain/repositories/conversation_repository.dart';
+
+import '../../../../core/response/response.dart';
+import '../../../../core/usecase/usecase.dart';
+import '../entities/conversation.dart';
+import '../repositories/conversation_repository.dart';
 
 class ListenConversationsUsecase
     extends Usecase<Conversation?, void Function({required Conversation conversation})> {

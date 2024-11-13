@@ -1,8 +1,8 @@
 import 'dart:ui';
 
-import 'package:eunoia_chat_application/features/authentication/presentation/cubit/authentication_cubit.dart';
-import 'package:eunoia_chat_application/features/main/presentation/cubit/main_cubit.dart';
-import 'package:eunoia_chat_application/injection.dart';
+import '../../features/authentication/presentation/cubit/authentication_cubit.dart';
+import '../../features/main/presentation/cubit/main_cubit.dart';
+import '../../injection.dart';
 
 final mainCubit = getIt<MainCubit>();
 final authCubit = getIt<AuthenticationCubit>();

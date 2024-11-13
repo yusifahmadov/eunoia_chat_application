@@ -1,5 +1,5 @@
-import 'package:eunoia_chat_application/features/conversation/domain/entities/conversation.dart';
-import 'package:eunoia_chat_application/features/message/data/models/message_model.dart';
+import '../../../message/data/models/message_model.dart';
+import '../../domain/entities/conversation.dart';
 
 class ConversationModel extends Conversation {
   const ConversationModel(

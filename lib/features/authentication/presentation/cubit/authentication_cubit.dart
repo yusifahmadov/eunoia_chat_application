@@ -1,12 +1,13 @@
 import 'package:equatable/equatable.dart';
-import 'package:eunoia_chat_application/core/extensions/localization_extension.dart';
-import 'package:eunoia_chat_application/core/flasher/custom_flasher.dart';
-import 'package:eunoia_chat_application/core/shared_preferences/custom_shared_preferences.dart';
-import 'package:eunoia_chat_application/features/user/data/models/auth_response_model.dart';
-import 'package:eunoia_chat_application/features/user/domain/entities/auth_response.dart';
-import 'package:eunoia_chat_application/injection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../../core/extensions/localization_extension.dart';
+import '../../../../core/flasher/custom_flasher.dart';
+import '../../../../core/shared_preferences/custom_shared_preferences.dart';
+import '../../../../injection.dart';
+import '../../../user/data/models/auth_response_model.dart';
+import '../../../user/domain/entities/auth_response.dart';
 
 part 'authentication_state.dart';
 

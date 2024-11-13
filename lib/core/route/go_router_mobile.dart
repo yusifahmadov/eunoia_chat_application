@@ -1,17 +1,18 @@
-import 'package:eunoia_chat_application/core/route/error_screen.dart';
-import 'package:eunoia_chat_application/core/route/transition.dart';
-import 'package:eunoia_chat_application/core/shared_preferences/custom_shared_preferences.dart';
-import 'package:eunoia_chat_application/features/contact/presentation/pages/contact_provider_state.dart';
-import 'package:eunoia_chat_application/features/conversation/presentation/pages/conversation_provider_state.dart';
-import 'package:eunoia_chat_application/features/main/presentation/pages/main_page.dart';
-import 'package:eunoia_chat_application/features/message/presentation/pages/message_provider_state.dart';
-import 'package:eunoia_chat_application/features/user/presentation/pages/auth_page.dart';
-import 'package:eunoia_chat_application/features/user/presentation/pages/profile/profile_page_provider_state.dart';
-import 'package:eunoia_chat_application/features/user/presentation/pages/signin/signin_provider_state.dart';
-import 'package:eunoia_chat_application/features/user/presentation/pages/signup/signup_provider_state.dart';
-import 'package:eunoia_chat_application/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../features/contact/presentation/pages/contact_provider_state.dart';
+import '../../features/conversation/presentation/pages/conversation_provider_state.dart';
+import '../../features/main/presentation/pages/main_page.dart';
+import '../../features/message/presentation/pages/message_provider_state.dart';
+import '../../features/user/presentation/pages/auth_page.dart';
+import '../../features/user/presentation/pages/profile/profile_page_provider_state.dart';
+import '../../features/user/presentation/pages/signin/signin_provider_state.dart';
+import '../../features/user/presentation/pages/signup/signup_provider_state.dart';
+import '../../injection.dart';
+import '../shared_preferences/custom_shared_preferences.dart';
+import 'error_screen.dart';
+import 'transition.dart';
 
 class AppRouter {
   static final _shellProfileNavigatorKey = GlobalKey<NavigatorState>();

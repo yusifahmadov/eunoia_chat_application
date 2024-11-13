@@ -1,11 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:eunoia_chat_application/core/response/response.dart';
-import 'package:eunoia_chat_application/features/conversation/data/datasources/conversation_remote_data_source.dart';
-import 'package:eunoia_chat_application/features/conversation/data/models/conversation_model.dart';
-import 'package:eunoia_chat_application/features/conversation/domain/entities/conversation.dart';
-import 'package:eunoia_chat_application/features/conversation/domain/entities/helper/get_conversations_helper.dart';
-import 'package:eunoia_chat_application/features/conversation/domain/repositories/conversation_repository.dart';
+
+import '../../../../core/response/response.dart';
+import '../../domain/entities/conversation.dart';
+import '../../domain/entities/helper/get_conversations_helper.dart';
+import '../../domain/repositories/conversation_repository.dart';
+import '../datasources/conversation_remote_data_source.dart';
+import '../models/conversation_model.dart';
 
 class ConversationRepositoryImpl implements ConversationRepository {
   final ConversationRemoteDataSource remoteDataSource;

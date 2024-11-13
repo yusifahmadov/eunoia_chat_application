@@ -1,11 +1,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:eunoia_chat_application/core/response/response.dart';
-import 'package:eunoia_chat_application/features/contact/data/datasources/contact_remote_data_source.dart';
-import 'package:eunoia_chat_application/features/contact/domain/entities/contact.dart';
-import 'package:eunoia_chat_application/features/contact/domain/entities/helper/get_contacts_helper.dart';
-import 'package:eunoia_chat_application/features/contact/domain/repositories/contact_repository.dart';
-import 'package:eunoia_chat_application/features/user/data/models/user_model.dart';
+
+import '../../../../core/response/response.dart';
+import '../../../user/data/models/user_model.dart';
+import '../../domain/entities/contact.dart';
+import '../../domain/entities/helper/get_contacts_helper.dart';
+import '../../domain/repositories/contact_repository.dart';
+import '../datasources/contact_remote_data_source.dart';
 
 class ContactRepositoryImpl implements ContactRepository {
   ContactRemoteDataSource contactRemoteDataSource;

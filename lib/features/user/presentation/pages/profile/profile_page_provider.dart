@@ -1,5 +1,6 @@
-import 'package:eunoia_chat_application/features/user/presentation/pages/profile/profile_page_provider_state.dart';
 import 'package:flutter/material.dart';
+
+import 'profile_page_provider_state.dart';
 
 class ProfilePageProvider extends InheritedWidget {
   final ProfilePageProviderState state;

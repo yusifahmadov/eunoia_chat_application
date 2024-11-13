@@ -1,7 +1,8 @@
-import 'package:eunoia_chat_application/core/extensions/localization_extension.dart';
-import 'package:eunoia_chat_application/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+
+import '../../../../core/extensions/localization_extension.dart';
+import '../../../../injection.dart';
 
 class MainPageView extends StatefulWidget {
   const MainPageView(

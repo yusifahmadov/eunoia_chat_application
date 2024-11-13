@@ -1,9 +1,10 @@
 import 'package:dartz/dartz.dart';
-import 'package:eunoia_chat_application/core/response/response.dart';
-import 'package:eunoia_chat_application/core/usecase/usecase.dart';
-import 'package:eunoia_chat_application/features/contact/domain/entities/contact.dart';
-import 'package:eunoia_chat_application/features/contact/domain/entities/helper/get_contacts_helper.dart';
-import 'package:eunoia_chat_application/features/contact/domain/repositories/contact_repository.dart';
+
+import '../../../../core/response/response.dart';
+import '../../../../core/usecase/usecase.dart';
+import '../entities/contact.dart';
+import '../entities/helper/get_contacts_helper.dart';
+import '../repositories/contact_repository.dart';
 
 class GetContactUsecase extends Usecase<List<EunoiaContact>, GetContactsHelper> {
   ContactRepository contactRepository;

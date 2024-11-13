@@ -1,11 +1,12 @@
 import 'package:equatable/equatable.dart';
-import 'package:eunoia_chat_application/core/mixins/cubit_scrolling_mixin.dart';
-import 'package:eunoia_chat_application/features/contact/domain/entities/helper/get_contacts_helper.dart';
-import 'package:eunoia_chat_application/features/contact/domain/usecases/check_contact_usecase.dart';
-import 'package:eunoia_chat_application/features/contact/domain/usecases/get_contact_usecase.dart';
-import 'package:eunoia_chat_application/features/contact/domain/usecases/search_contact_usecase.dart';
-import 'package:eunoia_chat_application/features/user/domain/entities/user.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../core/mixins/cubit_scrolling_mixin.dart';
+import '../../../user/domain/entities/user.dart';
+import '../../domain/entities/helper/get_contacts_helper.dart';
+import '../../domain/usecases/check_contact_usecase.dart';
+import '../../domain/usecases/get_contact_usecase.dart';
+import '../../domain/usecases/search_contact_usecase.dart';
 
 part 'contact_state.dart';
 

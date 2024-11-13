@@ -1,8 +1,8 @@
-import 'package:eunoia_chat_application/features/message/data/models/message_model.dart';
-import 'package:eunoia_chat_application/features/message/domain/entities/helper/get_message_helper.dart';
-import 'package:eunoia_chat_application/features/message/domain/entities/helper/listen_message_helper.dart';
-import 'package:eunoia_chat_application/features/message/domain/entities/helper/read_messages_helper.dart';
-import 'package:eunoia_chat_application/features/message/domain/entities/helper/send_message_helper.dart';
+import '../../domain/entities/helper/get_message_helper.dart';
+import '../../domain/entities/helper/listen_message_helper.dart';
+import '../../domain/entities/helper/read_messages_helper.dart';
+import '../../domain/entities/helper/send_message_helper.dart';
+import '../models/message_model.dart';
 
 abstract class MessageRemoteDataSource {
   Future<List<MessageModel>> getMessages({required GetMessageHelper body});

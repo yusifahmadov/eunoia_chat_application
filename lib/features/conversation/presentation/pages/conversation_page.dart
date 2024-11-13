@@ -1,15 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:eunoia_chat_application/core/extensions/localization_extension.dart';
-import 'package:eunoia_chat_application/core/shared_preferences/shared_preferences_user_manager.dart';
-import 'package:eunoia_chat_application/features/conversation/presentation/cubit/conversation_cubit.dart';
-import 'package:eunoia_chat_application/features/conversation/presentation/pages/conversation_provider.dart';
-import 'package:eunoia_chat_application/features/conversation/presentation/pages/conversation_provider_state.dart';
-import 'package:eunoia_chat_application/features/main/presentation/widgets/custom_svg_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+
+import '../../../../core/extensions/localization_extension.dart';
+import '../../../../core/shared_preferences/shared_preferences_user_manager.dart';
+import '../../../main/presentation/widgets/custom_svg_icon.dart';
+import '../cubit/conversation_cubit.dart';
+import 'conversation_provider.dart';
+import 'conversation_provider_state.dart';
 
 extension _AdvancedContext on BuildContext {
   ConversationProviderState get state => ConversationProvider.of(this);
@@ -90,7 +91,21 @@ class _ConversationTile extends StatelessWidget {
                 leading: CircleAvatar(
                   radius: 30,
                   child: conversation.senderProfilePhoto != null
-                      ? CachedNetworkImage(imageUrl: conversation.senderProfilePhoto!)
+                      ? CachedNetworkImage(
+                          imageUrl: '${conversation.senderProfilePhoto}',
+                          imageBuilder: (context, imageProvider) => Container(
+                            width: 120.0,
+                            height: 120.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  image: imageProvider, fit: BoxFit.cover),
+                            ),
+                          ),
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
+                        )
                       : SvgPicture.asset(
                           'assets/icons/no-profile-picture.svg',
                         ),

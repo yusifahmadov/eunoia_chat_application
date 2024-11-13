@@ -1,21 +1,24 @@
 import 'package:equatable/equatable.dart';
-import 'package:eunoia_chat_application/core/constant/constants.dart';
-import 'package:eunoia_chat_application/core/extensions/localization_extension.dart';
-import 'package:eunoia_chat_application/core/flasher/custom_flasher.dart';
-import 'package:eunoia_chat_application/core/response/no_params.dart';
-import 'package:eunoia_chat_application/core/shared_preferences/custom_shared_preferences.dart';
-import 'package:eunoia_chat_application/features/user/data/models/auth_response_model.dart';
-import 'package:eunoia_chat_application/features/user/domain/entities/auth_response.dart';
-import 'package:eunoia_chat_application/features/user/domain/entities/helper/user_login_helper.dart';
-import 'package:eunoia_chat_application/features/user/domain/entities/helper/user_register_helper.dart';
-import 'package:eunoia_chat_application/features/user/domain/entities/user.dart';
-import 'package:eunoia_chat_application/features/user/domain/usecases/get_current_user_usecase.dart';
-import 'package:eunoia_chat_application/features/user/domain/usecases/get_user_usecase.dart';
-import 'package:eunoia_chat_application/features/user/domain/usecases/refresh_token_usecase.dart';
-import 'package:eunoia_chat_application/features/user/domain/usecases/user_login_usecase.dart';
-import 'package:eunoia_chat_application/features/user/domain/usecases/user_register_usecase.dart';
-import 'package:eunoia_chat_application/injection.dart';
+import 'package:eunoia_chat_application/features/user/domain/entities/helper/upload_user_profile_photo_helper.dart';
+import 'package:eunoia_chat_application/features/user/domain/usecases/update_user_profile_photo_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../core/constant/constants.dart';
+import '../../../../core/extensions/localization_extension.dart';
+import '../../../../core/flasher/custom_flasher.dart';
+import '../../../../core/response/no_params.dart';
+import '../../../../core/shared_preferences/custom_shared_preferences.dart';
+import '../../../../injection.dart';
+import '../../data/models/auth_response_model.dart';
+import '../../domain/entities/auth_response.dart';
+import '../../domain/entities/helper/user_login_helper.dart';
+import '../../domain/entities/helper/user_register_helper.dart';
+import '../../domain/entities/user.dart';
+import '../../domain/usecases/get_current_user_usecase.dart';
+import '../../domain/usecases/get_user_usecase.dart';
+import '../../domain/usecases/refresh_token_usecase.dart';
+import '../../domain/usecases/user_login_usecase.dart';
+import '../../domain/usecases/user_register_usecase.dart';
 
 part 'user_state.dart';
 
@@ -25,12 +28,14 @@ class UserCubit extends Cubit<UserState> {
   RefreshTokenUsecase refreshTokenUsecase;
   GetUserUsecase getUserUsecase;
   GetCurrentUserUsecase getCurrentUserUsecase;
+  UpdateUserProfilePhotoUsecase updateUserProfilePhotoUsecase;
   UserCubit({
     required this.userLoginUsecase,
     required this.userRegisterUsecase,
     required this.refreshTokenUsecase,
     required this.getUserUsecase,
     required this.getCurrentUserUsecase,
+    required this.updateUserProfilePhotoUsecase,
   }) : super(UserInitial());
 
   login({required UserLoginHelper body}) async {
@@ -98,6 +103,19 @@ class UserCubit extends Cubit<UserState> {
     response.fold(
       (e) => emit(CurrentUserError(message: e.message)),
       (user) => emit(CurrentUserSuccess(user: user)),
+    );
+  }
+
+  updateUserProfilePhoto({required UploadUserProfilePhotoHelper body}) async {
+    final response = await updateUserProfilePhotoUsecase(body);
+    response.fold(
+      (error) {
+        CustomFlasher.showError(error.message);
+      },
+      (data) {
+        CustomFlasher.showSuccess(
+            mainContext?.localization?.update_profile_photo_success);
+      },
     );
   }
 }

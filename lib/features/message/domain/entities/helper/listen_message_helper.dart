@@ -1,4 +1,4 @@
-import 'package:eunoia_chat_application/features/message/domain/entities/message.dart';
+import '../message.dart';
 
 class ListenMessageHelper {
   final void Function({required Message message}) callBackFunc;

@@ -1,5 +1,6 @@
-import 'package:eunoia_chat_application/features/contact/presentation/pages/contact_provider_state.dart';
 import 'package:flutter/material.dart';
+
+import 'contact_provider_state.dart';
 
 class ContactProvider extends InheritedWidget {
   final ContactProviderState state;

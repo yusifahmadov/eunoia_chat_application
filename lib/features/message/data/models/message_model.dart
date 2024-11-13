@@ -1,4 +1,4 @@
-import 'package:eunoia_chat_application/features/message/domain/entities/message.dart';
+import '../../domain/entities/message.dart';
 
 class MessageModel extends Message {
   const MessageModel(

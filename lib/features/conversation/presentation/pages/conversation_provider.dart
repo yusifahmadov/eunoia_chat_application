@@ -1,5 +1,6 @@
-import 'package:eunoia_chat_application/features/conversation/presentation/pages/conversation_provider_state.dart';
 import 'package:flutter/material.dart';
+
+import 'conversation_provider_state.dart';
 
 class ConversationProvider extends InheritedWidget {
   final ConversationProviderState state;

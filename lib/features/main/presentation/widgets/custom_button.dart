@@ -1,5 +1,6 @@
-import 'package:eunoia_chat_application/core/constant/constants.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../core/constant/constants.dart';
 
 class CustomTextButton extends StatelessWidget {
   const CustomTextButton({

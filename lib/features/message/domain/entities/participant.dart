@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:eunoia_chat_application/features/message/domain/entities/participant_type.dart';
+
+import 'participant_type.dart';
 
 class Participant extends Equatable {
   final int id;

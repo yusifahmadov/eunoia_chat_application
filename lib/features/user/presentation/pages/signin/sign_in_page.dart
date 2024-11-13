@@ -1,18 +1,19 @@
-import 'package:eunoia_chat_application/core/constant/constants.dart';
-import 'package:eunoia_chat_application/core/constant/empty_box.dart';
-import 'package:eunoia_chat_application/features/authentication/presentation/cubit/authentication_cubit.dart';
-import 'package:eunoia_chat_application/features/main/presentation/utility/custom_border_radius.dart';
-import 'package:eunoia_chat_application/features/main/presentation/utility/custom_input_decoration.dart';
-import 'package:eunoia_chat_application/features/main/presentation/widgets/custom_button.dart';
-import 'package:eunoia_chat_application/features/main/presentation/widgets/custom_svg_icon.dart';
-import 'package:eunoia_chat_application/features/main/presentation/widgets/custom_text_field_v2.dart';
-import 'package:eunoia_chat_application/features/main/presentation/widgets/text_form_field.dart';
-import 'package:eunoia_chat_application/features/main/presentation/widgets/themed_container.dart';
-import 'package:eunoia_chat_application/features/user/presentation/pages/signin/signin_provider.dart';
-import 'package:eunoia_chat_application/features/user/presentation/pages/signin/signin_provider_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../../../core/constant/constants.dart';
+import '../../../../../core/constant/empty_box.dart';
+import '../../../../authentication/presentation/cubit/authentication_cubit.dart';
+import '../../../../main/presentation/utility/custom_border_radius.dart';
+import '../../../../main/presentation/utility/custom_input_decoration.dart';
+import '../../../../main/presentation/widgets/custom_button.dart';
+import '../../../../main/presentation/widgets/custom_svg_icon.dart';
+import '../../../../main/presentation/widgets/custom_text_field_v2.dart';
+import '../../../../main/presentation/widgets/text_form_field.dart';
+import '../../../../main/presentation/widgets/themed_container.dart';
+import 'signin_provider.dart';
+import 'signin_provider_state.dart';
 
 extension _AdvancedContext on BuildContext {
   SigninProviderState get state => SigninProvider.of(this);

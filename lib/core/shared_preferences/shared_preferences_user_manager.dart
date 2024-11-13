@@ -1,5 +1,5 @@
-import 'package:eunoia_chat_application/core/shared_preferences/custom_shared_preferences.dart';
-import 'package:eunoia_chat_application/features/user/data/models/auth_response_model.dart';
+import '../../features/user/data/models/auth_response_model.dart';
+import 'custom_shared_preferences.dart';
 
 class SharedPreferencesUserManager {
   static Future<AuthResponseModel?> getUser() async {

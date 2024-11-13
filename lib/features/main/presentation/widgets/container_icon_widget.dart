@@ -1,6 +1,7 @@
-import 'package:eunoia_chat_application/features/main/presentation/utility/custom_border_radius.dart';
-import 'package:eunoia_chat_application/features/main/presentation/widgets/custom_svg_icon.dart';
 import 'package:flutter/material.dart';
+
+import '../utility/custom_border_radius.dart';
+import 'custom_svg_icon.dart';
 
 class ContainerIconWidget extends StatelessWidget {
   const ContainerIconWidget({

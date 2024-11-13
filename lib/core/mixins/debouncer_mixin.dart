@@ -1,4 +1,4 @@
-import 'package:eunoia_chat_application/core/debouncer.dart';
+import '../debouncer.dart';
 
 /// A mixin that provides debouncing functionality for search operations.
 ///

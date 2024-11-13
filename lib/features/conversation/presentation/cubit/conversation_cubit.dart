@@ -1,13 +1,14 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:eunoia_chat_application/core/extensions/localization_extension.dart';
-import 'package:eunoia_chat_application/core/mixins/cubit_scrolling_mixin.dart';
-import 'package:eunoia_chat_application/core/shared_preferences/shared_preferences_user_manager.dart';
-import 'package:eunoia_chat_application/features/conversation/domain/entities/conversation.dart';
-import 'package:eunoia_chat_application/features/conversation/domain/entities/helper/get_conversations_helper.dart';
-import 'package:eunoia_chat_application/features/conversation/domain/usecases/get_conversations_usecase.dart';
-import 'package:eunoia_chat_application/features/conversation/domain/usecases/listen_conversations_usecase.dart';
-import 'package:eunoia_chat_application/injection.dart';
+
+import '../../../../core/extensions/localization_extension.dart';
+import '../../../../core/mixins/cubit_scrolling_mixin.dart';
+import '../../../../core/shared_preferences/shared_preferences_user_manager.dart';
+import '../../../../injection.dart';
+import '../../domain/entities/conversation.dart';
+import '../../domain/entities/helper/get_conversations_helper.dart';
+import '../../domain/usecases/get_conversations_usecase.dart';
+import '../../domain/usecases/listen_conversations_usecase.dart';
 
 part 'conversation_state.dart';
 

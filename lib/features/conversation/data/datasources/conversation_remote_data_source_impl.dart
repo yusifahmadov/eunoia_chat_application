@@ -1,9 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:eunoia_chat_application/core/supabase/supabase_repository.dart';
-import 'package:eunoia_chat_application/features/conversation/data/datasources/conversation_remote_data_source.dart';
-import 'package:eunoia_chat_application/features/conversation/data/models/conversation_model.dart';
-import 'package:eunoia_chat_application/features/conversation/domain/entities/helper/get_conversations_helper.dart';
-import 'package:eunoia_chat_application/injection.dart';
+
+import '../../../../core/supabase/supabase_repository.dart';
+import '../../../../injection.dart';
+import '../../domain/entities/helper/get_conversations_helper.dart';
+import '../models/conversation_model.dart';
+import 'conversation_remote_data_source.dart';
 
 class ConversationRemoteDataSourceImpl implements ConversationRemoteDataSource {
   @override

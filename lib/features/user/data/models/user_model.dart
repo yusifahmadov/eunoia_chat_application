@@ -1,4 +1,4 @@
-import 'package:eunoia_chat_application/features/user/domain/entities/user.dart';
+import '../../domain/entities/user.dart';
 
 class UserModel extends User {
   const UserModel(
