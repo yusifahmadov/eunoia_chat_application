@@ -1,5 +1,6 @@
-import 'package:eunoia_chat_application/features/message/presentation/pages/message_provider_state.dart';
 import 'package:flutter/widgets.dart';
+
+import 'message_provider_state.dart';
 
 class MessageProvider extends InheritedWidget {
   final MessageProviderState state;

@@ -1,5 +1,5 @@
-import 'package:eunoia_chat_application/features/user/data/models/user_model.dart';
-import 'package:eunoia_chat_application/features/user/domain/entities/auth_response.dart';
+import '../../domain/entities/auth_response.dart';
+import 'user_model.dart';
 
 class AuthResponseModel extends AuthResponse {
   const AuthResponseModel(

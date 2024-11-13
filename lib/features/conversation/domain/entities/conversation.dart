@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:eunoia_chat_application/features/message/data/models/message_model.dart';
+
+import '../../../message/data/models/message_model.dart';
 
 class Conversation extends Equatable {
   final int id;

@@ -1,8 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:eunoia_chat_application/core/response/response.dart';
-import 'package:eunoia_chat_application/core/usecase/usecase.dart';
-import 'package:eunoia_chat_application/features/user/domain/entities/user.dart';
-import 'package:eunoia_chat_application/features/user/domain/repositories/user_repository.dart';
+
+import '../../../../core/response/response.dart';
+import '../../../../core/usecase/usecase.dart';
+import '../entities/user.dart';
+import '../repositories/user_repository.dart';
 
 class GetUserUsecase extends Usecase<List<User>, int> {
   UserRepository userRepository;

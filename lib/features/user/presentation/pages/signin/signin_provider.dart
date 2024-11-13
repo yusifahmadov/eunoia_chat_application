@@ -1,5 +1,6 @@
-import 'package:eunoia_chat_application/features/user/presentation/pages/signin/signin_provider_state.dart';
 import 'package:flutter/widgets.dart';
+
+import 'signin_provider_state.dart';
 
 class SigninProvider extends InheritedWidget {
   final SigninProviderState state;

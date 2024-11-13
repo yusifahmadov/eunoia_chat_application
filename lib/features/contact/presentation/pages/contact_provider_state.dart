@@ -1,12 +1,13 @@
-import 'package:eunoia_chat_application/core/mixins/debouncer_mixin.dart';
-import 'package:eunoia_chat_application/core/mixins/page_scrolling_mixin.dart';
-import 'package:eunoia_chat_application/core/shared_preferences/shared_preferences_user_manager.dart';
-import 'package:eunoia_chat_application/features/contact/presentation/cubit/contact_cubit.dart';
-import 'package:eunoia_chat_application/features/contact/presentation/pages/contact_page.dart';
-import 'package:eunoia_chat_application/features/contact/presentation/pages/contact_provider.dart';
-import 'package:eunoia_chat_application/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../../core/mixins/debouncer_mixin.dart';
+import '../../../../core/mixins/page_scrolling_mixin.dart';
+import '../../../../core/shared_preferences/shared_preferences_user_manager.dart';
+import '../../../../injection.dart';
+import '../cubit/contact_cubit.dart';
+import 'contact_page.dart';
+import 'contact_provider.dart';
 
 class ContactProviderWidget extends StatefulWidget {
   const ContactProviderWidget({super.key});

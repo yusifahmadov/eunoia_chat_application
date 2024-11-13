@@ -1,13 +1,14 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
-import 'package:eunoia_chat_application/core/response/response.dart';
-import 'package:eunoia_chat_application/features/message/data/datasources/message_remote_data_source.dart';
-import 'package:eunoia_chat_application/features/message/domain/entities/helper/get_message_helper.dart';
-import 'package:eunoia_chat_application/features/message/domain/entities/helper/listen_message_helper.dart';
-import 'package:eunoia_chat_application/features/message/domain/entities/helper/read_messages_helper.dart';
-import 'package:eunoia_chat_application/features/message/domain/entities/helper/send_message_helper.dart';
-import 'package:eunoia_chat_application/features/message/domain/entities/message.dart';
-import 'package:eunoia_chat_application/features/message/domain/repositories/message_repository.dart';
+
+import '../../../../core/response/response.dart';
+import '../../domain/entities/helper/get_message_helper.dart';
+import '../../domain/entities/helper/listen_message_helper.dart';
+import '../../domain/entities/helper/read_messages_helper.dart';
+import '../../domain/entities/helper/send_message_helper.dart';
+import '../../domain/entities/message.dart';
+import '../../domain/repositories/message_repository.dart';
+import '../datasources/message_remote_data_source.dart';
 
 class MessageRepositoryImpl implements MessageRepository {
   final MessageRemoteDataSource remoteDataSource;

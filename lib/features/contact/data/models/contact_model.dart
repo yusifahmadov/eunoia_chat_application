@@ -1,4 +1,4 @@
-import 'package:eunoia_chat_application/features/contact/domain/entities/contact.dart';
+import '../../domain/entities/contact.dart';
 
 class EunoiaContactModel extends EunoiaContact {
   const EunoiaContactModel(

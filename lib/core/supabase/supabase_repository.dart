@@ -1,7 +1,8 @@
-import 'package:eunoia_chat_application/features/conversation/data/models/conversation_model.dart';
-import 'package:eunoia_chat_application/features/message/data/models/message_model.dart';
-import 'package:eunoia_chat_application/features/message/domain/entities/message.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../../features/conversation/data/models/conversation_model.dart';
+import '../../features/message/data/models/message_model.dart';
+import '../../features/message/domain/entities/message.dart';
 
 abstract class SupabaseRepository {
   static late final RealtimeClient socket;

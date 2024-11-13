@@ -1,9 +1,10 @@
 import 'package:dartz/dartz.dart';
-import 'package:eunoia_chat_application/core/response/response.dart';
-import 'package:eunoia_chat_application/core/usecase/usecase.dart';
-import 'package:eunoia_chat_application/features/conversation/domain/entities/conversation.dart';
-import 'package:eunoia_chat_application/features/conversation/domain/entities/helper/get_conversations_helper.dart';
-import 'package:eunoia_chat_application/features/conversation/domain/repositories/conversation_repository.dart';
+
+import '../../../../core/response/response.dart';
+import '../../../../core/usecase/usecase.dart';
+import '../entities/conversation.dart';
+import '../entities/helper/get_conversations_helper.dart';
+import '../repositories/conversation_repository.dart';
 
 class GetConversationsUsecase
     extends Usecase<List<Conversation>, GetConversationsHelper> {

@@ -1,9 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:eunoia_chat_application/core/shared_preferences/custom_shared_preferences.dart';
-import 'package:eunoia_chat_application/features/user/data/models/auth_response_model.dart';
-import 'package:eunoia_chat_application/features/user/presentation/cubit/user_cubit.dart';
-import 'package:eunoia_chat_application/injection.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+
+import '../../features/user/data/models/auth_response_model.dart';
+import '../../features/user/presentation/cubit/user_cubit.dart';
+import '../../injection.dart';
+import '../shared_preferences/custom_shared_preferences.dart';
 
 class CustomInterceptor extends Interceptor {
   @override

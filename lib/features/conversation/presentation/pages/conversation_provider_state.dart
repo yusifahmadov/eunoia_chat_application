@@ -1,9 +1,10 @@
-import 'package:eunoia_chat_application/core/mixins/page_scrolling_mixin.dart';
-import 'package:eunoia_chat_application/features/conversation/presentation/cubit/conversation_cubit.dart';
-import 'package:eunoia_chat_application/features/conversation/presentation/pages/conversation_page.dart';
-import 'package:eunoia_chat_application/features/conversation/presentation/pages/conversation_provider.dart';
-import 'package:eunoia_chat_application/injection.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../core/mixins/page_scrolling_mixin.dart';
+import '../../../../injection.dart';
+import '../cubit/conversation_cubit.dart';
+import 'conversation_page.dart';
+import 'conversation_provider.dart';
 
 class ConversationProviderWidget extends StatefulWidget {
   const ConversationProviderWidget({super.key});

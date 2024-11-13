@@ -1,6 +1,7 @@
-import 'package:eunoia_chat_application/core/theme/text/text_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../text_theme.dart';
 
 class TextThemeLight implements ITextTheme {
   TextThemeLight() {

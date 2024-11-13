@@ -26,6 +26,7 @@
     "search": "Search",
     "edit": "Edit",
     "change_profile_photo": "Change profile photo",
-    "change_language": "Change language"
+    "change_language": "Change language",
+    "update_profile_photo_success": "Successfully updated profile photo"
     
 }

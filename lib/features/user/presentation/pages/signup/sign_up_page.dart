@@ -1,16 +1,17 @@
-import 'package:eunoia_chat_application/core/constant/empty_box.dart';
-import 'package:eunoia_chat_application/core/extensions/localization_extension.dart';
-import 'package:eunoia_chat_application/features/main/presentation/utility/custom_border_radius.dart';
-import 'package:eunoia_chat_application/features/main/presentation/utility/custom_input_decoration.dart';
-import 'package:eunoia_chat_application/features/main/presentation/widgets/custom_button.dart';
-import 'package:eunoia_chat_application/features/main/presentation/widgets/custom_svg_icon.dart';
-import 'package:eunoia_chat_application/features/main/presentation/widgets/custom_text_field_v2.dart';
-import 'package:eunoia_chat_application/features/main/presentation/widgets/text_form_field.dart';
-import 'package:eunoia_chat_application/features/main/presentation/widgets/themed_container.dart';
-import 'package:eunoia_chat_application/features/user/presentation/pages/signup/signup_provider.dart';
-import 'package:eunoia_chat_application/features/user/presentation/pages/signup/signup_provider_state.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../../../core/constant/empty_box.dart';
+import '../../../../../core/extensions/localization_extension.dart';
+import '../../../../main/presentation/utility/custom_border_radius.dart';
+import '../../../../main/presentation/utility/custom_input_decoration.dart';
+import '../../../../main/presentation/widgets/custom_button.dart';
+import '../../../../main/presentation/widgets/custom_svg_icon.dart';
+import '../../../../main/presentation/widgets/custom_text_field_v2.dart';
+import '../../../../main/presentation/widgets/text_form_field.dart';
+import '../../../../main/presentation/widgets/themed_container.dart';
+import 'signup_provider.dart';
+import 'signup_provider_state.dart';
 
 extension _AdvancedContext on BuildContext {
   SignupProviderState get inherited => SignupProvider.of(this);

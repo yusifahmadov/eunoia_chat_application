@@ -1,10 +1,14 @@
 import 'package:dio/dio.dart';
-import 'package:eunoia_chat_application/features/user/data/datasources/user_remote_data_source.dart';
-import 'package:eunoia_chat_application/features/user/data/models/auth_response_model.dart';
-import 'package:eunoia_chat_application/features/user/data/models/user_model.dart';
-import 'package:eunoia_chat_application/features/user/domain/entities/helper/user_login_helper.dart';
-import 'package:eunoia_chat_application/features/user/domain/entities/helper/user_register_helper.dart';
-import 'package:eunoia_chat_application/injection.dart';
+import 'package:eunoia_chat_application/core/shared_preferences/custom_shared_preferences.dart';
+import 'package:eunoia_chat_application/features/user/domain/entities/helper/upload_user_profile_photo_helper.dart';
+import 'package:http_parser/http_parser.dart';
+
+import '../../../../injection.dart';
+import '../../domain/entities/helper/user_login_helper.dart';
+import '../../domain/entities/helper/user_register_helper.dart';
+import '../models/auth_response_model.dart';
+import '../models/user_model.dart';
+import 'user_remote_data_source.dart';
 
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   @override
@@ -58,5 +62,23 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     );
 
     return UserModel.fromJson(response.data);
+  }
+
+  @override
+  Future<void> updateUserProfilePhoto(UploadUserProfilePhotoHelper body) async {
+    String fileName =
+        AuthResponseModel.fromJson((await CustomSharedPreferences.readUser('user'))!)
+            .user
+            .id;
+    final data = FormData();
+    data.files.add(MapEntry(
+      'body',
+      MultipartFile.fromFileSync(
+        body.file.path,
+        filename: '$fileName.jpg',
+        contentType: MediaType.parse('image/jpeg'),
+      ),
+    ));
+    await getIt<Dio>().post('/storage/v1/object/users/${'$fileName.jpg'}', data: data);
   }
 }

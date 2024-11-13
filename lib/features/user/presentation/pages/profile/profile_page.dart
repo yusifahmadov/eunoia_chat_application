@@ -1,16 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:eunoia_chat_application/core/constant/constants.dart';
-import 'package:eunoia_chat_application/core/constant/empty_box.dart';
-import 'package:eunoia_chat_application/core/extensions/localization_extension.dart';
-import 'package:eunoia_chat_application/features/authentication/presentation/cubit/authentication_cubit.dart';
-import 'package:eunoia_chat_application/features/main/presentation/widgets/custom_svg_icon.dart';
-import 'package:eunoia_chat_application/features/user/presentation/cubit/user_cubit.dart';
-import 'package:eunoia_chat_application/features/user/presentation/pages/profile/profile_page_provider.dart';
-import 'package:eunoia_chat_application/features/user/presentation/pages/profile/profile_page_provider_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../../../core/constant/constants.dart';
+import '../../../../../core/constant/empty_box.dart';
+import '../../../../../core/extensions/localization_extension.dart';
+import '../../../../authentication/presentation/cubit/authentication_cubit.dart';
+import '../../../../main/presentation/widgets/custom_svg_icon.dart';
+import '../../cubit/user_cubit.dart';
+import 'profile_page_provider.dart';
+import 'profile_page_provider_state.dart';
 
 extension _AdvancedContext on BuildContext {
   ProfilePageProviderState get state => ProfilePageProvider.of(this);
@@ -58,13 +58,20 @@ class ProfilePage extends StatelessWidget {
                   SliverToBoxAdapter(
                     child: Column(
                       children: [
-                        CircleAvatar(
-                          radius: 50,
-                          child: state.user.profilePhoto != null
-                              ? CachedNetworkImage(imageUrl: state.user.profilePhoto!)
-                              : SvgPicture.asset(
-                                  'assets/icons/no-profile-picture.svg',
-                                ),
+                        CachedNetworkImage(
+                          imageUrl: '${state.user.profilePhoto}',
+                          imageBuilder: (context, imageProvider) => Container(
+                            width: 120.0,
+                            height: 120.0,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                  image: imageProvider, fit: BoxFit.cover),
+                            ),
+                          ),
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) => const Icon(Icons.error),
                         ),
                         const SizedBox(
                           height: 10,
@@ -83,6 +90,9 @@ class ProfilePage extends StatelessWidget {
                           child: Column(
                             children: [
                               ListTile(
+                                onTap: () {
+                                  context.state.updateProfilePhoto();
+                                },
                                 minTileHeight: 50,
                                 leading: const CustomSvgIcon(text: 'camera-outline'),
                                 title: Text(

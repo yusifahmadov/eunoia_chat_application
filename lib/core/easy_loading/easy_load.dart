@@ -1,7 +1,8 @@
-import 'package:eunoia_chat_application/core/easy_loading/custom_animation.dart';
-import 'package:eunoia_chat_application/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+
+import '../../injection.dart';
+import 'custom_animation.dart';
 
 class EasyLoad {
   static void init() {

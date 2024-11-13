@@ -1,6 +1,7 @@
-import 'package:eunoia_chat_application/features/main/presentation/widgets/themed_container.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../features/main/presentation/widgets/themed_container.dart';
 
 class ErrorScreen extends StatelessWidget {
   const ErrorScreen({super.key});

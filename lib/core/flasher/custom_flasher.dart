@@ -1,7 +1,8 @@
-import 'package:eunoia_chat_application/core/constant/constants.dart';
-import 'package:eunoia_chat_application/injection.dart';
 import 'package:flash/flash.dart';
 import 'package:flutter/material.dart';
+
+import '../../injection.dart';
+import '../constant/constants.dart';
 
 class CustomFlasher {
   // Method to show an error flash message

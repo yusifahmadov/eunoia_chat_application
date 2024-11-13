@@ -1,19 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:eunoia_chat_application/core/constant/empty_box.dart';
-import 'package:eunoia_chat_application/core/extensions/localization_extension.dart';
-import 'package:eunoia_chat_application/features/main/presentation/utility/custom_input_decoration.dart';
-import 'package:eunoia_chat_application/features/main/presentation/widgets/container_icon_widget.dart';
-import 'package:eunoia_chat_application/features/main/presentation/widgets/text_form_field.dart';
-import 'package:eunoia_chat_application/features/main/presentation/widgets/themed_container.dart';
-import 'package:eunoia_chat_application/features/message/domain/entities/message.dart';
-import 'package:eunoia_chat_application/features/message/presentation/cubit/message_cubit.dart';
-import 'package:eunoia_chat_application/features/message/presentation/pages/message_provider.dart';
-import 'package:eunoia_chat_application/features/message/presentation/pages/message_provider_state.dart';
-import 'package:eunoia_chat_application/features/user/presentation/cubit/user_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../../core/constant/empty_box.dart';
+import '../../../../core/extensions/localization_extension.dart';
+import '../../../main/presentation/utility/custom_input_decoration.dart';
+import '../../../main/presentation/widgets/container_icon_widget.dart';
+import '../../../main/presentation/widgets/text_form_field.dart';
+import '../../../main/presentation/widgets/themed_container.dart';
+import '../../../user/presentation/cubit/user_cubit.dart';
+import '../../domain/entities/message.dart';
+import '../cubit/message_cubit.dart';
+import 'message_provider.dart';
+import 'message_provider_state.dart';
 
 extension _AdvancedContext on BuildContext {
   MessageProviderState get state => MessageProvider.of(this);
@@ -140,7 +141,20 @@ class _AppBarTitle extends StatelessWidget {
             children: [
               CircleAvatar(
                 child: state.users.isNotEmpty && state.users[0].profilePhoto != null
-                    ? CachedNetworkImage(imageUrl: state.users[0].profilePhoto!)
+                    ? CachedNetworkImage(
+                        imageUrl: '${state.users[0].profilePhoto}',
+                        imageBuilder: (context, imageProvider) => Container(
+                          width: 120.0,
+                          height: 120.0,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            image:
+                                DecorationImage(image: imageProvider, fit: BoxFit.cover),
+                          ),
+                        ),
+                        placeholder: (context, url) => const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) => const Icon(Icons.error),
+                      )
                     : SvgPicture.asset(
                         'assets/icons/no-profile-picture.svg',
                       ),

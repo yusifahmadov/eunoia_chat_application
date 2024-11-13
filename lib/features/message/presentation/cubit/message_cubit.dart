@@ -1,19 +1,20 @@
 import 'package:equatable/equatable.dart';
-import 'package:eunoia_chat_application/core/flasher/custom_flasher.dart';
-import 'package:eunoia_chat_application/core/mixins/cubit_scrolling_mixin.dart';
-import 'package:eunoia_chat_application/core/shared_preferences/shared_preferences_user_manager.dart';
-import 'package:eunoia_chat_application/core/supabase/supabase_repository.dart';
-import 'package:eunoia_chat_application/features/message/domain/entities/helper/get_message_helper.dart';
-import 'package:eunoia_chat_application/features/message/domain/entities/helper/listen_message_helper.dart';
-import 'package:eunoia_chat_application/features/message/domain/entities/helper/read_messages_helper.dart';
-import 'package:eunoia_chat_application/features/message/domain/entities/helper/send_message_helper.dart';
-import 'package:eunoia_chat_application/features/message/domain/entities/message.dart';
-import 'package:eunoia_chat_application/features/message/domain/usecases/get_messages_usecase.dart';
-import 'package:eunoia_chat_application/features/message/domain/usecases/listen_messages_usecase.dart';
-import 'package:eunoia_chat_application/features/message/domain/usecases/read_messages_by_conversation_usecase.dart';
-import 'package:eunoia_chat_application/features/message/domain/usecases/read_messages_usecase.dart';
-import 'package:eunoia_chat_application/features/message/domain/usecases/send_message_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../../core/flasher/custom_flasher.dart';
+import '../../../../core/mixins/cubit_scrolling_mixin.dart';
+import '../../../../core/shared_preferences/shared_preferences_user_manager.dart';
+import '../../../../core/supabase/supabase_repository.dart';
+import '../../domain/entities/helper/get_message_helper.dart';
+import '../../domain/entities/helper/listen_message_helper.dart';
+import '../../domain/entities/helper/read_messages_helper.dart';
+import '../../domain/entities/helper/send_message_helper.dart';
+import '../../domain/entities/message.dart';
+import '../../domain/usecases/get_messages_usecase.dart';
+import '../../domain/usecases/listen_messages_usecase.dart';
+import '../../domain/usecases/read_messages_by_conversation_usecase.dart';
+import '../../domain/usecases/read_messages_usecase.dart';
+import '../../domain/usecases/send_message_usecase.dart';
 
 part 'message_state.dart';
 

@@ -1,9 +1,10 @@
-import 'package:eunoia_chat_application/core/theme/colors/color_manager.dart';
-import 'package:eunoia_chat_application/core/theme/text/app/dark_text.dart';
-import 'package:eunoia_chat_application/core/theme/text/app/light_text.dart';
-import 'package:eunoia_chat_application/core/theme/text/text_theme.dart';
-import 'package:eunoia_chat_application/features/main/presentation/utility/custom_border_radius.dart';
 import 'package:flutter/material.dart';
+
+import '../../features/main/presentation/utility/custom_border_radius.dart';
+import 'colors/color_manager.dart';
+import 'text/app/dark_text.dart';
+import 'text/app/light_text.dart';
+import 'text/text_theme.dart';
 
 abstract class ITheme {
   ITextTheme get textTheme;

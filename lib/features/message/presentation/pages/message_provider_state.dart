@@ -1,13 +1,14 @@
-import 'package:eunoia_chat_application/core/mixins/page_scrolling_mixin.dart';
-import 'package:eunoia_chat_application/features/message/domain/entities/helper/read_messages_helper.dart';
-import 'package:eunoia_chat_application/features/message/domain/entities/helper/send_message_helper.dart';
-import 'package:eunoia_chat_application/features/message/presentation/cubit/message_cubit.dart';
-import 'package:eunoia_chat_application/features/message/presentation/pages/message_page.dart';
-import 'package:eunoia_chat_application/features/message/presentation/pages/message_provider.dart';
-import 'package:eunoia_chat_application/features/user/domain/entities/user.dart';
-import 'package:eunoia_chat_application/features/user/presentation/cubit/user_cubit.dart';
-import 'package:eunoia_chat_application/injection.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../core/mixins/page_scrolling_mixin.dart';
+import '../../../../injection.dart';
+import '../../../user/domain/entities/user.dart';
+import '../../../user/presentation/cubit/user_cubit.dart';
+import '../../domain/entities/helper/read_messages_helper.dart';
+import '../../domain/entities/helper/send_message_helper.dart';
+import '../cubit/message_cubit.dart';
+import 'message_page.dart';
+import 'message_provider.dart';
 
 class MessageProviderWidget extends StatefulWidget {
   const MessageProviderWidget({

@@ -1,11 +1,12 @@
-import 'package:eunoia_chat_application/core/constant/constants.dart';
-import 'package:eunoia_chat_application/core/route/go_router_mobile.dart';
-import 'package:eunoia_chat_application/core/supabase/supabase_repository.dart';
-import 'package:eunoia_chat_application/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'core/constant/constants.dart';
+import 'core/route/go_router_mobile.dart';
+import 'core/supabase/supabase_repository.dart';
+import 'core/theme/app_theme.dart';
 
 class App extends StatefulWidget {
   const App({super.key});

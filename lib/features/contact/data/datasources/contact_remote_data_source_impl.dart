@@ -1,9 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:eunoia_chat_application/features/contact/data/datasources/contact_remote_data_source.dart';
-import 'package:eunoia_chat_application/features/contact/data/models/contact_model.dart';
-import 'package:eunoia_chat_application/features/contact/domain/entities/helper/get_contacts_helper.dart';
-import 'package:eunoia_chat_application/features/user/data/models/user_model.dart';
-import 'package:eunoia_chat_application/injection.dart';
+
+import '../../../../injection.dart';
+import '../../../user/data/models/user_model.dart';
+import '../../domain/entities/helper/get_contacts_helper.dart';
+import '../models/contact_model.dart';
+import 'contact_remote_data_source.dart';
 
 class ContactRemoteDataSourceImpl implements ContactRemoteDataSource {
   @override

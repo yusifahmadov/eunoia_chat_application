@@ -1,4 +1,4 @@
-import 'package:eunoia_chat_application/core/response/response.dart';
+import 'response.dart';
 
 class ResponseModel extends ResponseI {
   ResponseModel({required super.message});
