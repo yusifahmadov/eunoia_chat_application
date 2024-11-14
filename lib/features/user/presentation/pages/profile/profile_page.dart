@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eunoia_chat_application/core/encryption/diffie_hellman_encryption.dart';
 import 'package:eunoia_chat_application/features/user/presentation/pages/language/language_provider_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -148,7 +149,11 @@ class ProfilePage extends StatelessWidget {
                                     )),
                               ),
                               ListTile(
-                                onTap: () {},
+                                onTap: () {
+                                  DiffieHellmanEncryption diffieHellmanEncryption =
+                                      DiffieHellmanEncryption();
+                                  diffieHellmanEncryption.secureChatExample();
+                                },
                                 minTileHeight: 50,
                                 leading: CustomSvgIcon(
                                   text: 'language-outline',

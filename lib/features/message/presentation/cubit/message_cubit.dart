@@ -1,4 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:eunoia_chat_application/core/encryption/dh_base.dart';
+import 'package:eunoia_chat_application/core/encryption/diffie_hellman_encryption.dart';
+import 'package:eunoia_chat_application/core/secure_storage/customized_secure_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/flasher/custom_flasher.dart';
@@ -25,7 +28,7 @@ class MessageCubit extends Cubit<MessageState>
   ListenMessagesUsecase listenMessagesUsecase;
   ReadMessagesUsecase readMessagesUsecase;
   ReadMessagesByConversationUsecase readMessagesByConversationUsecase;
-
+  DiffieHellmanEncryption diffieHellmanEncryption = DiffieHellmanEncryption();
   MessageCubit({
     required this.getMessagesUsecase,
     required this.readMessagesUsecase,
@@ -36,8 +39,56 @@ class MessageCubit extends Cubit<MessageState>
     helperClass = GetMessageHelper(conversationId: 0);
   }
 
+  decryptMessages(
+      {required List<Message> messages, required BigInt? otherPartyPublicKey}) async {
+    final DhKey? myKeyPair = await CustomizedSecureStorage.getUserKeys();
+
+    if (myKeyPair == null || otherPartyPublicKey == null) {
+      return;
+    }
+
+    DiffieHellmanEncryption diffieHellmanEncryption = DiffieHellmanEncryption();
+    print("Other party public key: $otherPartyPublicKey");
+    print('My public key: ${myKeyPair.publicKey}');
+    BigInt sharedSecret = diffieHellmanEncryption.generateSharedSecret(
+        keyPair: myKeyPair, receiverPublicKey: otherPartyPublicKey);
+    print('Shared secret: $sharedSecret');
+    for (var i = 0; i < messages.length; i++) {
+      final message = diffieHellmanEncryption.decryptMessageRCase(
+          secretKey: sharedSecret, message: messages[i].message);
+      messages[i] = messages[i].copyWith(message: message);
+    }
+
+    return messages;
+  }
+
+  decryptOthersMessages() {}
+
+  // Future<List<Message>> decryptMessages({required List<Message> messages,}) async {
+  //   final String? senderPublicKey = await CustomizedSecureStorage.getUserPublicKey();
+
+  //   if(senderPublicKey == null || receiverPublicKey == null) {
+  //     return [];
+  //   }
+
+  //   for (var i = 0; i < messages.length; i++) {
+
+  //     DiffieHellmanEncryption diffieHellmanEncryption = DiffieHellmanEncryption();
+  //     BigInt? privateKey = await CustomizedSecureStorage.getUserPrivateKey();
+
+  //     BigInt userBKeySecret = diffieHellmanEncryption.generateSharedSecret(
+  //       yourPrivateKey: );
+  //     final message = diffieHellmanEncryption.decryptMessageRCase(
+  //         secretKey: privateKey., message: messages[i].message);
+  //     messages[i] = messages[i].copyWith(message: message);
+  //   }
+
+  //   return messages;
+  // }
+
   Future<List<Message>> getMessages(
-      {GetMessageHelper? helper,
+      {required BigInt receiverPublicKey,
+      GetMessageHelper? helper,
       bool isUIRefresh = false,
       bool refreshScroll = false}) async {
     if (isUIRefresh) {
@@ -62,8 +113,11 @@ class MessageCubit extends Cubit<MessageState>
 
         emit(MessageError(message: l.message));
       },
-      (r) {
-        fetchedData.addAll(r);
+      (r) async {
+        List<Message> decryptedMessages =
+            await decryptMessages(messages: r, otherPartyPublicKey: receiverPublicKey);
+
+        fetchedData.addAll(decryptedMessages);
         isFirstFetching = false;
         hasMore = r.isNotEmpty;
         isLoading = false;
@@ -74,7 +128,19 @@ class MessageCubit extends Cubit<MessageState>
     return fetchedData;
   }
 
-  sendMessage({required SendMessageHelper message}) async {
+  sendMessage(
+      {required SendMessageHelper message, required BigInt recieverPublicKey}) async {
+    DhKey? keyPair = await CustomizedSecureStorage.getUserKeys();
+    if (keyPair == null) {
+      return;
+    }
+
+    message.messageText = diffieHellmanEncryption
+        .encryptMessageRCase(
+            keyPair: keyPair,
+            message: message.messageText,
+            receiverPublicKey: recieverPublicKey)
+        .toString();
     message.senderId = (await SharedPreferencesUserManager.getUser())?.user.id ?? '';
 
     final response = await sendMessageUsecase(message);
@@ -86,13 +152,16 @@ class MessageCubit extends Cubit<MessageState>
     );
   }
 
-  void listenMessages({required int conversationId}) async {
+  void listenMessages(
+      {required int conversationId, required BigInt otherPartyPublicKey}) async {
     final response = await listenMessagesUsecase(
       ListenMessageHelper(
         conversationId: conversationId,
-        callBackFunc: ({required message}) {
+        callBackFunc: ({required message}) async {
           emit(MessageLoading());
-          fetchedData.insert(0, message);
+          List<Message> messages = await decryptMessages(
+              messages: [message], otherPartyPublicKey: otherPartyPublicKey);
+          fetchedData.insert(0, messages[0]);
           emit(MessageLoaded(messages: fetchedData));
         },
       ),

@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:eunoia_chat_application/core/encryption/dh_base.dart';
 import 'package:eunoia_chat_application/core/encryption/diffie_hellman_encryption.dart';
+import 'package:eunoia_chat_application/core/secure_storage/customized_secure_storage.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/helper/upload_user_profile_photo_helper.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/set_public_key_usecase.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/update_user_profile_photo_usecase.dart';
@@ -50,7 +52,7 @@ class UserCubit extends Cubit<UserState> {
         emit(UserLoginError(message: error.message));
       },
       (data) {
-        setPublicKey(DiffieHellmanEncryption.getPublicKey());
+        setPublicKey();
         authCubit.authenticate(body: data);
 
         CustomFlasher.showSuccess(mainContext?.localization?.login_success);
@@ -68,7 +70,7 @@ class UserCubit extends Cubit<UserState> {
         emit(UserRegisterError(message: error.message));
       },
       (data) {
-        setPublicKey(DiffieHellmanEncryption.getPublicKey());
+        setPublicKey();
         authCubit.authenticate(body: data);
         emit(UserRegisterSuccess(authResponse: data));
       },
@@ -81,7 +83,7 @@ class UserCubit extends Cubit<UserState> {
           .refreshToken,
     );
     var token = '';
-    CustomFlasher.showSuccess('Sizin sessiya yeniləndi!');
+    CustomFlasher.showSuccess(mainContext?.localization?.refresh_token_success);
     response.fold((l) => '', (r) => token = r.accessToken);
     return token;
   }
@@ -129,7 +131,17 @@ class UserCubit extends Cubit<UserState> {
     );
   }
 
-  setPublicKey(String publicKey) async {
-    await setPublicKeyUsecase(publicKey);
+  setPublicKey() async {
+    DiffieHellmanEncryption diffieHellmanEncryption = DiffieHellmanEncryption();
+
+    final DhKey keyPair = diffieHellmanEncryption.getPublicKey();
+    final result = await setPublicKeyUsecase(keyPair.publicKey.toString());
+
+    result.fold(
+      (error) {},
+      (data) async {
+        await CustomizedSecureStorage.setUserKeys(keyPair: keyPair);
+      },
+    );
   }
 }
