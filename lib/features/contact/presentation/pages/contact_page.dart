@@ -1,7 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eunoia_chat_application/features/main/presentation/utility/custom_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/extensions/localization_extension.dart';
@@ -58,6 +57,12 @@ class ContactPage extends StatelessWidget {
           ),
           BlocBuilder<ContactCubit, ContactState>(
             bloc: context.state.contactCubit,
+            buildWhen: (previous, current) =>
+                previous != current &&
+                (current is ContactInitial ||
+                    current is ContactsLoaded ||
+                    current is ContactsLoading ||
+                    current is ContactsError),
             builder: (context, state) {
               if (context.state.contactCubit.fetchedData.isEmpty) {
                 return SliverFillRemaining(
@@ -76,12 +81,10 @@ class ContactPage extends StatelessWidget {
                         onTap: () async {
                           context.state.checkContact(id: contact.id);
                         },
-                        leading: CircleAvatar(
-                          radius: 23,
-                          child: contact.profilePhoto != null
-                              ? CachedNetworkImage(imageUrl: contact.profilePhoto!)
-                              : SvgPicture.asset('assets/icons/no-profile-picture.svg'),
-                        ),
+                        leading: CustomCachedNetworkImage(
+                            containerHeight: 50,
+                            containerWidth: 50,
+                            imageUrl: contact.profilePhoto ?? ""),
                         tileColor: Theme.of(context).colorScheme.surface,
                         title: Text(
                             context.state.contactCubit.fetchedData[index].username ?? "",

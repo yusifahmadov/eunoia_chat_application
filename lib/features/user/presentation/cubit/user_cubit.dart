@@ -106,7 +106,8 @@ class UserCubit extends Cubit<UserState> {
     );
   }
 
-  updateUserProfilePhoto({required UploadUserProfilePhotoHelper body}) async {
+  updateUserProfilePhoto(
+      {required UploadUserProfilePhotoHelper body, void Function()? whenSuccess}) async {
     final response = await updateUserProfilePhotoUsecase(body);
     response.fold(
       (error) {
@@ -115,6 +116,8 @@ class UserCubit extends Cubit<UserState> {
       (data) {
         CustomFlasher.showSuccess(
             mainContext?.localization?.update_profile_photo_success);
+
+        if (whenSuccess != null) whenSuccess();
       },
     );
   }

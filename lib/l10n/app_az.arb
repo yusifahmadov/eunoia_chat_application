@@ -28,6 +28,8 @@
     "edit": "Redaktə et",
     "change_profile_photo": "Profil şəklini dəyiş",
     "change_language": "Dili dəyiş",
-    "update_profile_photo_success": "Profil şəkli uğurla yeniləndi"
+    "update_profile_photo_success": "Profil şəkli uğurla yeniləndi",
+    "save": "Yadda saxla",
+    "language_content_message": "Bütün məzmun seçilmiş dilə uyğun olaraq göstəriləcək."
 
 }

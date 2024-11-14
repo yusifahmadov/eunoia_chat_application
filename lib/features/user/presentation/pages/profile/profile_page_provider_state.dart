@@ -18,6 +18,7 @@ class ProfilePageProviderWidget extends StatefulWidget {
 
 class ProfilePageProviderState extends State<ProfilePageProviderWidget> {
   final userCubit = getIt<UserCubit>();
+  final ValueNotifier<File?> profilePhotoNotifier = ValueNotifier(null);
   UploadUserProfilePhotoHelper uploadUserProfilePhotoHelper =
       UploadUserProfilePhotoHelper(
           file: File(
@@ -40,7 +41,10 @@ class ProfilePageProviderState extends State<ProfilePageProviderWidget> {
     if (file != null) {
       await userCubit.updateUserProfilePhoto(
           body: UploadUserProfilePhotoHelper(
-              file: File(file.files.single.path!), fileName: file.files.single.name));
+              file: File(file.files.single.path!), fileName: file.files.single.name),
+          whenSuccess: () async {
+            profilePhotoNotifier.value = File(file.files.single.path!);
+          });
     }
   }
 

@@ -41,36 +41,40 @@ class _AppState extends State<App> {
           StreamBuilder<bool>(
             stream: mainCubit.isLightMode,
             builder: (context, snapshot) {
-              return MaterialApp.router(
-                localizationsDelegates: const [
-                  AppLocalizations.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
-                supportedLocales: const [
-                  Locale('en'),
-                  Locale('az'),
-                ],
-                builder: EasyLoading.init(
-                  builder: (context, child) {
-                    const textScaleFactor = 0.8;
+              return StreamBuilder<String>(
+                  stream: mainCubit.language,
+                  builder: (context, snapshot) {
+                    return MaterialApp.router(
+                      localizationsDelegates: const [
+                        AppLocalizations.delegate,
+                        GlobalMaterialLocalizations.delegate,
+                        GlobalWidgetsLocalizations.delegate,
+                        GlobalCupertinoLocalizations.delegate,
+                      ],
+                      supportedLocales: const [
+                        Locale('en'),
+                        Locale('az'),
+                      ],
+                      builder: EasyLoading.init(
+                        builder: (context, child) {
+                          const textScaleFactor = 0.8;
 
-                    return MediaQuery(
-                      data: MediaQuery.of(context).copyWith(
-                        textScaler: const TextScaler.linear(textScaleFactor),
+                          return MediaQuery(
+                            data: MediaQuery.of(context).copyWith(
+                              textScaler: const TextScaler.linear(textScaleFactor),
+                            ),
+                            child: child!,
+                          );
+                        },
                       ),
-                      child: child!,
+                      locale: Locale(mainCubit.languageValue),
+                      theme: ThemeManager.craeteTheme(
+                          mainCubit.themeValue ? AppThemeDark() : AppThemeLight()),
+                      routeInformationProvider: AppRouter.router.routeInformationProvider,
+                      routeInformationParser: AppRouter.router.routeInformationParser,
+                      routerDelegate: AppRouter.router.routerDelegate,
                     );
-                  },
-                ),
-                locale: const Locale('en'),
-                theme: ThemeManager.craeteTheme(
-                    mainCubit.themeValue ? AppThemeDark() : AppThemeLight()),
-                routeInformationProvider: AppRouter.router.routeInformationProvider,
-                routeInformationParser: AppRouter.router.routeInformationParser,
-                routerDelegate: AppRouter.router.routerDelegate,
-              );
+                  });
             },
           ),
         ],
