@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eunoia_chat_application/features/user/presentation/pages/language/language_provider_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -58,21 +59,29 @@ class ProfilePage extends StatelessWidget {
                   SliverToBoxAdapter(
                     child: Column(
                       children: [
-                        CachedNetworkImage(
-                          imageUrl: '${state.user.profilePhoto}',
-                          imageBuilder: (context, imageProvider) => Container(
-                            width: 120.0,
-                            height: 120.0,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                  image: imageProvider, fit: BoxFit.cover),
-                            ),
-                          ),
-                          placeholder: (context, url) =>
-                              const CircularProgressIndicator(),
-                          errorWidget: (context, url, error) => const Icon(Icons.error),
-                        ),
+                        ValueListenableBuilder(
+                            valueListenable: context.state.profilePhotoNotifier,
+                            builder: (context, value, child) {
+                              return CachedNetworkImage(
+                                imageUrl: '${state.user.profilePhoto}',
+                                imageBuilder: (context, imageProvider) => Container(
+                                  width: 120.0,
+                                  height: 120.0,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                        image: value != null
+                                            ? AssetImage(value.path)
+                                            : imageProvider,
+                                        fit: BoxFit.cover),
+                                  ),
+                                ),
+                                placeholder: (context, url) =>
+                                    const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                              );
+                            }),
                         const SizedBox(
                           height: 10,
                         ),
@@ -102,6 +111,14 @@ class ProfilePage extends StatelessWidget {
                                 height: 10,
                               ),
                               ListTile(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                      context: context,
+                                      showDragHandle: true,
+                                      builder: (context) {
+                                        return const LanguageProviderWidget();
+                                      });
+                                },
                                 minTileHeight: 50,
                                 leading: CustomSvgIcon(
                                   text: 'language-outline',

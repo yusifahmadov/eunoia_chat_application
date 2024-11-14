@@ -9,4 +9,12 @@ class MainCubit extends Cubit<MainState> {
   final _themeController = BehaviorSubject<bool>.seeded(true);
   Stream<bool> get isLightMode => _themeController.stream;
   bool get themeValue => _themeController.value;
+
+  final _languageController = BehaviorSubject<String>.seeded('az');
+  Stream<String> get language => _languageController.stream;
+  String get languageValue => _languageController.value;
+
+  updateLanguage(String language) {
+    _languageController.add(language);
+  }
 }

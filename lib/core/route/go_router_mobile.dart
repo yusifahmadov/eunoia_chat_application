@@ -1,3 +1,4 @@
+import 'package:eunoia_chat_application/features/user/presentation/pages/language/language_provider_state.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -76,6 +77,14 @@ class AppRouter {
               GoRoute(
                 parentNavigatorKey: _shellProfileNavigatorKey,
                 path: '/profile',
+                routes: [
+                  GoRoute(
+                    parentNavigatorKey: navigatorKey,
+                    path: '/languages',
+                    pageBuilder: (context, state) =>
+                        const NoTransitionPage(child: LanguageProviderWidget()),
+                  ),
+                ],
                 pageBuilder: (context, state) =>
                     const NoTransitionPage(child: ProfilePageProviderWidget()),
               ),

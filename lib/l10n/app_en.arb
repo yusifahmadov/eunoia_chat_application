@@ -27,6 +27,8 @@
     "edit": "Edit",
     "change_profile_photo": "Change profile photo",
     "change_language": "Change language",
-    "update_profile_photo_success": "Successfully updated profile photo"
+    "update_profile_photo_success": "Successfully updated profile photo",
+    "save": "Save",
+    "language_content_message": "All the content will be displayed in the selected language."
     
 }

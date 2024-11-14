@@ -1,7 +1,6 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eunoia_chat_application/features/main/presentation/utility/custom_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
@@ -88,28 +87,10 @@ class _ConversationTile extends StatelessWidget {
                 visualDensity: const VisualDensity(vertical: 1),
                 contentPadding: const EdgeInsets.all(0),
                 tileColor: Theme.of(context).colorScheme.surface,
-                leading: CircleAvatar(
-                  radius: 30,
-                  child: conversation.senderProfilePhoto != null
-                      ? CachedNetworkImage(
-                          imageUrl: '${conversation.senderProfilePhoto}',
-                          imageBuilder: (context, imageProvider) => Container(
-                            width: 120.0,
-                            height: 120.0,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                  image: imageProvider, fit: BoxFit.cover),
-                            ),
-                          ),
-                          placeholder: (context, url) =>
-                              const CircularProgressIndicator(),
-                          errorWidget: (context, url, error) => const Icon(Icons.error),
-                        )
-                      : SvgPicture.asset(
-                          'assets/icons/no-profile-picture.svg',
-                        ),
-                ),
+                leading: CustomCachedNetworkImage(
+                    containerHeight: 50,
+                    containerWidth: 50,
+                    imageUrl: conversation.senderProfilePhoto),
                 title: Row(
                   children: [
                     Text(

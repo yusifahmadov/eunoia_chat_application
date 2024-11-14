@@ -63,7 +63,7 @@ abstract class ThemeManager {
           thumbVisibility: const WidgetStatePropertyAll(true),
         ),
         bottomSheetTheme: BottomSheetThemeData(
-          backgroundColor: theme.colors.colorScheme!.primaryContainer,
+          backgroundColor: theme.colors.colorScheme!.surface,
         ),
         appBarTheme: AppBarTheme(
           elevation: 0,
