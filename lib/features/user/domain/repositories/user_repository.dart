@@ -18,4 +18,6 @@ abstract class UserRepository {
   Future<Either<ResponseI, User>> getCurrentUser();
   Future<Either<ResponseI, void>> updateUserProfilePhoto(
       UploadUserProfilePhotoHelper body);
+
+  Future<Either<ResponseI, void>> setPublicKey(String publicKey);
 }

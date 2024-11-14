@@ -159,7 +159,7 @@ class ProfilePage extends StatelessWidget {
                                   text: 'language-outline',
                                   color: Theme.of(context).colorScheme.primary,
                                 ),
-                                title: const Text("Huffman"),
+                                title: const Text("Diffie Hellman Key Exchange"),
                               ),
                             ],
                           ),

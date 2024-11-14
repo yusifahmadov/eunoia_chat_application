@@ -29,6 +29,7 @@ class MessageProviderState extends State<MessageProviderWidget> with PageScrolli
 
   final messageController = TextEditingController();
   final focusNode = FocusNode();
+  BigInt userPublicKey = BigInt.zero;
   int conversationId = 0;
   List<User> users = [];
   @override
@@ -36,17 +37,21 @@ class MessageProviderState extends State<MessageProviderWidget> with PageScrolli
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       if (widget.conversationId != null) {
         users = (await userCubit.getUser(conversationId: widget.conversationId!));
+        userPublicKey = BigInt.parse(users[0].publicKey ?? '0');
+        messageCubit.helperClass =
+            messageCubit.helperClass.copyWith(conversationId: widget.conversationId);
+
+        initializeScrolling(function: () async {
+          await messageCubit.getMessages(receiverPublicKey: userPublicKey);
+        });
+
+        if (users.isNotEmpty && users[0].publicKey != null) {
+          messageCubit.listenMessages(
+              conversationId: conversationId, otherPartyPublicKey: userPublicKey);
+        }
       }
     });
 
-    messageCubit.helperClass =
-        messageCubit.helperClass.copyWith(conversationId: widget.conversationId);
-
-    initializeScrolling(function: () async {
-      await messageCubit.getMessages();
-    });
-
-    messageCubit.listenMessages(conversationId: conversationId);
     // readMessagesByConversation();
     super.initState();
   }
@@ -54,8 +59,9 @@ class MessageProviderState extends State<MessageProviderWidget> with PageScrolli
   Future<void> sendMessage({
     required String message,
   }) async {
-    if (message == '') return;
+    if (message == '' || users[0].publicKey == null) return;
     await messageCubit.sendMessage(
+        recieverPublicKey: BigInt.parse(users[0].publicKey!),
         message: SendMessageHelper(
             senderId: '', messageText: message, receiverId: users[0].id));
   }

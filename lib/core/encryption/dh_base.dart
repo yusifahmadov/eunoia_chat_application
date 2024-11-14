@@ -1,30 +1,6 @@
+import 'dart:math';
+
 import 'package:eunoia_chat_application/core/encryption/rand.dart';
-
-class DhKey {
-  final BigInt? _privateKey;
-  final BigInt _publicKey;
-  final DhGroup? _group;
-
-  DhKey._(this._privateKey, this._publicKey, this._group);
-
-  String get publicKey => _publicKey.toRadixString(16);
-
-  factory DhKey.fromPublicKey(String hex) {
-    BigInt publicKey = BigInt.parse(hex, radix: 16);
-    return DhKey._(null, publicKey, null);
-  }
-
-  BigInt computeKey(DhKey other) {
-    if (_privateKey == null) {
-      throw StateError('Private key is not available');
-    }
-    if (_group?.prime != other._group?.prime ||
-        _group?.generator != other._group?.generator) {
-      throw ArgumentError('Groups do not match');
-    }
-    return other._publicKey.modPow(_privateKey, _group!.prime);
-  }
-}
 
 class DhGroup {
   final BigInt prime;
@@ -63,6 +39,59 @@ class DhGroup {
   DhKey generateKey() {
     BigInt privateKey = BigInt.from(randomInt(prime.toInt() - 1) + 1);
     BigInt publicKey = generator.modPow(privateKey, prime);
-    return DhKey._(privateKey, publicKey, this);
+    return DhKey(privateKey: privateKey, publicKey: publicKey, group: this);
+  }
+}
+
+class DhKey {
+  final BigInt privateKey;
+  final BigInt publicKey;
+  final DhGroup group;
+  final String? userId;
+  DhKey(
+      {required this.privateKey,
+      required this.publicKey,
+      required this.group,
+      this.userId});
+
+  // Generate a new Diffie-Hellman key pair
+  factory DhKey.generate(DhGroup group) {
+    BigInt privateKey = _generatePrivateKey(group.prime);
+    BigInt publicKey = group.generator.modPow(privateKey, group.prime);
+    return DhKey(group: group, privateKey: privateKey, publicKey: publicKey);
+  }
+
+  // Compute shared secret with another user's public key
+  BigInt computeSharedSecret(BigInt otherPublicKey) {
+    return otherPublicKey.modPow(privateKey, group.prime);
+  }
+
+  static BigInt _generatePrivateKey(BigInt prime) {
+    final random = Random.secure();
+    return BigInt.from(random.nextInt(prime.toInt() - 1) + 1);
+  }
+
+  Map<String, dynamic> toJson({required String userId}) {
+    return {
+      'userId': userId,
+      'privateKey': privateKey.toString(),
+      'publicKey': publicKey.toString(),
+      'group': {
+        'prime': group.prime.toString(),
+        'generator': group.generator.toString(),
+      }
+    };
+  }
+
+  factory DhKey.fromJson(Map<String, dynamic> json) {
+    return DhKey(
+      group: DhGroup(
+        BigInt.parse(json['group']['prime']),
+        BigInt.parse(json['group']['generator']),
+      ),
+      privateKey: BigInt.parse(json['privateKey']),
+      publicKey: BigInt.parse(json['publicKey']),
+      userId: json['userId'],
+    );
   }
 }

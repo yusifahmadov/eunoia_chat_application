@@ -8,6 +8,7 @@ class UserModel extends User {
       required super.profilePhoto,
       required super.email,
       required super.createdAt,
+      required super.publicKey,
       required super.username});
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -21,6 +22,7 @@ class UserModel extends User {
           : null,
       profilePhoto: json['profile_photo'] as String?,
       bio: json['bio'] as String?,
+      publicKey: json['public_key'] as String?,
     );
   }
 
