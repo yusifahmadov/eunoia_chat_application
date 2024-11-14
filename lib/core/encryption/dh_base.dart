@@ -1,5 +1,6 @@
 import 'package:eunoia_chat_application/core/encryption/rand.dart';
 
+/// The Diffie-Hellman key.
 class DhKey {
   final BigInt? _privateKey;
   final BigInt _publicKey;

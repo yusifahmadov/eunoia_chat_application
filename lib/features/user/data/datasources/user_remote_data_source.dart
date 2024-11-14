@@ -13,4 +13,5 @@ abstract class UserRemoteDataSource {
 
   Future<UserModel> getCurrentUser();
   Future<void> updateUserProfilePhoto(UploadUserProfilePhotoHelper body);
+  Future<void> setPublicKey(String publicKey);
 }

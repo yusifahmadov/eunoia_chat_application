@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:eunoia_chat_application/core/encryption/diffie_hellman_encryption.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/helper/upload_user_profile_photo_helper.dart';
+import 'package:eunoia_chat_application/features/user/domain/usecases/set_public_key_usecase.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/update_user_profile_photo_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -29,6 +31,7 @@ class UserCubit extends Cubit<UserState> {
   GetUserUsecase getUserUsecase;
   GetCurrentUserUsecase getCurrentUserUsecase;
   UpdateUserProfilePhotoUsecase updateUserProfilePhotoUsecase;
+  SetPublicKeyUsecase setPublicKeyUsecase;
   UserCubit({
     required this.userLoginUsecase,
     required this.userRegisterUsecase,
@@ -36,6 +39,7 @@ class UserCubit extends Cubit<UserState> {
     required this.getUserUsecase,
     required this.getCurrentUserUsecase,
     required this.updateUserProfilePhotoUsecase,
+    required this.setPublicKeyUsecase,
   }) : super(UserInitial());
 
   login({required UserLoginHelper body}) async {
@@ -46,7 +50,9 @@ class UserCubit extends Cubit<UserState> {
         emit(UserLoginError(message: error.message));
       },
       (data) {
+        setPublicKey(DiffieHellmanEncryption.getPublicKey());
         authCubit.authenticate(body: data);
+
         CustomFlasher.showSuccess(mainContext?.localization?.login_success);
         emit(UserLoginSuccess(authResponse: data));
       },
@@ -62,6 +68,7 @@ class UserCubit extends Cubit<UserState> {
         emit(UserRegisterError(message: error.message));
       },
       (data) {
+        setPublicKey(DiffieHellmanEncryption.getPublicKey());
         authCubit.authenticate(body: data);
         emit(UserRegisterSuccess(authResponse: data));
       },
@@ -120,5 +127,9 @@ class UserCubit extends Cubit<UserState> {
         if (whenSuccess != null) whenSuccess();
       },
     );
+  }
+
+  setPublicKey(String publicKey) async {
+    await setPublicKeyUsecase(publicKey);
   }
 }

@@ -68,7 +68,15 @@ class UserRepositoryImpl implements UserRepository {
     try {
       return Right(await userRemoteDataSource.updateUserProfilePhoto(body));
     } on DioException catch (e) {
-      print(e.response.toString());
+      return Left(ResponseI(message: e.response.toString()));
+    }
+  }
+
+  @override
+  Future<Either<ResponseI, void>> setPublicKey(String publicKey) async {
+    try {
+      return Right(await userRemoteDataSource.setPublicKey(publicKey));
+    } on DioException catch (e) {
       return Left(ResponseI(message: e.response.toString()));
     }
   }

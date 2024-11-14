@@ -6,9 +6,15 @@ import 'package:eunoia_chat_application/core/encryption/dh_base.dart';
 import 'package:pointycastle/pointycastle.dart';
 
 class DiffieHellmanEncryption {
+  static getPublicKey() {
+    DhGroup userA = DhGroup.byGroupId(14);
+    DhKey userAKey = userA.generateKey();
+    return userAKey.publicKey;
+  }
+
   List<BigInt> initiateKeyExchange() {
-    DhGroup userA = DhGroup.byGroupId(1);
-    DhGroup userB = DhGroup.byGroupId(1);
+    DhGroup userA = DhGroup.byGroupId(14);
+    DhGroup userB = DhGroup.byGroupId(14);
 
     DhKey userAKey = userA.generateKey();
     DhKey userBKey = userB.generateKey();

@@ -81,4 +81,25 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     ));
     await getIt<Dio>().post('/storage/v1/object/users/${'$fileName.jpg'}', data: data);
   }
+
+  @override
+  Future<void> setPublicKey(String publicKey) async {
+    await getIt<Dio>().fetch<Map<String, dynamic>>(_setStreamType<void>(Options(
+      method: 'POST',
+      headers: <String, dynamic>{},
+      extra: <String, dynamic>{},
+    ).compose(
+      getIt<Dio>().options,
+      '/rest/v1/rpc/set_public_key',
+      queryParameters: <String, dynamic>{},
+      data: {
+        'new_public_key': publicKey,
+      },
+    )));
+  }
+
+  RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
+    requestOptions.responseType = ResponseType.json;
+    return requestOptions;
+  }
 }
