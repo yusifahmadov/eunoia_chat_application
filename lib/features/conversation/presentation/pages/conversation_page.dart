@@ -1,3 +1,4 @@
+import 'package:eunoia_chat_application/core/constant/constants.dart';
 import 'package:eunoia_chat_application/features/main/presentation/utility/custom_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,7 +23,11 @@ class ConversationPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(context.localization?.messages ?? ""),
+        title: GestureDetector(
+            onTap: () {
+              authCubit.logout();
+            },
+            child: Text(context.localization?.messages ?? "")),
         actions: [
           IconButton(
             icon: const CustomSvgIcon(text: 'create-outline'),

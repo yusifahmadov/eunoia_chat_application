@@ -10,6 +10,7 @@ class ConversationModel extends Conversation {
       required super.updatedAt,
       required super.creatorId,
       required super.lastMessage,
+      required super.lastMessageOwnerPublicKey,
       required super.totalMessageCount});
 
   factory ConversationModel.fromJson(Map<String, dynamic> json) {
@@ -24,6 +25,7 @@ class ConversationModel extends Conversation {
       title: json['title'] as String?,
       createdAt: DateTime.parse(json['created_at']),
       senderProfilePhoto: json['profile_photo'] as String?,
+      lastMessageOwnerPublicKey: json['last_message_owner_public_key'] as String?,
     );
   }
 

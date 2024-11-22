@@ -48,11 +48,8 @@ class MessageCubit extends Cubit<MessageState>
     }
 
     DiffieHellmanEncryption diffieHellmanEncryption = DiffieHellmanEncryption();
-    print("Other party public key: $otherPartyPublicKey");
-    print('My public key: ${myKeyPair.publicKey}');
     BigInt sharedSecret = diffieHellmanEncryption.generateSharedSecret(
         keyPair: myKeyPair, receiverPublicKey: otherPartyPublicKey);
-    print('Shared secret: $sharedSecret');
     for (var i = 0; i < messages.length; i++) {
       final message = diffieHellmanEncryption.decryptMessageRCase(
           secretKey: sharedSecret, message: messages[i].message);
@@ -61,30 +58,6 @@ class MessageCubit extends Cubit<MessageState>
 
     return messages;
   }
-
-  decryptOthersMessages() {}
-
-  // Future<List<Message>> decryptMessages({required List<Message> messages,}) async {
-  //   final String? senderPublicKey = await CustomizedSecureStorage.getUserPublicKey();
-
-  //   if(senderPublicKey == null || receiverPublicKey == null) {
-  //     return [];
-  //   }
-
-  //   for (var i = 0; i < messages.length; i++) {
-
-  //     DiffieHellmanEncryption diffieHellmanEncryption = DiffieHellmanEncryption();
-  //     BigInt? privateKey = await CustomizedSecureStorage.getUserPrivateKey();
-
-  //     BigInt userBKeySecret = diffieHellmanEncryption.generateSharedSecret(
-  //       yourPrivateKey: );
-  //     final message = diffieHellmanEncryption.decryptMessageRCase(
-  //         secretKey: privateKey., message: messages[i].message);
-  //     messages[i] = messages[i].copyWith(message: message);
-  //   }
-
-  //   return messages;
-  // }
 
   Future<List<Message>> getMessages(
       {required BigInt receiverPublicKey,
@@ -114,9 +87,9 @@ class MessageCubit extends Cubit<MessageState>
         emit(MessageError(message: l.message));
       },
       (r) async {
-        List<Message> decryptedMessages =
+        List<Message>? decryptedMessages =
             await decryptMessages(messages: r, otherPartyPublicKey: receiverPublicKey);
-
+        if (decryptedMessages == null) return [];
         fetchedData.addAll(decryptedMessages);
         isFirstFetching = false;
         hasMore = r.isNotEmpty;

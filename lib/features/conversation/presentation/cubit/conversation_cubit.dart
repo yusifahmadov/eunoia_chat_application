@@ -1,5 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:eunoia_chat_application/core/encryption/dh_base.dart';
+import 'package:eunoia_chat_application/core/encryption/diffie_hellman_encryption.dart';
+import 'package:eunoia_chat_application/core/secure_storage/customized_secure_storage.dart';
+import 'package:eunoia_chat_application/features/message/domain/entities/message.dart';
 
 import '../../../../core/extensions/localization_extension.dart';
 import '../../../../core/mixins/cubit_scrolling_mixin.dart';
@@ -48,21 +52,57 @@ class ConversationCubit extends Cubit<ConversationState>
 
     final response = getConversationsUsecase.call(helperClass);
 
-    response.then((value) {
+    response.then((value) async {
       value.fold(
         (error) {
           fetchedData.clear();
           emit(ConversationsError(message: error.message));
         },
-        (conversations) {
+        (conversations) async {
           isFirstFetching = false;
+          for (var i = 0; i < conversations.length; i++) {
+            if (conversations[i].lastMessage == null ||
+                conversations[i].lastMessageOwnerPublicKey == null) {
+              continue;
+            }
+            final String? message = await decryptLastMessage(
+              lastMessage: conversations[i].lastMessage!,
+              otherPartyPublicKey: BigInt.parse(
+                conversations[i].lastMessageOwnerPublicKey!,
+              ),
+            );
+
+            conversations[i] = conversations[i].copyWith(
+                lastMessage: conversations[i].lastMessage!.copyWith(message: message));
+          }
           fetchedData.addAll(conversations);
+
           hasMore = conversations.isNotEmpty;
           isLoading = false;
           emit(ConversationsLoaded(conversations: conversations));
         },
       );
     });
+  }
+
+  Future<String?> decryptLastMessage({
+    required Message lastMessage,
+    required BigInt? otherPartyPublicKey,
+  }) async {
+    final DhKey? myKeyPair = await CustomizedSecureStorage.getUserKeys();
+
+    if (myKeyPair == null || otherPartyPublicKey == null) {
+      return null;
+    }
+
+    DiffieHellmanEncryption diffieHellmanEncryption = DiffieHellmanEncryption();
+    BigInt sharedSecret = diffieHellmanEncryption.generateSharedSecret(
+        keyPair: myKeyPair, receiverPublicKey: otherPartyPublicKey);
+    final message = diffieHellmanEncryption.decryptMessageRCase(
+        secretKey: sharedSecret, message: lastMessage.message);
+
+    lastMessage = lastMessage.copyWith(message: message);
+    return lastMessage.message;
   }
 
   listenConversations() async {

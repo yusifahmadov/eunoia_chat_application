@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:eunoia_chat_application/core/response/response_model.dart';
 import 'package:eunoia_chat_application/core/shared_preferences/custom_shared_preferences.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/helper/upload_user_profile_photo_helper.dart';
 import 'package:http_parser/http_parser.dart';
@@ -101,5 +102,18 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     requestOptions.responseType = ResponseType.json;
     return requestOptions;
+  }
+
+  @override
+  Future<ResponseModel> updateUserInformation(Map<String, dynamic> body) async {
+    final result = await getIt<Dio>().fetch<Map<String, dynamic>>(_setStreamType<void>(
+        Options(
+      method: 'POST',
+      headers: <String, dynamic>{},
+      extra: <String, dynamic>{},
+    ).compose(getIt<Dio>().options, '/rest/v1/rpc/update_user_info',
+            queryParameters: <String, dynamic>{}, data: body)));
+
+    return ResponseModel.fromJson(result.data!);
   }
 }

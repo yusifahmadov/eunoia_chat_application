@@ -1,3 +1,6 @@
+import 'package:eunoia_chat_application/features/user/domain/entities/user.dart';
+import 'package:eunoia_chat_application/features/user/presentation/cubit/user_cubit.dart';
+import 'package:eunoia_chat_application/features/user/presentation/pages/edit/edit_user_provider_state.dart';
 import 'package:eunoia_chat_application/features/user/presentation/pages/language/language_provider_state.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -83,6 +86,15 @@ class AppRouter {
                     path: '/languages',
                     pageBuilder: (context, state) =>
                         const NoTransitionPage(child: LanguageProviderWidget()),
+                  ),
+                  GoRoute(
+                    parentNavigatorKey: navigatorKey,
+                    path: '/edit-profile',
+                    pageBuilder: (context, state) => NoTransitionPage(
+                        child: EditUserProviderWidget(
+                      user: (state.extra as List)[0] as User,
+                      userCubit: (state.extra as List)[1] as UserCubit,
+                    )),
                   ),
                 ],
                 pageBuilder: (context, state) =>
