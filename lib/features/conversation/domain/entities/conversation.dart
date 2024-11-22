@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:eunoia_chat_application/features/conversation/data/models/conversation_model.dart';
 
 import '../../../message/data/models/message_model.dart';
 
@@ -11,6 +12,7 @@ class Conversation extends Equatable {
   final String? creatorId;
   final DateTime updatedAt;
   final int totalMessageCount;
+  final String? lastMessageOwnerPublicKey;
   const Conversation({
     required this.id,
     required this.title,
@@ -20,13 +22,14 @@ class Conversation extends Equatable {
     required this.totalMessageCount,
     this.creatorId,
     this.senderProfilePhoto,
+    this.lastMessageOwnerPublicKey,
   });
 
   @override
   List<Object?> get props =>
       [id, title, createdAt, lastMessage, senderProfilePhoto, creatorId];
 
-  copyWith({
+  ConversationModel copyWith({
     int? id,
     String? title,
     DateTime? createdAt,
@@ -35,8 +38,11 @@ class Conversation extends Equatable {
     String? creatorId,
     DateTime? updatedAt,
     int? totalMessageCount,
+    String? lastMessageOwnerPublicKey,
   }) {
-    return Conversation(
+    return ConversationModel(
+      lastMessageOwnerPublicKey:
+          lastMessageOwnerPublicKey ?? this.lastMessageOwnerPublicKey,
       id: id ?? this.id,
       creatorId: creatorId ?? this.creatorId,
       updatedAt: updatedAt ?? this.updatedAt,

@@ -1,3 +1,4 @@
+import 'package:eunoia_chat_application/core/response/response_model.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/helper/upload_user_profile_photo_helper.dart';
 
 import '../../domain/entities/helper/user_login_helper.dart';
@@ -14,4 +15,6 @@ abstract class UserRemoteDataSource {
   Future<UserModel> getCurrentUser();
   Future<void> updateUserProfilePhoto(UploadUserProfilePhotoHelper body);
   Future<void> setPublicKey(String publicKey);
+
+  Future<ResponseModel> updateUserInformation(Map<String, dynamic> body);
 }

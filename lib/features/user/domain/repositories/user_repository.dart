@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:eunoia_chat_application/features/user/domain/entities/helper/update_user_information_helper.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/helper/upload_user_profile_photo_helper.dart';
 
 import '../../../../core/response/response.dart';
@@ -20,4 +21,7 @@ abstract class UserRepository {
       UploadUserProfilePhotoHelper body);
 
   Future<Either<ResponseI, void>> setPublicKey(String publicKey);
+
+  Future<Either<ResponseI, ResponseI>> updateUserInformation(
+      UpdateUserInformationHelper helper);
 }

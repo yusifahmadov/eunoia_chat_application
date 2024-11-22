@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/set_public_key_usecase.dart';
+import 'package:eunoia_chat_application/features/user/domain/usecases/update_user_information_usecase.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/update_user_profile_photo_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -57,6 +58,7 @@ Future<void> init() async {
 initCubits() {
   getIt.registerFactory(() => UserCubit(
       setPublicKeyUsecase: getIt(),
+      updateUserInformationUsecase: getIt(),
       userLoginUsecase: getIt(),
       updateUserProfilePhotoUsecase: getIt(),
       getCurrentUserUsecase: getIt(),
@@ -103,6 +105,8 @@ initDataSources() {
 
 initUseCases() {
   getIt.registerLazySingleton(() => SetPublicKeyUsecase(userRepository: getIt()));
+  getIt
+      .registerLazySingleton(() => UpdateUserInformationUsecase(userRepository: getIt()));
   getIt.registerLazySingleton(() => UserLoginUsecase(userRepository: getIt()));
   getIt.registerLazySingleton(() => UserRegisterUsecase(userRepository: getIt()));
   getIt.registerLazySingleton(() => GetConversationsUsecase(repository: getIt()));

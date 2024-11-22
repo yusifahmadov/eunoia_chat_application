@@ -35,9 +35,10 @@ class CustomTextButton extends StatelessWidget {
         highlightColor: Colors.transparent,
         splashColor: Colors.black54,
         onPressed: onPressed,
-        color: mainCubit.themeValue == false
-            ? Theme.of(context).colorScheme.primary
-            : Theme.of(context).colorScheme.primary,
+        color: color ??
+            (mainCubit.themeValue == false
+                ? Theme.of(context).colorScheme.secondaryContainer
+                : Theme.of(context).colorScheme.secondaryContainer),
         elevation: 0,
         padding: const EdgeInsets.all(14),
         hoverElevation: 0,

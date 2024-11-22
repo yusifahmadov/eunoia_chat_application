@@ -10,9 +10,16 @@ class CustomizedSecureStorage {
 
   static Future<DhKey?> getUserKeys() async {
     final String? userId = await getUserId();
+
     if (userId == null) {
       return null;
     }
+    final userKey = await storage.read(key: userId);
+
+    if (userKey == null) {
+      return null;
+    }
+
     final DhKey publicKey =
         DhKey.fromJson(jsonDecode(await storage.read(key: userId) as String));
     return publicKey;

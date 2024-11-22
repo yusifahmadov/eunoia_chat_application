@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:eunoia_chat_application/core/encryption/diffie_hellman_encryption.dart';
 import 'package:eunoia_chat_application/features/user/presentation/pages/language/language_provider_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,12 +39,18 @@ class ProfilePage extends StatelessWidget {
                     pinned: true,
                     centerTitle: false,
                     actions: [
-                      Text(
-                        context.localization?.edit ?? "",
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyLarge!
-                            .copyWith(color: Theme.of(context).colorScheme.primary),
+                      GestureDetector(
+                        onTap: () => context.go('/profile/edit-profile', extra: [
+                          state.user,
+                          context.state.userCubit,
+                        ]),
+                        child: Text(
+                          context.localization?.edit ?? "",
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge!
+                              .copyWith(color: Theme.of(context).colorScheme.primary),
+                        ),
                       ),
                       const SizedBox(
                         width: 20,
@@ -63,24 +68,27 @@ class ProfilePage extends StatelessWidget {
                         ValueListenableBuilder(
                             valueListenable: context.state.profilePhotoNotifier,
                             builder: (context, value, child) {
-                              return CachedNetworkImage(
-                                imageUrl: '${state.user.profilePhoto}',
-                                imageBuilder: (context, imageProvider) => Container(
-                                  width: 120.0,
-                                  height: 120.0,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: DecorationImage(
-                                        image: value != null
-                                            ? AssetImage(value.path)
-                                            : imageProvider,
-                                        fit: BoxFit.cover),
+                              return CircleAvatar(
+                                radius: 50,
+                                child: CachedNetworkImage(
+                                  imageUrl: '${state.user.profilePhoto}',
+                                  imageBuilder: (context, imageProvider) => Container(
+                                    width: 120.0,
+                                    height: 120.0,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                          image: value != null
+                                              ? AssetImage(value.path)
+                                              : imageProvider,
+                                          fit: BoxFit.cover),
+                                    ),
                                   ),
+                                  placeholder: (context, url) =>
+                                      const CircularProgressIndicator(),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
                                 ),
-                                placeholder: (context, url) =>
-                                    const CircularProgressIndicator(),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
                               );
                             }),
                         const SizedBox(
@@ -147,19 +155,6 @@ class ProfilePage extends StatelessWidget {
                                     title: Text(
                                       context.localization?.logout ?? "",
                                     )),
-                              ),
-                              ListTile(
-                                onTap: () {
-                                  DiffieHellmanEncryption diffieHellmanEncryption =
-                                      DiffieHellmanEncryption();
-                                  diffieHellmanEncryption.secureChatExample();
-                                },
-                                minTileHeight: 50,
-                                leading: CustomSvgIcon(
-                                  text: 'language-outline',
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
-                                title: const Text("Diffie Hellman Key Exchange"),
                               ),
                             ],
                           ),

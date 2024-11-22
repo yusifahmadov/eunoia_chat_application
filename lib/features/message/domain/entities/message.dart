@@ -22,7 +22,7 @@ class Message extends Equatable {
   @override
   List<Object?> get props => [id, message, createdAt, conversationId];
 
-  copyWith({
+  MessageModel copyWith({
     int? id,
     String? message,
     DateTime? createdAt,

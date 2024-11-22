@@ -2,8 +2,10 @@ import 'package:equatable/equatable.dart';
 import 'package:eunoia_chat_application/core/encryption/dh_base.dart';
 import 'package:eunoia_chat_application/core/encryption/diffie_hellman_encryption.dart';
 import 'package:eunoia_chat_application/core/secure_storage/customized_secure_storage.dart';
+import 'package:eunoia_chat_application/features/user/domain/entities/helper/update_user_information_helper.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/helper/upload_user_profile_photo_helper.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/set_public_key_usecase.dart';
+import 'package:eunoia_chat_application/features/user/domain/usecases/update_user_information_usecase.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/update_user_profile_photo_usecase.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -34,6 +36,7 @@ class UserCubit extends Cubit<UserState> {
   GetCurrentUserUsecase getCurrentUserUsecase;
   UpdateUserProfilePhotoUsecase updateUserProfilePhotoUsecase;
   SetPublicKeyUsecase setPublicKeyUsecase;
+  UpdateUserInformationUsecase updateUserInformationUsecase;
   UserCubit({
     required this.userLoginUsecase,
     required this.userRegisterUsecase,
@@ -42,6 +45,7 @@ class UserCubit extends Cubit<UserState> {
     required this.getCurrentUserUsecase,
     required this.updateUserProfilePhotoUsecase,
     required this.setPublicKeyUsecase,
+    required this.updateUserInformationUsecase,
   }) : super(UserInitial());
 
   login({required UserLoginHelper body}) async {
@@ -141,6 +145,22 @@ class UserCubit extends Cubit<UserState> {
       (error) {},
       (data) async {
         await CustomizedSecureStorage.setUserKeys(keyPair: keyPair);
+      },
+    );
+  }
+
+  updateUserInformation(
+      {required UpdateUserInformationHelper helper, void Function()? whenSuccess}) async {
+    final response = await updateUserInformationUsecase(helper);
+    response.fold(
+      (error) {
+        CustomFlasher.showError(error.message);
+      },
+      (data) {
+        CustomFlasher.showSuccess(
+            mainContext?.localization?.update_profile_photo_success);
+
+        if (whenSuccess != null) whenSuccess();
       },
     );
   }
