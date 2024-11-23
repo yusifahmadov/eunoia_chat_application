@@ -1,34 +1,25 @@
+import 'package:eunoia_chat_application/features/message/data/models/encryption_request_model.dart';
+import 'package:eunoia_chat_application/features/user/data/models/user_model.dart';
+
 import '../../domain/entities/participant.dart';
-import '../../domain/entities/participant_type.dart';
 
 class ParticipantModel extends Participant {
-  const ParticipantModel(
-      {required super.id,
-      required super.joinedAt,
-      required super.readMessageCount,
-      required super.conversationId,
-      required super.userId,
-      required super.type});
+  const ParticipantModel({required super.userData, required super.encryptionRequestData});
 
   factory ParticipantModel.fromJson(Map<String, dynamic> json) {
     return ParticipantModel(
-      id: json['id'] as int,
-      readMessageCount: json['read_message_count'] as int,
-      joinedAt: DateTime.parse(json['joined_at']),
-      conversationId: json['conversation_id'] as int,
-      userId: json['user_id'] as int,
-      type: json['type'] as ParticipantType,
+      encryptionRequestData: json['encryption_request_data'] != null
+          ? EncryptionRequestModel.fromJson(
+              json['encryption_request_data'] as Map<String, dynamic>)
+          : null,
+      userData: UserModel.fromJson(json['user_data'] as Map<String, dynamic>),
     );
   }
 
   toJson() {
     return {
-      'id': super.id,
-      'joined_at': super.joinedAt.toIso8601String(),
-      'conversation_id': super.conversationId,
-      'user_id': super.userId,
-      'type': super.type,
-      'read_message_count': super.readMessageCount,
+      'user_data': super.userData.toJson(),
+      'encryption_request_data': (super.encryptionRequestData)?.toJson(),
     };
   }
 }

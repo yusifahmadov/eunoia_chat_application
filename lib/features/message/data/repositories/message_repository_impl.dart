@@ -1,5 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:eunoia_chat_application/features/message/domain/entities/encryption_request.dart';
+import 'package:eunoia_chat_application/features/message/domain/entities/helper/handle_encryption_request_helper.dart';
+import 'package:eunoia_chat_application/features/message/domain/entities/helper/listen_encryption_requests_helper.dart';
+import 'package:eunoia_chat_application/features/message/domain/entities/helper/send_encryption_request_helper.dart';
 
 import '../../../../core/response/response.dart';
 import '../../domain/entities/helper/get_message_helper.dart';
@@ -59,6 +63,50 @@ class MessageRepositoryImpl implements MessageRepository {
     try {
       return Right(await remoteDataSource.readMessagesByConversation(body: body));
     } on DioException catch (e) {
+      return Left(ResponseI(message: e.response.toString()));
+    }
+  }
+
+  @override
+  Future<Either<ResponseI, ResponseI>> sendEncryptionRequest(
+      SendEncryptionRequestHelper body) async {
+    try {
+      return Right(await remoteDataSource.sendEncryptionRequest(body: body));
+    } on DioException catch (e) {
+      return Left(ResponseI(message: e.response.toString()));
+    }
+  }
+
+  @override
+  Future<Either<ResponseI, List<EncryptionRequest>>> getLastEncryption(
+      int conversationId) async {
+    try {
+      return Right(
+          await remoteDataSource.getEncryptionRequest(conversationId: conversationId));
+    } on DioException catch (e) {
+      print(e.response);
+      return Left(ResponseI(message: e.response.toString()));
+    }
+  }
+
+  @override
+  Future<Either<ResponseI, ResponseI>> handleEncryptionRequest(
+      {required HandleEncryptionRequestHelper body}) async {
+    try {
+      return Right(await remoteDataSource.handleEncryptionRequest(body: body));
+    } on DioException catch (e) {
+      print(e.response);
+      return Left(ResponseI(message: e.response.toString()));
+    }
+  }
+
+  @override
+  Future<Either<ResponseI, EncryptionRequest?>> listenEncryptionRequests(
+      ListenEncryptionRequestsHelper body) async {
+    try {
+      return Right(await remoteDataSource.listenEncryptionRequests(body: body));
+    } on DioException catch (e) {
+      print(e.response);
       return Left(ResponseI(message: e.response.toString()));
     }
   }

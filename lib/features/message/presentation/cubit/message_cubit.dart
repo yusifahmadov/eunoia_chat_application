@@ -1,8 +1,17 @@
 import 'package:equatable/equatable.dart';
-import 'package:eunoia_chat_application/core/encryption/dh_base.dart';
 import 'package:eunoia_chat_application/core/encryption/diffie_hellman_encryption.dart';
-import 'package:eunoia_chat_application/core/secure_storage/customized_secure_storage.dart';
+import 'package:eunoia_chat_application/features/message/domain/entities/helper/handle_encryption_request_helper.dart';
+import 'package:eunoia_chat_application/features/message/domain/entities/helper/listen_encryption_requests_helper.dart';
+import 'package:eunoia_chat_application/features/message/domain/entities/helper/send_encryption_request_helper.dart';
+import 'package:eunoia_chat_application/features/message/domain/usecases/get_encryption_request_usecase.dart';
+import 'package:eunoia_chat_application/features/message/domain/usecases/handle_encryption_request_usecase.dart';
+import 'package:eunoia_chat_application/features/message/domain/usecases/listen_encryption_requests_usecase.dart';
+import 'package:eunoia_chat_application/features/message/domain/usecases/send_encryption_request_usecase.dart';
+import 'package:eunoia_chat_application/features/user/presentation/cubit/user_cubit.dart';
+import 'package:eunoia_chat_application/injection.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/flasher/custom_flasher.dart';
 import '../../../../core/mixins/cubit_scrolling_mixin.dart';
@@ -28,10 +37,17 @@ class MessageCubit extends Cubit<MessageState>
   ListenMessagesUsecase listenMessagesUsecase;
   ReadMessagesUsecase readMessagesUsecase;
   ReadMessagesByConversationUsecase readMessagesByConversationUsecase;
-  DiffieHellmanEncryption diffieHellmanEncryption = DiffieHellmanEncryption();
+  SendEncryptionRequestUsecase sendEncryptionRequestUsecase;
+  GetEncryptionRequestUsecase getEncryptionRequestUsecase;
+  HandleEncryptionRequestUsecase handleEncryptionRequestUsecase;
+  ListenEncryptionRequestsUsecase listenEncryptionRequestsUsecase;
   MessageCubit({
     required this.getMessagesUsecase,
+    required this.handleEncryptionRequestUsecase,
+    required this.listenEncryptionRequestsUsecase,
     required this.readMessagesUsecase,
+    required this.getEncryptionRequestUsecase,
+    required this.sendEncryptionRequestUsecase,
     required this.sendMessageUsecase,
     required this.listenMessagesUsecase,
     required this.readMessagesByConversationUsecase,
@@ -41,18 +57,23 @@ class MessageCubit extends Cubit<MessageState>
 
   decryptMessages(
       {required List<Message> messages, required BigInt? otherPartyPublicKey}) async {
-    final DhKey? myKeyPair = await CustomizedSecureStorage.getUserKeys();
-
-    if (myKeyPair == null || otherPartyPublicKey == null) {
-      return;
+    if (otherPartyPublicKey == null) {
+      return <Message>[];
     }
 
-    DiffieHellmanEncryption diffieHellmanEncryption = DiffieHellmanEncryption();
-    BigInt sharedSecret = diffieHellmanEncryption.generateSharedSecret(
-        keyPair: myKeyPair, receiverPublicKey: otherPartyPublicKey);
+    BigInt sharedSecret = await DiffieHellmanEncryption.generateSharedSecret(
+        receiverPublicKey: otherPartyPublicKey);
+
     for (var i = 0; i < messages.length; i++) {
-      final message = diffieHellmanEncryption.decryptMessageRCase(
+      if (messages[i].encrypted == false) {
+        continue;
+      }
+      final message = await DiffieHellmanEncryption.decryptMessageRCase(
           secretKey: sharedSecret, message: messages[i].message);
+      if (message == null) {
+        messages[i] = messages[i].copyWith(message: 'Message could not be decrypted');
+        continue;
+      }
       messages[i] = messages[i].copyWith(message: message);
     }
 
@@ -87,9 +108,9 @@ class MessageCubit extends Cubit<MessageState>
         emit(MessageError(message: l.message));
       },
       (r) async {
-        List<Message>? decryptedMessages =
+        List<Message> decryptedMessages =
             await decryptMessages(messages: r, otherPartyPublicKey: receiverPublicKey);
-        if (decryptedMessages == null) return [];
+
         fetchedData.addAll(decryptedMessages);
         isFirstFetching = false;
         hasMore = r.isNotEmpty;
@@ -102,18 +123,14 @@ class MessageCubit extends Cubit<MessageState>
   }
 
   sendMessage(
-      {required SendMessageHelper message, required BigInt recieverPublicKey}) async {
-    DhKey? keyPair = await CustomizedSecureStorage.getUserKeys();
-    if (keyPair == null) {
-      return;
+      {required SendMessageHelper message,
+      required BigInt recieverPublicKey,
+      required bool encryptMessage}) async {
+    if (encryptMessage) {
+      message.messageText = (await DiffieHellmanEncryption.encryptMessageRCase(
+              message: message.messageText, receiverPublicKey: recieverPublicKey))
+          .toString();
     }
-
-    message.messageText = diffieHellmanEncryption
-        .encryptMessageRCase(
-            keyPair: keyPair,
-            message: message.messageText,
-            receiverPublicKey: recieverPublicKey)
-        .toString();
     message.senderId = (await SharedPreferencesUserManager.getUser())?.user.id ?? '';
 
     final response = await sendMessageUsecase(message);
@@ -126,14 +143,20 @@ class MessageCubit extends Cubit<MessageState>
   }
 
   void listenMessages(
-      {required int conversationId, required BigInt otherPartyPublicKey}) async {
+      {required int conversationId,
+      required BigInt otherPartyPublicKey,
+      required bool decryptMessage}) async {
     final response = await listenMessagesUsecase(
       ListenMessageHelper(
         conversationId: conversationId,
         callBackFunc: ({required message}) async {
           emit(MessageLoading());
-          List<Message> messages = await decryptMessages(
-              messages: [message], otherPartyPublicKey: otherPartyPublicKey);
+          List<Message> messages = [message];
+          if (decryptMessage) {
+            messages = await decryptMessages(
+                messages: [message], otherPartyPublicKey: otherPartyPublicKey);
+          }
+
           fetchedData.insert(0, messages[0]);
           emit(MessageLoaded(messages: fetchedData));
         },
@@ -171,5 +194,120 @@ class MessageCubit extends Cubit<MessageState>
     required int conversationId,
   }) async {
     await SupabaseRepository.leaveMessageChannel(conversationId: conversationId);
+    await SupabaseRepository.leaveEncryptionRequestChannel(
+        conversationId: conversationId);
+  }
+
+  sendEncryptionRequest(
+      {required SendEncryptionRequestHelper body,
+      Future<void> Function()? whenSuccess}) async {
+    final response = await sendEncryptionRequestUsecase(body);
+    response.fold(
+      (l) {
+        CustomFlasher.showError(l.message);
+      },
+      (r) async {
+        CustomFlasher.showSuccess(r.message);
+        if (whenSuccess != null) await whenSuccess();
+      },
+    );
+  }
+
+  getEncryptionRequest(
+      {required int conversationId, required UserCubit userCubit}) async {
+    final response = await getEncryptionRequestUsecase(conversationId);
+    response.fold(
+      (l) {
+        CustomFlasher.showError(l.message);
+      },
+      (r) {
+        if (r.isEmpty) return;
+        showEncryptionRequestDialog(
+            requestId: r[0].id, userCubit: userCubit, conversationId: conversationId);
+      },
+    );
+  }
+
+  showEncryptionRequestDialog(
+      {required int requestId,
+      required UserCubit userCubit,
+      required int conversationId}) {
+    showAdaptiveDialog(
+        context: mainContext!,
+        barrierDismissible: false,
+        builder: (context) {
+          return AlertDialog(
+            content: const Text("Do you want to accept the encryption request?"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  handleEncryptionRequest(
+                      userCubit: userCubit,
+                      body: HandleEncryptionRequestHelper(
+                          conversationId: conversationId,
+                          requestId: requestId,
+                          answer: false));
+                },
+                child: const Text('No'),
+              ),
+              TextButton(
+                onPressed: () async {
+                  Navigator.pop(context);
+                  handleEncryptionRequest(
+                      userCubit: userCubit,
+                      body: HandleEncryptionRequestHelper(
+                          conversationId: conversationId,
+                          requestId: requestId,
+                          answer: true));
+                },
+                child: const Text('Yes'),
+              ),
+            ],
+          );
+        });
+  }
+
+  handleEncryptionRequest(
+      {required HandleEncryptionRequestHelper body, required UserCubit userCubit}) async {
+    final response = await handleEncryptionRequestUsecase(body);
+    response.fold(
+      (l) {
+        CustomFlasher.showError(l.message);
+      },
+      (r) async {
+        CustomFlasher.showSuccess(r.message);
+        userCubit.getUser(conversationId: body.conversationId);
+        closeConversationChannels(conversationId: body.conversationId);
+      },
+    );
+  }
+
+  listenEncryptionRequest(
+      {required int conversationId,
+      required bool? current,
+      required UserCubit userCubit}) async {
+    await listenEncryptionRequestsUsecase(ListenEncryptionRequestsHelper(
+        answer: current,
+        callBackFunc: ({required request}) async {
+          /// we need to get current route name and if it is not the message page we should not show the dialog
+
+          if (GoRouter.of(mainContext!)
+                  .routerDelegate
+                  .currentConfiguration
+                  .uri
+                  .toString() !=
+              '/conversations/details/$conversationId') return;
+
+          if (request.receiverId !=
+              (await SharedPreferencesUserManager.getUser())?.user.id) return;
+
+          showEncryptionRequestDialog(
+            requestId: request.id,
+            conversationId: conversationId,
+            userCubit: userCubit,
+          );
+        },
+        conversationId: conversationId));
   }
 }

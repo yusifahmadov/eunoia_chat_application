@@ -1,4 +1,6 @@
 import 'package:dartz/dartz.dart';
+import 'package:eunoia_chat_application/features/message/domain/entities/participant.dart';
+import 'package:eunoia_chat_application/features/user/domain/entities/helper/set_public_key_helper.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/helper/update_user_information_helper.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/helper/upload_user_profile_photo_helper.dart';
 
@@ -15,12 +17,12 @@ abstract class UserRepository {
   Future<Either<ResponseI, AuthResponseModel>> refreshToken(
       {required String refreshToken});
 
-  Future<Either<ResponseI, List<User>>> getUser({required int conversationId});
+  Future<Either<ResponseI, List<Participant>>> getUser({required int conversationId});
   Future<Either<ResponseI, User>> getCurrentUser();
   Future<Either<ResponseI, void>> updateUserProfilePhoto(
       UploadUserProfilePhotoHelper body);
 
-  Future<Either<ResponseI, void>> setPublicKey(String publicKey);
+  Future<Either<ResponseI, String>> setPublicKey(SetPublicKeyHelper helper);
 
   Future<Either<ResponseI, ResponseI>> updateUserInformation(
       UpdateUserInformationHelper helper);

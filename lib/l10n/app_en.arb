@@ -30,6 +30,7 @@
     "update_profile_photo_success": "Successfully updated profile photo",
     "save": "Save",
     "language_content_message": "All the content will be displayed in the selected language.",
-    "refresh_token_success": "Successfully refreshed session"
+    "refresh_token_success": "Successfully refreshed session",
+    "no_messages": "No messages"
     
 }

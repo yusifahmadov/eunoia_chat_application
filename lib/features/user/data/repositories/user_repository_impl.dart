@@ -1,5 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:eunoia_chat_application/features/message/domain/entities/participant.dart';
+import 'package:eunoia_chat_application/features/user/domain/entities/helper/set_public_key_helper.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/helper/update_user_information_helper.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/helper/upload_user_profile_photo_helper.dart';
 
@@ -46,10 +48,12 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<ResponseI, List<User>>> getUser({required int conversationId}) async {
+  Future<Either<ResponseI, List<Participant>>> getUser(
+      {required int conversationId}) async {
     try {
       return Right(await userRemoteDataSource.getUser(conversationId));
     } on DioException catch (e) {
+      print(e.response);
       return Left(ResponseI(message: e.response.toString()));
     }
   }
@@ -74,9 +78,9 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Future<Either<ResponseI, void>> setPublicKey(String publicKey) async {
+  Future<Either<ResponseI, String>> setPublicKey(SetPublicKeyHelper helper) async {
     try {
-      return Right(await userRemoteDataSource.setPublicKey(publicKey));
+      return Right(await userRemoteDataSource.setPublicKey(helper));
     } on DioException catch (e) {
       return Left(ResponseI(message: e.response.toString()));
     }

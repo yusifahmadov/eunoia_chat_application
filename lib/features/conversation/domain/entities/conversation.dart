@@ -13,17 +13,19 @@ class Conversation extends Equatable {
   final DateTime updatedAt;
   final int totalMessageCount;
   final String? lastMessageOwnerPublicKey;
-  const Conversation({
-    required this.id,
-    required this.title,
-    required this.createdAt,
-    required this.lastMessage,
-    required this.updatedAt,
-    required this.totalMessageCount,
-    this.creatorId,
-    this.senderProfilePhoto,
-    this.lastMessageOwnerPublicKey,
-  });
+
+  final bool e2eeEnabled;
+  const Conversation(
+      {required this.id,
+      required this.title,
+      required this.createdAt,
+      required this.lastMessage,
+      required this.updatedAt,
+      required this.totalMessageCount,
+      this.creatorId,
+      this.senderProfilePhoto,
+      this.lastMessageOwnerPublicKey,
+      required this.e2eeEnabled});
 
   @override
   List<Object?> get props =>
@@ -39,6 +41,7 @@ class Conversation extends Equatable {
     DateTime? updatedAt,
     int? totalMessageCount,
     String? lastMessageOwnerPublicKey,
+    bool? e2eeEnabled,
   }) {
     return ConversationModel(
       lastMessageOwnerPublicKey:
@@ -51,6 +54,7 @@ class Conversation extends Equatable {
       createdAt: createdAt ?? this.createdAt,
       lastMessage: lastMessage ?? this.lastMessage,
       senderProfilePhoto: senderProfilePhoto ?? this.senderProfilePhoto,
+      e2eeEnabled: e2eeEnabled ?? this.e2eeEnabled,
     );
   }
 }

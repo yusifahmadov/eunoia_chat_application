@@ -10,6 +10,7 @@ class Message extends Equatable {
   final String senderId;
   final String? senderName;
   final bool isRead;
+  final bool encrypted;
   const Message({
     required this.id,
     required this.message,
@@ -18,19 +19,20 @@ class Message extends Equatable {
     required this.senderId,
     required this.senderName,
     required this.isRead,
+    required this.encrypted,
   });
   @override
   List<Object?> get props => [id, message, createdAt, conversationId];
 
-  MessageModel copyWith({
-    int? id,
-    String? message,
-    DateTime? createdAt,
-    int? conversationId,
-    String? senderId,
-    String? senderName,
-    bool? isRead,
-  }) {
+  MessageModel copyWith(
+      {int? id,
+      String? message,
+      DateTime? createdAt,
+      int? conversationId,
+      String? senderId,
+      String? senderName,
+      bool? isRead,
+      bool? e2eeEnabled}) {
     return MessageModel(
       id: id ?? this.id,
       message: message ?? this.message,
@@ -39,6 +41,7 @@ class Message extends Equatable {
       senderId: senderId ?? this.senderId,
       senderName: senderName ?? this.senderName,
       isRead: isRead ?? this.isRead,
+      encrypted: e2eeEnabled ?? encrypted,
     );
   }
 }

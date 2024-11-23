@@ -1,7 +1,8 @@
+import 'package:diffie_hellman/diffie_hellman.dart';
 import 'package:equatable/equatable.dart';
-import 'package:eunoia_chat_application/core/encryption/dh_base.dart';
-import 'package:eunoia_chat_application/core/encryption/diffie_hellman_encryption.dart';
 import 'package:eunoia_chat_application/core/secure_storage/customized_secure_storage.dart';
+import 'package:eunoia_chat_application/features/message/domain/entities/participant.dart';
+import 'package:eunoia_chat_application/features/user/domain/entities/helper/set_public_key_helper.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/helper/update_user_information_helper.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/helper/upload_user_profile_photo_helper.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/set_public_key_usecase.dart';
@@ -55,7 +56,9 @@ class UserCubit extends Cubit<UserState> {
         CustomFlasher.showError(error.message);
         emit(UserLoginError(message: error.message));
       },
-      (data) {
+      (data) async {
+        await storeUserInformation(body: data);
+        await storeKeyEngine();
         setPublicKey();
         authCubit.authenticate(body: data);
 
@@ -63,6 +66,12 @@ class UserCubit extends Cubit<UserState> {
         emit(UserLoginSuccess(authResponse: data));
       },
     );
+  }
+
+  storeKeyEngine() async {
+    DhPkcs3Engine dhEngine = DhPkcs3Engine.fromGroup(DhGroup.g5);
+    dhEngine.generateKeyPair();
+    await CustomizedSecureStorage.storeDhEngine(engine: dhEngine);
   }
 
   register({required UserRegisterHelper body}) async {
@@ -73,12 +82,17 @@ class UserCubit extends Cubit<UserState> {
         CustomFlasher.showError(error.message);
         emit(UserRegisterError(message: error.message));
       },
-      (data) {
+      (data) async {
+        await storeUserInformation(body: data);
         setPublicKey();
         authCubit.authenticate(body: data);
         emit(UserRegisterSuccess(authResponse: data));
       },
     );
+  }
+
+  storeUserInformation({required AuthResponse body}) async {
+    await CustomSharedPreferences.saveUser("user", body);
   }
 
   Future<String> refreshToken() async {
@@ -92,19 +106,20 @@ class UserCubit extends Cubit<UserState> {
     return token;
   }
 
-  Future<List<User>> getUser({required int conversationId}) async {
-    final response = await getUserUsecase(conversationId);
-    List<User> tmpList = [];
-    response.fold(
-      (error) async {
-        tmpList = [];
-        emit(UserDetailError(message: error.message));
-      },
-      (user) async {
-        tmpList = user;
-        emit(UserDetailSuccess(users: user));
-      },
-    );
+  Future<List<Participant>> getUser({required int conversationId}) async {
+    List<Participant> tmpList = [];
+
+    await getUserUsecase(conversationId).then((value) => value.fold(
+          (error) {
+            CustomFlasher.showError(error.message);
+            tmpList = [];
+            emit(UserDetailError(message: error.message));
+          },
+          (data) {
+            tmpList = data;
+            emit(UserDetailSuccess(users: data));
+          },
+        ));
     return tmpList;
   }
 
@@ -135,16 +150,38 @@ class UserCubit extends Cubit<UserState> {
     );
   }
 
-  setPublicKey() async {
-    DiffieHellmanEncryption diffieHellmanEncryption = DiffieHellmanEncryption();
+  setPublicKey({bool forceChange = false}) async {
+    SetPublicKeyHelper tmpHelper = SetPublicKeyHelper(forceChange: false, publicKey: '');
 
-    final DhKey keyPair = diffieHellmanEncryption.getPublicKey();
-    final result = await setPublicKeyUsecase(keyPair.publicKey.toString());
+    final DhPkcs3Engine? engine = await CustomizedSecureStorage.getDhEngine();
+
+    if (engine == null || engine.keyPair == null) {
+      return;
+    }
+
+    if (forceChange) {
+      tmpHelper = SetPublicKeyHelper(
+          forceChange: true, publicKey: engine.keyPair!.publicKey.value.toString());
+    }
+    tmpHelper = tmpHelper.copyWith(publicKey: engine.keyPair!.publicKey.value.toString());
+
+    final result = await setPublicKeyUsecase(tmpHelper);
 
     result.fold(
-      (error) {},
+      (error) async {
+        /// Although the public is already set, we need to store it in the secure storage
+
+        if (!await CustomizedSecureStorage.checkPrivateKey()) {
+          print('NO PRIVATE KEY AND WE NEED TO SET IT');
+          setPublicKey(forceChange: true);
+        }
+      },
       (data) async {
-        await CustomizedSecureStorage.setUserKeys(keyPair: keyPair);
+        print('SAVED NEW PUBLIC KEY');
+        await CustomizedSecureStorage.setNewPublicKey(publicKey: data);
+        await CustomizedSecureStorage.setNewPrivateKey(
+            privateKey: engine.keyPair!.privateKey.toString());
+        await CustomizedSecureStorage.storeDhEngine(engine: engine);
       },
     );
   }

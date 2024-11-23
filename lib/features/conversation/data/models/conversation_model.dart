@@ -11,10 +11,12 @@ class ConversationModel extends Conversation {
       required super.creatorId,
       required super.lastMessage,
       required super.lastMessageOwnerPublicKey,
+      required super.e2eeEnabled,
       required super.totalMessageCount});
 
   factory ConversationModel.fromJson(Map<String, dynamic> json) {
     return ConversationModel(
+      e2eeEnabled: json['e2ee_enabled'] as bool,
       id: json['id'] as int,
       totalMessageCount: json['total_messages_count'] as int,
       updatedAt: DateTime.parse(json['updated_at']),

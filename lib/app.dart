@@ -28,7 +28,6 @@ class _AppState extends State<App> {
   @override
   void dispose() async {
     await SupabaseRepository.closeSocket();
-    print('Socket closed');
     super.dispose();
   }
 

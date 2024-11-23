@@ -28,7 +28,7 @@ class ContainerIconWidget extends StatelessWidget {
         height: height ?? 35,
         decoration: BoxDecoration(
           borderRadius: CustomBorderRadius.radius8(),
-          color: containerColor ?? Theme.of(context).colorScheme.secondaryContainer,
+          color: containerColor ?? Theme.of(context).colorScheme.surfaceContainerHighest,
         ),
         child: Center(
           child: CustomSvgIcon(

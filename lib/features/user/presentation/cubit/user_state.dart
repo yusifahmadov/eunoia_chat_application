@@ -36,7 +36,7 @@ class UserRegisterError extends UserState {
 class UserDetailLoading extends UserState {}
 
 class UserDetailSuccess extends UserState {
-  final List<User> users;
+  final List<Participant> users;
   const UserDetailSuccess({required this.users});
 }
 
