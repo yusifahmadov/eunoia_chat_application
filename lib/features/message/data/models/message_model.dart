@@ -7,6 +7,7 @@ class MessageModel extends Message {
       required super.senderName,
       required super.createdAt,
       required super.conversationId,
+      required super.encrypted,
       required super.senderId,
       required super.isRead});
 
@@ -19,6 +20,7 @@ class MessageModel extends Message {
       conversationId: json['conversation_id'] as int,
       senderId: json['sender_id'] as String,
       isRead: json['is_read'] as bool,
+      encrypted: json['encrypted'] as bool,
     );
   }
 

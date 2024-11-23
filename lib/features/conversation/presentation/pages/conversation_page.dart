@@ -124,7 +124,7 @@ class _ConversationTile extends StatelessWidget {
                   context.go('/conversations/details/${conversation.id}', extra: [
                     (await SharedPreferencesUserManager.getUser())?.user.id,
                     conversation.id,
-                    conversation.senderProfilePhoto
+                    conversation.e2eeEnabled
                   ]);
                 },
               ),

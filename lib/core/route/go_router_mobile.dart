@@ -60,6 +60,7 @@ class AppRouter {
                         child: MessageProviderWidget(
                       userId: (state.extra as List)[0] as String,
                       conversationId: (state.extra as List)[1] as int?,
+                      e2eeEnabled: (state.extra as List)[2] as bool,
                     )),
                   ),
                 ],

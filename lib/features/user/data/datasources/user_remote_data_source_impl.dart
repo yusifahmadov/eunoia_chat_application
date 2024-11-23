@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:eunoia_chat_application/core/response/response_model.dart';
 import 'package:eunoia_chat_application/core/shared_preferences/custom_shared_preferences.dart';
+import 'package:eunoia_chat_application/features/message/data/models/participant_model.dart';
+import 'package:eunoia_chat_application/features/user/domain/entities/helper/set_public_key_helper.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/helper/upload_user_profile_photo_helper.dart';
 import 'package:http_parser/http_parser.dart';
 
@@ -45,7 +47,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   }
 
   @override
-  Future<List<UserModel>> getUser(int conversationId) async {
+  Future<List<ParticipantModel>> getUser(int conversationId) async {
     final response = await getIt<Dio>().post(
       '/rest/v1/rpc/get_participants_data',
       data: {
@@ -53,7 +55,7 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       },
     );
 
-    return (response.data as List).map((e) => UserModel.fromJson(e)).toList();
+    return (response.data as List).map((e) => ParticipantModel.fromJson(e)).toList();
   }
 
   @override
@@ -84,19 +86,15 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   }
 
   @override
-  Future<void> setPublicKey(String publicKey) async {
-    await getIt<Dio>().fetch<Map<String, dynamic>>(_setStreamType<void>(Options(
+  Future<String> setPublicKey(SetPublicKeyHelper helper) async {
+    final result = await getIt<Dio>().fetch<String>(_setStreamType<void>(Options(
       method: 'POST',
       headers: <String, dynamic>{},
       extra: <String, dynamic>{},
-    ).compose(
-      getIt<Dio>().options,
-      '/rest/v1/rpc/set_public_key',
-      queryParameters: <String, dynamic>{},
-      data: {
-        'new_public_key': publicKey,
-      },
-    )));
+    ).compose(getIt<Dio>().options, '/rest/v1/rpc/set_public_key',
+        queryParameters: <String, dynamic>{}, data: helper.toJson())));
+
+    return result.data!;
   }
 
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {

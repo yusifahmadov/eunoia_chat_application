@@ -1,8 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:eunoia_chat_application/core/encryption/dh_base.dart';
 import 'package:eunoia_chat_application/core/encryption/diffie_hellman_encryption.dart';
-import 'package:eunoia_chat_application/core/secure_storage/customized_secure_storage.dart';
 import 'package:eunoia_chat_application/features/message/domain/entities/message.dart';
 
 import '../../../../core/extensions/localization_extension.dart';
@@ -89,17 +87,18 @@ class ConversationCubit extends Cubit<ConversationState>
     required Message lastMessage,
     required BigInt? otherPartyPublicKey,
   }) async {
-    final DhKey? myKeyPair = await CustomizedSecureStorage.getUserKeys();
-
-    if (myKeyPair == null || otherPartyPublicKey == null) {
+    if (otherPartyPublicKey == null) {
       return null;
     }
 
-    DiffieHellmanEncryption diffieHellmanEncryption = DiffieHellmanEncryption();
-    BigInt sharedSecret = diffieHellmanEncryption.generateSharedSecret(
-        keyPair: myKeyPair, receiverPublicKey: otherPartyPublicKey);
-    final message = diffieHellmanEncryption.decryptMessageRCase(
-        secretKey: sharedSecret, message: lastMessage.message);
+    BigInt sharedSecret = await DiffieHellmanEncryption.generateSharedSecret(
+        receiverPublicKey: otherPartyPublicKey);
+    String? message = lastMessage.message;
+    if (lastMessage.encrypted) {
+      message = await DiffieHellmanEncryption.decryptMessageRCase(
+          secretKey: sharedSecret, message: lastMessage.message);
+      message ??= 'Message could not be decrypted';
+    }
 
     lastMessage = lastMessage.copyWith(message: message);
     return lastMessage.message;

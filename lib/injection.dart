@@ -1,4 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:eunoia_chat_application/features/message/domain/usecases/get_encryption_request_usecase.dart';
+import 'package:eunoia_chat_application/features/message/domain/usecases/handle_encryption_request_usecase.dart';
+import 'package:eunoia_chat_application/features/message/domain/usecases/listen_encryption_requests_usecase.dart';
+import 'package:eunoia_chat_application/features/message/domain/usecases/send_encryption_request_usecase.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/set_public_key_usecase.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/update_user_information_usecase.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/update_user_profile_photo_usecase.dart';
@@ -73,8 +77,12 @@ initCubits() {
       ));
   getIt.registerFactory(() => MessageCubit(
         readMessagesUsecase: getIt(),
+        handleEncryptionRequestUsecase: getIt(),
+        listenEncryptionRequestsUsecase: getIt(),
         getMessagesUsecase: getIt(),
         sendMessageUsecase: getIt(),
+        getEncryptionRequestUsecase: getIt(),
+        sendEncryptionRequestUsecase: getIt(),
         readMessagesByConversationUsecase: getIt(),
         listenMessagesUsecase: getIt(),
       ));
@@ -116,10 +124,18 @@ initUseCases() {
   getIt.registerLazySingleton(() => GetCurrentUserUsecase(userRepository: getIt()));
   getIt.registerLazySingleton(() => ListenMessagesUsecase(messageRepository: getIt()));
   getIt.registerLazySingleton(() => ReadMessagesUsecase(messageRepository: getIt()));
+  getIt.registerLazySingleton(
+      () => ListenEncryptionRequestsUsecase(messageRepository: getIt()));
   getIt.registerLazySingleton(() => GetContactUsecase(contactRepository: getIt()));
   getIt.registerLazySingleton(() => CheckContactUsecase(contactRepository: getIt()));
+  getIt.registerLazySingleton(
+      () => HandleEncryptionRequestUsecase(messageRepository: getIt()));
+  getIt.registerLazySingleton(
+      () => GetEncryptionRequestUsecase(messageRepository: getIt()));
   getIt.registerLazySingleton(() => SearchContactUsecase(contactRepository: getIt()));
   getIt.registerLazySingleton(() => RefreshTokenUsecase(userRepository: getIt()));
+  getIt.registerLazySingleton(
+      () => SendEncryptionRequestUsecase(messageRepository: getIt()));
   getIt.registerLazySingleton(() => GetUserUsecase(userRepository: getIt()));
   getIt.registerLazySingleton(
       () => UpdateUserProfilePhotoUsecase(userRepository: getIt()));

@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eunoia_chat_application/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -35,6 +36,83 @@ class MessagePage extends StatelessWidget {
               context.pop();
             },
           ),
+          actions: [
+            ListenableBuilder(
+                listenable: context.state.e2eeNotifier,
+                builder: (context, child) {
+                  return Stack(
+                    children: [
+                      Switch(
+                        value: context.state.e2eeNotifier.value,
+                        onChanged: (value) {
+                          context.state.sendEncryptionRequest();
+                        },
+                      ),
+                      ListenableBuilder(
+                          listenable: context.state.encryptionRequestNotifier,
+                          builder: (context, child) {
+                            return context.state.encryptionRequestNotifier.value != null
+                                ? ContainerIconWidget(
+                                    onTap: () {
+                                      if (context.state.encryptionRequestNotifier.value ==
+                                          null) {
+                                        return;
+                                      }
+                                      showAdaptiveDialog(
+                                          context: context,
+                                          barrierDismissible: true,
+                                          builder: (_) {
+                                            return AlertDialog.adaptive(
+                                              content: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Text(
+                                                    "Encryption request",
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .headlineLarge,
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 20,
+                                                  ),
+                                                  Text(
+                                                      "Sender: ${context.state.encryptionRequestNotifier.value?.senderName}"),
+                                                  const SizedBox(
+                                                    height: 6,
+                                                  ),
+                                                  Text(
+                                                      "Receiver: ${context.state.encryptionRequestNotifier.value?.receiverName}"),
+                                                  const SizedBox(
+                                                    height: 6,
+                                                  ),
+                                                  Text(
+                                                      "End-to-end encryption offer: ${context.state.encryptionRequestNotifier.value?.e2eeOffer == true ? "Opening" : "Closing"}"),
+                                                  const SizedBox(
+                                                    height: 6,
+                                                  ),
+                                                  Text(
+                                                      "Status: ${context.state.encryptionRequestNotifier.value?.status == true ? "Accepted" : "Pending"}"),
+                                                ],
+                                              ),
+                                              actions: const [],
+                                            );
+                                          });
+                                    },
+                                    icon: 'lock-open-outline',
+                                    containerColor:
+                                        Theme.of(context).colorScheme.outlineVariant,
+                                  )
+                                : const SizedBox();
+                          }),
+                    ],
+                  );
+                }),
+            const SizedBox(
+              width: 20,
+            )
+          ],
           title: const _AppBarTitle(),
         ),
         body: CustomScrollView(
@@ -58,7 +136,8 @@ class _BlocBuilder extends StatelessWidget {
       bloc: context.state.messageCubit,
       builder: (context, state) {
         if (context.state.messageCubit.fetchedData.isEmpty) {
-          return const SliverFillRemaining(child: Center(child: Text("Mesaj yoxdur!")));
+          return SliverFillRemaining(
+              child: Center(child: Text(mainContext?.localization?.no_messages ?? "")));
         }
         if (state is MessageError) {
           return SliverFillRemaining(child: Center(child: Text(state.message)));
@@ -130,6 +209,11 @@ class _AppBarTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UserCubit, UserState>(
       bloc: context.state.userCubit,
+      buildWhen: (previous, current) =>
+          previous != current &&
+          (current is UserDetailSuccess ||
+              current is UserDetailLoading ||
+              current is UserDetailError),
       builder: (context, state) {
         if (state is UserDetailLoading) {
           return const CircularProgressIndicator();
@@ -140,9 +224,10 @@ class _AppBarTitle extends StatelessWidget {
           return Row(
             children: [
               CircleAvatar(
-                child: state.users.isNotEmpty && state.users[0].profilePhoto != null
+                child: state.users.isNotEmpty &&
+                        state.users[0].userData.profilePhoto != null
                     ? CachedNetworkImage(
-                        imageUrl: '${state.users[0].profilePhoto}',
+                        imageUrl: '${state.users[0].userData.profilePhoto}',
                         imageBuilder: (context, imageProvider) => Container(
                           width: 120.0,
                           height: 120.0,
@@ -160,7 +245,7 @@ class _AppBarTitle extends StatelessWidget {
                       ),
               ),
               const EmptyWidthBox(width: 10),
-              Text(state.users.isNotEmpty ? state.users[0].username ?? "" : ""),
+              Text(state.users.isNotEmpty ? state.users[0].userData.username ?? "" : ""),
             ],
           );
         }

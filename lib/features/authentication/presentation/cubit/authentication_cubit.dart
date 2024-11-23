@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:eunoia_chat_application/core/secure_storage/customized_secure_storage.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,13 +27,8 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
 
   authenticate({required AuthResponse body}) async {
     emit(AuthenticationLoading());
-    await storeUserInformation(body: body);
 
     emit(AuthenticationAuthenticated(authResponse: body));
-  }
-
-  storeUserInformation({required AuthResponse body}) async {
-    await CustomSharedPreferences.saveUser("user", body);
   }
 
   Future<AuthResponse?> readUserInformation() async {
@@ -46,7 +42,10 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
   logout() async {
     emit(AuthenticationLoading());
     final prefs = await SharedPreferences.getInstance();
+    await CustomizedSecureStorage.removePrivateKey();
+
     prefs.remove('user');
+
     CustomFlasher.showSuccess(mainContext?.localization?.logout_success);
 
     emit(AuthenticationUnauthenticated());

@@ -31,6 +31,7 @@
     "update_profile_photo_success": "Profil şəkli uğurla yeniləndi",
     "save": "Yadda saxla",
     "language_content_message": "Bütün məzmun seçilmiş dilə uyğun olaraq göstəriləcək.",
-    "refresh_token_success":  "Sessiyanız uğurla yeniləndi"
+    "refresh_token_success":  "Sessiyanız uğurla yeniləndi",
+    "no_messages": "Mesajlar yoxdur"
 
 }

@@ -1,4 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:eunoia_chat_application/core/response/response_model.dart';
+import 'package:eunoia_chat_application/features/message/data/models/encryption_request_model.dart';
+import 'package:eunoia_chat_application/features/message/domain/entities/encryption_request.dart';
+import 'package:eunoia_chat_application/features/message/domain/entities/helper/handle_encryption_request_helper.dart';
+import 'package:eunoia_chat_application/features/message/domain/entities/helper/listen_encryption_requests_helper.dart';
+import 'package:eunoia_chat_application/features/message/domain/entities/helper/send_encryption_request_helper.dart';
 
 import '../../../../core/supabase/supabase_repository.dart';
 import '../../../../injection.dart';
@@ -53,5 +59,49 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
     );
 
     return response.then((value) => null);
+  }
+
+  @override
+  Future<ResponseModel> sendEncryptionRequest(
+      {required SendEncryptionRequestHelper body}) async {
+    final response = await getIt<Dio>().post(
+      '/rest/v1/rpc/add_encryption_request',
+      data: body.toJson(),
+    );
+
+    return ResponseModel.fromJson(response.data);
+  }
+
+  @override
+  Future<List<EncryptionRequest>> getEncryptionRequest(
+      {required int conversationId}) async {
+    final response = await getIt<Dio>().post(
+      '/rest/v1/rpc/get_last_encryption_request',
+      data: {
+        "p_conversation_id": conversationId,
+      },
+    );
+
+    return (response.data as List)
+        .map((e) => EncryptionRequestModel.fromJson(e))
+        .toList();
+  }
+
+  @override
+  Future<ResponseModel> handleEncryptionRequest(
+      {required HandleEncryptionRequestHelper body}) async {
+    final response = await getIt<Dio>()
+        .post('/rest/v1/rpc/handle_encryption_request', data: body.toJson());
+
+    return ResponseModel.fromJson(response.data);
+  }
+
+  @override
+  Future<EncryptionRequestModel?> listenEncryptionRequests(
+      {required ListenEncryptionRequestsHelper body}) async {
+    return await SupabaseRepository.listenEncryptionRequests(
+        answer: body.answer,
+        callBackFunc: body.callBackFunc,
+        conversationId: body.conversationId);
   }
 }
