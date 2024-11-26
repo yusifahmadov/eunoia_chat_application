@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:eunoia_chat_application/core/encryption/diffie_hellman_encryption.dart';
+import 'package:eunoia_chat_application/features/conversation/domain/entities/helper/send_group_message_helper.dart';
 import 'package:eunoia_chat_application/features/message/domain/entities/helper/handle_encryption_request_helper.dart';
 import 'package:eunoia_chat_application/features/message/domain/entities/helper/listen_encryption_requests_helper.dart';
 import 'package:eunoia_chat_application/features/message/domain/entities/helper/send_encryption_request_helper.dart';
@@ -7,6 +8,7 @@ import 'package:eunoia_chat_application/features/message/domain/usecases/get_enc
 import 'package:eunoia_chat_application/features/message/domain/usecases/handle_encryption_request_usecase.dart';
 import 'package:eunoia_chat_application/features/message/domain/usecases/listen_encryption_requests_usecase.dart';
 import 'package:eunoia_chat_application/features/message/domain/usecases/send_encryption_request_usecase.dart';
+import 'package:eunoia_chat_application/features/message/domain/usecases/send_group_message_usecase.dart';
 import 'package:eunoia_chat_application/features/user/presentation/cubit/user_cubit.dart';
 import 'package:eunoia_chat_application/injection.dart';
 import 'package:flutter/material.dart';
@@ -41,9 +43,11 @@ class MessageCubit extends Cubit<MessageState>
   GetEncryptionRequestUsecase getEncryptionRequestUsecase;
   HandleEncryptionRequestUsecase handleEncryptionRequestUsecase;
   ListenEncryptionRequestsUsecase listenEncryptionRequestsUsecase;
+  SendGroupMessageUsecase sendGroupMessageUsecase;
   MessageCubit({
     required this.getMessagesUsecase,
     required this.handleEncryptionRequestUsecase,
+    required this.sendGroupMessageUsecase,
     required this.listenEncryptionRequestsUsecase,
     required this.readMessagesUsecase,
     required this.getEncryptionRequestUsecase,
@@ -134,6 +138,16 @@ class MessageCubit extends Cubit<MessageState>
     message.senderId = (await SharedPreferencesUserManager.getUser())?.user.id ?? '';
 
     final response = await sendMessageUsecase(message);
+    response.fold(
+      (l) {
+        CustomFlasher.showError(l.message);
+      },
+      (r) => null,
+    );
+  }
+
+  sendGroupMessage({required SendGroupMessageHelper helper}) async {
+    final response = await sendGroupMessageUsecase(helper);
     response.fold(
       (l) {
         CustomFlasher.showError(l.message);

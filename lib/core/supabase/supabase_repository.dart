@@ -20,6 +20,7 @@ abstract class SupabaseRepository {
         .onPostgresChanges(
           event: PostgresChangeEvent.all,
           callback: (payload) async {
+            print('payload: ${payload.newRecord}');
             conversationModel = ConversationModel.fromJson(payload.newRecord);
 
             if (conversationModel != null) {

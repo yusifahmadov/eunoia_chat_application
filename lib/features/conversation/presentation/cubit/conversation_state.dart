@@ -28,3 +28,23 @@ class ConversationsError extends ConversationState {
   @override
   List<Object> get props => [message];
 }
+
+class GroupDataLoading extends ConversationState {}
+
+class GroupDataLoaded extends ConversationState {
+  final List<GroupData> groupData;
+
+  const GroupDataLoaded({required this.groupData});
+
+  @override
+  List<Object> get props => [groupData];
+}
+
+class GroupDataError extends ConversationState {
+  final String message;
+
+  const GroupDataError({required this.message});
+
+  @override
+  List<Object> get props => [message];
+}

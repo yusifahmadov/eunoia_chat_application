@@ -1,4 +1,6 @@
 import 'package:eunoia_chat_application/core/shared_preferences/shared_preferences_user_manager.dart';
+import 'package:eunoia_chat_application/features/conversation/domain/entities/conversation.dart';
+import 'package:eunoia_chat_application/features/conversation/domain/entities/helper/send_group_message_helper.dart';
 import 'package:eunoia_chat_application/features/message/domain/entities/encryption_request.dart';
 import 'package:eunoia_chat_application/features/message/domain/entities/helper/send_encryption_request_helper.dart';
 import 'package:eunoia_chat_application/features/message/domain/entities/participant.dart';
@@ -14,16 +16,10 @@ import 'message_page.dart';
 import 'message_provider.dart';
 
 class MessageProviderWidget extends StatefulWidget {
-  const MessageProviderWidget({
-    super.key,
-    required this.userId,
-    required this.conversationId,
-    required this.e2eeEnabled,
-  });
-
+  const MessageProviderWidget(
+      {super.key, required this.conversation, required this.userId});
   final String userId;
-  final int? conversationId;
-  final bool e2eeEnabled;
+  final Conversation conversation;
   @override
   State<MessageProviderWidget> createState() => MessageProviderState();
 }
@@ -42,15 +38,15 @@ class MessageProviderState extends State<MessageProviderWidget> with PageScrolli
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      if (widget.conversationId != null) {
-        e2eeNotifier.value = widget.e2eeEnabled;
+      if (widget.conversation.isGroup == false) {
+        e2eeNotifier.value = widget.conversation.e2eeEnabled;
         messageCubit.getEncryptionRequest(
-            conversationId: widget.conversationId!, userCubit: userCubit);
-        users = (await userCubit.getUser(conversationId: widget.conversationId!));
+            conversationId: widget.conversation.id, userCubit: userCubit);
+        users = (await userCubit.getUser(conversationId: widget.conversation.id));
         encryptionRequestNotifier.value = users[0].encryptionRequestData;
         userPublicKey = BigInt.parse(users[0].userData.publicKey ?? '0');
         messageCubit.helperClass =
-            messageCubit.helperClass.copyWith(conversationId: widget.conversationId);
+            messageCubit.helperClass.copyWith(conversationId: widget.conversation.id);
 
         initializeScrolling(function: () async {
           await messageCubit.getMessages(receiverPublicKey: userPublicKey);
@@ -58,15 +54,27 @@ class MessageProviderState extends State<MessageProviderWidget> with PageScrolli
 
         if (users.isNotEmpty && users[0].userData.publicKey != null) {
           messageCubit.listenMessages(
-              decryptMessage: false,
-              conversationId: widget.conversationId!,
+              decryptMessage: widget.conversation.e2eeEnabled,
+              conversationId: widget.conversation.id,
               otherPartyPublicKey: userPublicKey);
 
           messageCubit.listenEncryptionRequest(
-              conversationId: widget.conversationId!,
+              conversationId: widget.conversation.id,
               current: null,
               userCubit: userCubit);
         }
+      } else {
+        messageCubit.helperClass =
+            messageCubit.helperClass.copyWith(conversationId: widget.conversation.id);
+
+        initializeScrolling(function: () async {
+          await messageCubit.getMessages(receiverPublicKey: BigInt.zero);
+        });
+
+        messageCubit.listenMessages(
+            decryptMessage: widget.conversation.e2eeEnabled,
+            conversationId: widget.conversation.id,
+            otherPartyPublicKey: BigInt.zero);
       }
     });
 
@@ -93,10 +101,10 @@ class MessageProviderState extends State<MessageProviderWidget> with PageScrolli
                     Navigator.pop(context);
                     messageCubit.sendEncryptionRequest(
                         whenSuccess: () async {
-                          await userCubit.getUser(conversationId: widget.conversationId!);
+                          await userCubit.getUser(conversationId: widget.conversation.id);
                         },
                         body: SendEncryptionRequestHelper(
-                          conversationId: widget.conversationId!,
+                          conversationId: widget.conversation.id,
                           e2eeOffer: !e2eeNotifier.value,
                           receiverId: users[0].userData.id,
                           senderId:
@@ -113,12 +121,24 @@ class MessageProviderState extends State<MessageProviderWidget> with PageScrolli
   Future<void> sendMessage({
     required String message,
   }) async {
+    if (widget.conversation.isGroup) {
+      await messageCubit.sendGroupMessage(
+          helper: SendGroupMessageHelper(
+        groupId: widget.conversation.id,
+        message: message,
+      ));
+      return;
+    }
+
     if (message == '' || users[0].userData.publicKey == null) return;
     await messageCubit.sendMessage(
-        encryptMessage: widget.e2eeEnabled,
+        encryptMessage: widget.conversation.e2eeEnabled,
         recieverPublicKey: BigInt.parse(users[0].userData.publicKey!),
         message: SendMessageHelper(
-            senderId: '', messageText: message, receiverId: users[0].userData.id));
+            isGroup: widget.conversation.isGroup,
+            senderId: '',
+            messageText: message,
+            receiverId: users[0].userData.id));
   }
 
   readMessagesByConversation() async {

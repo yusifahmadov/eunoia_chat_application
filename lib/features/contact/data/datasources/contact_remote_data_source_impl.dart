@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:eunoia_chat_application/features/conversation/data/models/conversation_model.dart';
 
 import '../../../../injection.dart';
 import '../../../user/data/models/user_model.dart';
@@ -18,7 +19,7 @@ class ContactRemoteDataSourceImpl implements ContactRemoteDataSource {
   }
 
   @override
-  Future<int> checkContact({required String contactId}) async {
+  Future<ConversationModel> checkContact({required String contactId}) async {
     final response = await getIt<Dio>().post(
       '/rest/v1/rpc/check_or_create_conversation',
       data: {
@@ -26,7 +27,7 @@ class ContactRemoteDataSourceImpl implements ContactRemoteDataSource {
       },
     );
 
-    return response.data as int;
+    return ConversationModel.fromJson(response.data);
   }
 
   @override

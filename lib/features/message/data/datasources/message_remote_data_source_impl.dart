@@ -104,4 +104,14 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
         callBackFunc: body.callBackFunc,
         conversationId: body.conversationId);
   }
+
+  @override
+  Future<void> sendGroupMessage({required Map<String, dynamic> body}) async {
+    final response = getIt<Dio>().post(
+      '/rest/v1/rpc/send_group_message',
+      data: body,
+    );
+
+    return response.then((value) => null);
+  }
 }

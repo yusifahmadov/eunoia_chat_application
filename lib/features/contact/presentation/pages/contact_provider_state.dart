@@ -1,3 +1,4 @@
+import 'package:eunoia_chat_application/features/conversation/domain/entities/conversation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -34,9 +35,9 @@ class ContactProviderState extends State<ContactProviderWidget>
   }
 
   checkContact({required String id}) async {
-    int? conversationId = (await contactCubit.checkContact(id: id));
-    context.go('/conversations/details/$conversationId',
-        extra: [(await SharedPreferencesUserManager.getUser())?.user.id, conversationId]);
+    Conversation? conversation = (await contactCubit.checkContact(id: id));
+    context.go('/conversations/details/${conversation?.id}',
+        extra: [(await SharedPreferencesUserManager.getUser())?.user.id, conversation]);
   }
 
   @override

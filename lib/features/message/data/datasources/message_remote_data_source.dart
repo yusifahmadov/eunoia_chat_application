@@ -27,4 +27,6 @@ abstract class MessageRemoteDataSource {
 
   Future<EncryptionRequestModel?> listenEncryptionRequests(
       {required ListenEncryptionRequestsHelper body});
+
+  Future<void> sendGroupMessage({required Map<String, dynamic> body});
 }

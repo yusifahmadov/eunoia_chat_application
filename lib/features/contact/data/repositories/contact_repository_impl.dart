@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:eunoia_chat_application/features/conversation/domain/entities/conversation.dart';
 
 import '../../../../core/response/response.dart';
 import '../../../user/data/models/user_model.dart';
@@ -24,7 +25,8 @@ class ContactRepositoryImpl implements ContactRepository {
   }
 
   @override
-  Future<Either<ResponseI, int>> checkContact({required String contactId}) async {
+  Future<Either<ResponseI, Conversation>> checkContact(
+      {required String contactId}) async {
     try {
       return Right(await contactRemoteDataSource.checkContact(contactId: contactId));
     } on DioException catch (e) {

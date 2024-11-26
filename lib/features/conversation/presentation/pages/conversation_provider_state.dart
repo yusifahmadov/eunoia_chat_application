@@ -15,14 +15,14 @@ class ConversationProviderWidget extends StatefulWidget {
 
 class ConversationProviderState extends State<ConversationProviderWidget>
     with PageScrollingMixin {
-  final chatCubit = getIt<ConversationCubit>();
+  final conversationCubit = getIt<ConversationCubit>();
 
   @override
   void initState() {
     initializeScrolling(function: () async {
-      chatCubit.getConversations();
+      conversationCubit.getConversations();
     });
-    chatCubit.listenConversations();
+    conversationCubit.listenConversations();
     super.initState();
   }
 

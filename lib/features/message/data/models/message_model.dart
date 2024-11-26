@@ -8,12 +8,14 @@ class MessageModel extends Message {
       required super.createdAt,
       required super.conversationId,
       required super.encrypted,
+      required super.otherPartyProfilePhoto,
       required super.senderId,
       required super.isRead});
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
     return MessageModel(
       id: json['id'] as int,
+      otherPartyProfilePhoto: json['receiver_profile_photo'] as String?,
       senderName: json['sender_name'] as String?,
       message: json['message_text'] as String,
       createdAt: DateTime.parse(json['created_at']),
