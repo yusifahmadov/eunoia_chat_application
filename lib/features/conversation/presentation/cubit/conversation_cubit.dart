@@ -8,6 +8,7 @@ import 'package:eunoia_chat_application/features/conversation/domain/entities/he
 import 'package:eunoia_chat_application/features/conversation/domain/usecases/add_group_photo_usecase.dart';
 import 'package:eunoia_chat_application/features/conversation/domain/usecases/add_participants_to_group_usecase.dart';
 import 'package:eunoia_chat_application/features/conversation/domain/usecases/get_group_data_usecase.dart';
+import 'package:eunoia_chat_application/features/conversation/domain/usecases/leave_group_usecase.dart';
 import 'package:eunoia_chat_application/features/conversation/domain/usecases/make_group_conversation_usecase.dart';
 import 'package:eunoia_chat_application/features/message/domain/entities/message.dart';
 
@@ -30,15 +31,17 @@ class ConversationCubit extends Cubit<ConversationState>
   MakeGroupConversationUsecase makeGroupConversationUsecase;
   AddGroupPhotoUsecase addGroupPhotoUsecase;
   GetGroupDataUsecase getGroupDataUsecase;
+  LeaveGroupUsecase laeveGroupUsecase;
 
-  ConversationCubit({
-    required this.getConversationsUsecase,
-    required this.listenConversationsUsecase,
-    required this.addParticipantsToGroupUsecase,
-    required this.makeGroupConversationUsecase,
-    required this.getGroupDataUsecase,
-    required this.addGroupPhotoUsecase,
-  }) : super(ConversationInitial()) {
+  ConversationCubit(
+      {required this.getConversationsUsecase,
+      required this.listenConversationsUsecase,
+      required this.addParticipantsToGroupUsecase,
+      required this.makeGroupConversationUsecase,
+      required this.getGroupDataUsecase,
+      required this.addGroupPhotoUsecase,
+      required this.laeveGroupUsecase})
+      : super(ConversationInitial()) {
     helperClass = GetConversationsHelper();
   }
 
@@ -142,8 +145,7 @@ class ConversationCubit extends Cubit<ConversationState>
 
     final index = fetchedData.indexWhere((element) => element.id == conversation.id);
 
-    if (conversation.e2eeEnabled &&
-        conversation.lastMessage?.message != null &&
+    if (conversation.lastMessage?.message != null &&
         conversation.lastMessage?.message != "" &&
         conversation.lastMessage?.encrypted == true) {
       conversation = conversation.copyWith(
@@ -230,6 +232,19 @@ class ConversationCubit extends Cubit<ConversationState>
         print(l.message);
       },
       (r) {},
+    );
+  }
+
+  leaveGroup({required int conversationId, required void Function()? whenSuccess}) async {
+    final response = await laeveGroupUsecase(conversationId);
+    response.fold(
+      (l) {
+        print(l.message);
+      },
+      (r) {
+        getConversations(refreshScroll: true);
+        whenSuccess?.call();
+      },
     );
   }
 }

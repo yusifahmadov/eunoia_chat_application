@@ -75,4 +75,13 @@ class ConversationRepositoryImpl implements ConversationRepository {
       return Left(ResponseI(message: e.response.toString()));
     }
   }
+
+  @override
+  Future<Either<ResponseI, ResponseI>> leaveGroup(int conversationId) async {
+    try {
+      return Right(await remoteDataSource.leaveGroup(conversationId));
+    } on DioException catch (e) {
+      return Left(ResponseI(message: e.response.toString()));
+    }
+  }
 }

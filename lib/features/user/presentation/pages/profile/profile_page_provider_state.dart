@@ -1,6 +1,10 @@
 import 'dart:io';
 
+import 'package:eunoia_chat_application/core/shared_preferences/custom_shared_preferences.dart';
+import 'package:eunoia_chat_application/core/shared_preferences/shared_preferences_user_manager.dart';
+import 'package:eunoia_chat_application/features/user/data/models/auth_response_model.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/helper/upload_user_profile_photo_helper.dart';
+import 'package:eunoia_chat_application/features/user/domain/entities/user.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +23,8 @@ class ProfilePageProviderWidget extends StatefulWidget {
 class ProfilePageProviderState extends State<ProfilePageProviderWidget> {
   final userCubit = getIt<UserCubit>();
   final ValueNotifier<File?> profilePhotoNotifier = ValueNotifier(null);
+  final ValueNotifier<bool> e2eeStatusNotifier = ValueNotifier(false);
+
   UploadUserProfilePhotoHelper uploadUserProfilePhotoHelper =
       UploadUserProfilePhotoHelper(
           file: File(
@@ -29,7 +35,10 @@ class ProfilePageProviderState extends State<ProfilePageProviderWidget> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      await userCubit.getCurrentUserInformation();
+      final User? user = await userCubit.getCurrentUserInformation();
+      if (user != null) {
+        e2eeStatusNotifier.value = user.e2eeEnabled;
+      }
     });
     super.initState();
   }
@@ -46,6 +55,26 @@ class ProfilePageProviderState extends State<ProfilePageProviderWidget> {
             profilePhotoNotifier.value = File(file.files.single.path!);
           });
     }
+  }
+
+  setE2eeStatus(bool status) async {
+    await userCubit.setE2eeStatus(
+      status: status,
+      whenSuccess: () async {
+        e2eeStatusNotifier.value = status;
+
+        /// Edit shared preferences e2ee status
+
+        AuthResponseModel? authResponse = (await SharedPreferencesUserManager.getUser());
+
+        if (authResponse != null) {
+          authResponse = authResponse.copyWith(
+              user: authResponse.user.copyWith(e2eeEnabled: status));
+
+          await CustomSharedPreferences.saveUser('user', authResponse!);
+        }
+      },
+    );
   }
 
   @override

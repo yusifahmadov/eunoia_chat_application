@@ -95,4 +95,13 @@ class UserRepositoryImpl implements UserRepository {
       return Left(ResponseI(message: e.response.toString()));
     }
   }
+
+  @override
+  Future<Either<ResponseI, ResponseI>> setE2eeStatus(bool status) async {
+    try {
+      return Right(await userRemoteDataSource.setE2eeStatus(status));
+    } on DioException catch (e) {
+      return Left(ResponseI(message: e.response.toString()));
+    }
+  }
 }

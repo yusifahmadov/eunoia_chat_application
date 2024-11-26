@@ -1,3 +1,4 @@
+import 'package:eunoia_chat_application/core/response/response_model.dart';
 import 'package:eunoia_chat_application/features/conversation/data/models/group_data_model.dart';
 import 'package:eunoia_chat_application/features/conversation/domain/entities/helper/add_group_photo_helper.dart';
 
@@ -14,4 +15,5 @@ abstract class ConversationRemoteDataSource {
   Future<void> addParticipantsToGroupConversation({required Map<String, dynamic> body});
   Future<List<GroupDataModel>> getGroupData(int conversationId);
   Future<void> addGroupPhoto({required AddGroupPhotoHelper body});
+  Future<ResponseModel> leaveGroup(int conversationId);
 }

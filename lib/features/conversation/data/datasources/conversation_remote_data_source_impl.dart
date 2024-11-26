@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:eunoia_chat_application/core/response/response_model.dart';
 import 'package:eunoia_chat_application/features/conversation/data/models/group_data_model.dart';
 import 'package:eunoia_chat_application/features/conversation/domain/entities/helper/add_group_photo_helper.dart';
 import 'package:http_parser/http_parser.dart';
@@ -73,5 +74,17 @@ class ConversationRemoteDataSourceImpl implements ConversationRemoteDataSource {
     ));
     await getIt<Dio>()
         .post('/storage/v1/object/groups/${'${body.fileName}.jpg'}', data: data);
+  }
+
+  @override
+  Future<ResponseModel> leaveGroup(int conversationId) async {
+    final response = await getIt<Dio>().post(
+      '/rest/v1/rpc/leave_group',
+      data: {
+        "group_id": conversationId,
+      },
+    );
+
+    return ResponseModel.fromJson(response.data as Map<String, dynamic>);
   }
 }

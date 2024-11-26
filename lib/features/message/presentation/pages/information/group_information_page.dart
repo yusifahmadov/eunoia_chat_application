@@ -1,6 +1,8 @@
+import 'package:eunoia_chat_application/core/constant/constants.dart';
 import 'package:eunoia_chat_application/features/conversation/presentation/cubit/conversation_cubit.dart';
 import 'package:eunoia_chat_application/features/conversation/presentation/pages/add_participants/add_participants_provider_state.dart';
 import 'package:eunoia_chat_application/features/main/presentation/utility/custom_cached_network_image.dart';
+import 'package:eunoia_chat_application/features/main/presentation/widgets/custom_button.dart';
 import 'package:eunoia_chat_application/features/main/presentation/widgets/custom_svg_icon.dart';
 import 'package:eunoia_chat_application/features/message/presentation/pages/information/group_information_provider.dart';
 import 'package:eunoia_chat_application/features/message/presentation/pages/information/group_information_provider_state.dart';
@@ -22,7 +24,7 @@ class GroupInformationPage extends StatelessWidget {
         title: const Text('Group Information'),
       ),
       body: BlocBuilder<ConversationCubit, ConversationState>(
-        bloc: context.state.conversationCubit,
+        bloc: conversationCubit,
         builder: (context, state) {
           if (state is GroupDataLoading) {
             return const Center(child: CircularProgressIndicator());
@@ -76,7 +78,7 @@ class GroupInformationPage extends StatelessWidget {
                           builder: (_) {
                             return AddParticipantsProviderWidget(
                               updateParticipant: null,
-                              conversationCubit: context.state.conversationCubit,
+                              conversationCubit: conversationCubit,
                               conversationId: state.groupData.first.id,
                             );
                           });
@@ -119,6 +121,37 @@ class GroupInformationPage extends StatelessWidget {
                           ),
                         );
                       }),
+                  const Spacer(),
+                  CustomTextButton(
+                    onPressed: () {
+                      showAdaptiveDialog(
+                          context: context,
+                          builder: (_) {
+                            return AlertDialog.adaptive(
+                              title: const Text("Do you want to leave this group?"),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text("Cancel")),
+                                TextButton(
+                                    onPressed: () {
+                                      context.state.leaveGroup();
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text("Leave")),
+                              ],
+                            );
+                          });
+                    },
+                    text: 'Leave group',
+                    maxSize: true,
+                    color: Theme.of(context).colorScheme.errorContainer,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  )
                 ],
               ),
             );

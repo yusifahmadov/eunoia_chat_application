@@ -42,7 +42,43 @@ class MessagePage extends StatelessWidget {
           ),
           actions: [
             !context.state.widget.conversation.isGroup
-                ? const _e2eeNotifier()
+                ? ValueListenableBuilder(
+                    valueListenable: context.state.e2eeStatusNotifier,
+                    builder: (context, value, child) {
+                      return GestureDetector(
+                          onTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (_) {
+                                  var data = '''
+Messages in this chat are encrypted if both you and the other participant have enabled encryption. Your current encryption setting is ${context.state.widget.myInformation.e2eeEnabled == true ? "Enabled" : "Disabled"}. The other participant’s encryption setting is ${context.state.otherPartyE2eeEnabled == true ? "Enabled" : "Disabled"}.
+
+When encryption is enabled for both parties, messages are secured using end-to-end encryption (E2EE), ensuring that only you and the other participant can read them.
+If either participant has encryption disabled, messages will be sent in plaintext and may not be secure.
+
+You can manage your encryption preference in the settings. Please note that encryption settings apply to all conversations.''';
+                                  return AlertDialog(
+                                    title: Text(
+                                      'Encryption status - ${context.state.e2eeStatusNotifier.value == true ? "Enabled" : "Disabled"}',
+                                      style: Theme.of(context).textTheme.titleLarge,
+                                    ),
+                                    content: Text(
+                                      data,
+                                      style: Theme.of(context).textTheme.bodyMedium,
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: const Text("Close"),
+                                      ),
+                                    ],
+                                  );
+                                });
+                          },
+                          child: const ContainerIconWidget(icon: 'lock-open-outline'));
+                    })
                 : const SizedBox(),
             context.state.widget.conversation.isGroup
                 ? GestureDetector(
@@ -111,84 +147,6 @@ class MessagePage extends StatelessWidget {
   }
 }
 
-class _e2eeNotifier extends StatelessWidget {
-  const _e2eeNotifier({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListenableBuilder(
-        listenable: context.state.e2eeNotifier,
-        builder: (context, child) {
-          return Stack(
-            children: [
-              Switch(
-                value: context.state.e2eeNotifier.value,
-                onChanged: (value) {
-                  context.state.sendEncryptionRequest();
-                },
-              ),
-              ListenableBuilder(
-                  listenable: context.state.encryptionRequestNotifier,
-                  builder: (context, child) {
-                    return context.state.encryptionRequestNotifier.value != null
-                        ? ContainerIconWidget(
-                            onTap: () {
-                              if (context.state.encryptionRequestNotifier.value == null) {
-                                return;
-                              }
-                              showAdaptiveDialog(
-                                  context: context,
-                                  barrierDismissible: true,
-                                  builder: (_) {
-                                    return AlertDialog.adaptive(
-                                      content: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            "Encryption request",
-                                            style:
-                                                Theme.of(context).textTheme.headlineLarge,
-                                          ),
-                                          const SizedBox(
-                                            height: 20,
-                                          ),
-                                          Text(
-                                              "Sender: ${context.state.encryptionRequestNotifier.value?.senderName}"),
-                                          const SizedBox(
-                                            height: 6,
-                                          ),
-                                          Text(
-                                              "Receiver: ${context.state.encryptionRequestNotifier.value?.receiverName}"),
-                                          const SizedBox(
-                                            height: 6,
-                                          ),
-                                          Text(
-                                              "End-to-end encryption offer: ${context.state.encryptionRequestNotifier.value?.e2eeOffer == true ? "Opening" : "Closing"}"),
-                                          const SizedBox(
-                                            height: 6,
-                                          ),
-                                          Text(
-                                              "Status: ${context.state.encryptionRequestNotifier.value?.status == true ? "Accepted" : "Pending"}"),
-                                        ],
-                                      ),
-                                      actions: const [],
-                                    );
-                                  });
-                            },
-                            icon: 'lock-open-outline',
-                            containerColor: Theme.of(context).colorScheme.outlineVariant,
-                          )
-                        : const SizedBox();
-                  }),
-            ],
-          );
-        });
-  }
-}
-
 class _BlocBuilder extends StatelessWidget {
   const _BlocBuilder({
     super.key,
@@ -214,7 +172,7 @@ class _BlocBuilder extends StatelessWidget {
               itemBuilder: (context, index) {
                 final message = context.state.messageCubit.fetchedData[index];
                 return Align(
-                    alignment: message.senderId == context.state.widget.userId
+                    alignment: message.senderId == context.state.widget.myInformation.id
                         ? Alignment.centerRight
                         : Alignment.centerLeft,
                     child: _MessageContainer(message: message));
@@ -238,12 +196,12 @@ class _MessageContainer extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Row(
-        mainAxisAlignment: message.senderId == context.state.widget.userId
+        mainAxisAlignment: message.senderId == context.state.widget.myInformation.id
             ? MainAxisAlignment.end
             : MainAxisAlignment.start,
         children: [
           context.state.widget.conversation.isGroup &&
-                  message.senderId != context.state.widget.userId
+                  message.senderId != context.state.widget.myInformation.id
               ? CircleAvatar(
                   child: ClipRRect(
                   child: Container(
@@ -261,7 +219,7 @@ class _MessageContainer extends StatelessWidget {
           ThemedContainer(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: message.senderId == context.state.widget.userId
+              color: message.senderId == context.state.widget.myInformation.id
                   ? Theme.of(context).colorScheme.primaryContainer
                   : Theme.of(context).colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(10),

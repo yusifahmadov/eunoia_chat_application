@@ -19,4 +19,6 @@ abstract class UserRemoteDataSource {
   Future<String> setPublicKey(SetPublicKeyHelper helper);
 
   Future<ResponseModel> updateUserInformation(Map<String, dynamic> body);
+
+  Future<ResponseModel> setE2eeStatus(bool status);
 }

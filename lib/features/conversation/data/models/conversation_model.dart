@@ -13,12 +13,10 @@ class ConversationModel extends Conversation {
       required super.lastMessage,
       required super.lastMessageOwnerPublicKey,
       required super.groupPhoto,
-      required super.e2eeEnabled,
       required super.totalMessageCount});
 
   factory ConversationModel.fromJson(Map<String, dynamic> json) {
     return ConversationModel(
-      e2eeEnabled: json['e2ee_enabled'] as bool,
       id: json['id'] as int,
       groupPhoto: json['group_photo'] as String?,
       isGroup: json['is_group'] as bool,

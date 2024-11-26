@@ -16,20 +16,19 @@ class Conversation extends Equatable {
   final bool isGroup;
   final String? groupPhoto;
 
-  final bool e2eeEnabled;
-  const Conversation(
-      {required this.id,
-      required this.title,
-      required this.isGroup,
-      required this.createdAt,
-      required this.lastMessage,
-      required this.updatedAt,
-      required this.groupPhoto,
-      required this.totalMessageCount,
-      this.creatorId,
-      this.otherPartyProfilePhoto,
-      this.lastMessageOwnerPublicKey,
-      required this.e2eeEnabled});
+  const Conversation({
+    required this.id,
+    required this.title,
+    required this.isGroup,
+    required this.createdAt,
+    required this.lastMessage,
+    required this.updatedAt,
+    required this.groupPhoto,
+    required this.totalMessageCount,
+    this.creatorId,
+    this.otherPartyProfilePhoto,
+    this.lastMessageOwnerPublicKey,
+  });
 
   @override
   List<Object?> get props =>
@@ -45,7 +44,6 @@ class Conversation extends Equatable {
       DateTime? updatedAt,
       int? totalMessageCount,
       String? lastMessageOwnerPublicKey,
-      bool? e2eeEnabled,
       String? groupPhoto,
       bool? isGroup}) {
     return ConversationModel(
@@ -61,7 +59,6 @@ class Conversation extends Equatable {
       createdAt: createdAt ?? this.createdAt,
       lastMessage: lastMessage ?? this.lastMessage,
       otherPartyProfilePhoto: otherPartyProfilePhoto ?? this.otherPartyProfilePhoto,
-      e2eeEnabled: e2eeEnabled ?? this.e2eeEnabled,
     );
   }
 }
