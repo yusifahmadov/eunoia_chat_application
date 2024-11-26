@@ -5,6 +5,7 @@ import 'package:eunoia_chat_application/features/message/domain/entities/partici
 import 'package:eunoia_chat_application/features/user/domain/entities/helper/set_public_key_helper.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/helper/update_user_information_helper.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/helper/upload_user_profile_photo_helper.dart';
+import 'package:eunoia_chat_application/features/user/domain/usecases/set_e2ee_status_usecase.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/set_public_key_usecase.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/update_user_information_usecase.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/update_user_profile_photo_usecase.dart';
@@ -38,8 +39,10 @@ class UserCubit extends Cubit<UserState> {
   UpdateUserProfilePhotoUsecase updateUserProfilePhotoUsecase;
   SetPublicKeyUsecase setPublicKeyUsecase;
   UpdateUserInformationUsecase updateUserInformationUsecase;
+  SetE2eeStatusUsecase setE2eeStatusUsecase;
   UserCubit({
     required this.userLoginUsecase,
+    required this.setE2eeStatusUsecase,
     required this.userRegisterUsecase,
     required this.refreshTokenUsecase,
     required this.getUserUsecase,
@@ -123,15 +126,23 @@ class UserCubit extends Cubit<UserState> {
     return tmpList;
   }
 
-  getCurrentUserInformation() async {
+  Future<User?> getCurrentUserInformation() async {
     emit(CurrentUserLoading());
-
+    User? tmpUser;
     final response = await getCurrentUserUsecase(NoParams());
 
     response.fold(
-      (e) => emit(CurrentUserError(message: e.message)),
-      (user) => emit(CurrentUserSuccess(user: user)),
+      (e) {
+        tmpUser = null;
+        emit(CurrentUserError(message: e.message));
+      },
+      (user) {
+        tmpUser = user;
+        emit(CurrentUserSuccess(user: user));
+      },
     );
+
+    return tmpUser;
   }
 
   updateUserProfilePhoto(
@@ -198,6 +209,19 @@ class UserCubit extends Cubit<UserState> {
             mainContext?.localization?.update_profile_photo_success);
 
         if (whenSuccess != null) whenSuccess();
+      },
+    );
+  }
+
+  setE2eeStatus({required bool status, void Function()? whenSuccess}) async {
+    final response = await setE2eeStatusUsecase(status);
+    response.fold(
+      (error) {
+        CustomFlasher.showError(error.message);
+      },
+      (data) {
+        CustomFlasher.showSuccess(data.message);
+        whenSuccess?.call();
       },
     );
   }

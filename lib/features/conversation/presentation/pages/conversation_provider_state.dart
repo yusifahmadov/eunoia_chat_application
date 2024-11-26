@@ -1,8 +1,7 @@
+import 'package:eunoia_chat_application/core/constant/constants.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/mixins/page_scrolling_mixin.dart';
-import '../../../../injection.dart';
-import '../cubit/conversation_cubit.dart';
 import 'conversation_page.dart';
 import 'conversation_provider.dart';
 
@@ -15,8 +14,6 @@ class ConversationProviderWidget extends StatefulWidget {
 
 class ConversationProviderState extends State<ConversationProviderWidget>
     with PageScrollingMixin {
-  final conversationCubit = getIt<ConversationCubit>();
-
   @override
   void initState() {
     initializeScrolling(function: () async {

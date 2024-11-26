@@ -1,19 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:eunoia_chat_application/core/encryption/diffie_hellman_encryption.dart';
 import 'package:eunoia_chat_application/features/conversation/domain/entities/helper/send_group_message_helper.dart';
-import 'package:eunoia_chat_application/features/message/domain/entities/helper/handle_encryption_request_helper.dart';
-import 'package:eunoia_chat_application/features/message/domain/entities/helper/listen_encryption_requests_helper.dart';
-import 'package:eunoia_chat_application/features/message/domain/entities/helper/send_encryption_request_helper.dart';
-import 'package:eunoia_chat_application/features/message/domain/usecases/get_encryption_request_usecase.dart';
-import 'package:eunoia_chat_application/features/message/domain/usecases/handle_encryption_request_usecase.dart';
-import 'package:eunoia_chat_application/features/message/domain/usecases/listen_encryption_requests_usecase.dart';
-import 'package:eunoia_chat_application/features/message/domain/usecases/send_encryption_request_usecase.dart';
 import 'package:eunoia_chat_application/features/message/domain/usecases/send_group_message_usecase.dart';
-import 'package:eunoia_chat_application/features/user/presentation/cubit/user_cubit.dart';
-import 'package:eunoia_chat_application/injection.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../core/flasher/custom_flasher.dart';
 import '../../../../core/mixins/cubit_scrolling_mixin.dart';
@@ -39,19 +28,11 @@ class MessageCubit extends Cubit<MessageState>
   ListenMessagesUsecase listenMessagesUsecase;
   ReadMessagesUsecase readMessagesUsecase;
   ReadMessagesByConversationUsecase readMessagesByConversationUsecase;
-  SendEncryptionRequestUsecase sendEncryptionRequestUsecase;
-  GetEncryptionRequestUsecase getEncryptionRequestUsecase;
-  HandleEncryptionRequestUsecase handleEncryptionRequestUsecase;
-  ListenEncryptionRequestsUsecase listenEncryptionRequestsUsecase;
   SendGroupMessageUsecase sendGroupMessageUsecase;
   MessageCubit({
     required this.getMessagesUsecase,
-    required this.handleEncryptionRequestUsecase,
     required this.sendGroupMessageUsecase,
-    required this.listenEncryptionRequestsUsecase,
     required this.readMessagesUsecase,
-    required this.getEncryptionRequestUsecase,
-    required this.sendEncryptionRequestUsecase,
     required this.sendMessageUsecase,
     required this.listenMessagesUsecase,
     required this.readMessagesByConversationUsecase,
@@ -210,118 +191,5 @@ class MessageCubit extends Cubit<MessageState>
     await SupabaseRepository.leaveMessageChannel(conversationId: conversationId);
     await SupabaseRepository.leaveEncryptionRequestChannel(
         conversationId: conversationId);
-  }
-
-  sendEncryptionRequest(
-      {required SendEncryptionRequestHelper body,
-      Future<void> Function()? whenSuccess}) async {
-    final response = await sendEncryptionRequestUsecase(body);
-    response.fold(
-      (l) {
-        CustomFlasher.showError(l.message);
-      },
-      (r) async {
-        CustomFlasher.showSuccess(r.message);
-        if (whenSuccess != null) await whenSuccess();
-      },
-    );
-  }
-
-  getEncryptionRequest(
-      {required int conversationId, required UserCubit userCubit}) async {
-    final response = await getEncryptionRequestUsecase(conversationId);
-    response.fold(
-      (l) {
-        CustomFlasher.showError(l.message);
-      },
-      (r) {
-        if (r.isEmpty) return;
-        showEncryptionRequestDialog(
-            requestId: r[0].id, userCubit: userCubit, conversationId: conversationId);
-      },
-    );
-  }
-
-  showEncryptionRequestDialog(
-      {required int requestId,
-      required UserCubit userCubit,
-      required int conversationId}) {
-    showAdaptiveDialog(
-        context: mainContext!,
-        barrierDismissible: false,
-        builder: (context) {
-          return AlertDialog(
-            content: const Text("Do you want to accept the encryption request?"),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  handleEncryptionRequest(
-                      userCubit: userCubit,
-                      body: HandleEncryptionRequestHelper(
-                          conversationId: conversationId,
-                          requestId: requestId,
-                          answer: false));
-                },
-                child: const Text('No'),
-              ),
-              TextButton(
-                onPressed: () async {
-                  Navigator.pop(context);
-                  handleEncryptionRequest(
-                      userCubit: userCubit,
-                      body: HandleEncryptionRequestHelper(
-                          conversationId: conversationId,
-                          requestId: requestId,
-                          answer: true));
-                },
-                child: const Text('Yes'),
-              ),
-            ],
-          );
-        });
-  }
-
-  handleEncryptionRequest(
-      {required HandleEncryptionRequestHelper body, required UserCubit userCubit}) async {
-    final response = await handleEncryptionRequestUsecase(body);
-    response.fold(
-      (l) {
-        CustomFlasher.showError(l.message);
-      },
-      (r) async {
-        CustomFlasher.showSuccess(r.message);
-        userCubit.getUser(conversationId: body.conversationId);
-        closeConversationChannels(conversationId: body.conversationId);
-      },
-    );
-  }
-
-  listenEncryptionRequest(
-      {required int conversationId,
-      required bool? current,
-      required UserCubit userCubit}) async {
-    await listenEncryptionRequestsUsecase(ListenEncryptionRequestsHelper(
-        answer: current,
-        callBackFunc: ({required request}) async {
-          /// we need to get current route name and if it is not the message page we should not show the dialog
-
-          if (GoRouter.of(mainContext!)
-                  .routerDelegate
-                  .currentConfiguration
-                  .uri
-                  .toString() !=
-              '/conversations/details/$conversationId') return;
-
-          if (request.receiverId !=
-              (await SharedPreferencesUserManager.getUser())?.user.id) return;
-
-          showEncryptionRequestDialog(
-            requestId: request.id,
-            conversationId: conversationId,
-            userCubit: userCubit,
-          );
-        },
-        conversationId: conversationId));
   }
 }

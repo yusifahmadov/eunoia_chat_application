@@ -26,4 +26,6 @@ abstract class UserRepository {
 
   Future<Either<ResponseI, ResponseI>> updateUserInformation(
       UpdateUserInformationHelper helper);
+
+  Future<Either<ResponseI, ResponseI>> setE2eeStatus(bool status);
 }

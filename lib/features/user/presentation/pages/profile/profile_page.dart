@@ -135,6 +135,20 @@ class ProfilePage extends StatelessWidget {
                                 ),
                                 title: Text(context.localization?.change_language ?? ""),
                               ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              ValueListenableBuilder(
+                                  valueListenable: context.state.e2eeStatusNotifier,
+                                  builder: (context, value, child) {
+                                    return SwitchListTile(
+                                      value: value,
+                                      title: const Text('End-to-end encryption'),
+                                      onChanged: (value) {
+                                        context.state.setE2eeStatus(value);
+                                      },
+                                    );
+                                  }),
                               const EmptyHeightBox(
                                 height: 30,
                               ),

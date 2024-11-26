@@ -114,4 +114,20 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
 
     return ResponseModel.fromJson(result.data!);
   }
+
+  @override
+  Future<ResponseModel> setE2eeStatus(bool status) async {
+    final result = await getIt<Dio>().fetch<Map<String, dynamic>>(_setStreamType<void>(
+        Options(
+      method: 'POST',
+      headers: <String, dynamic>{},
+      extra: <String, dynamic>{},
+    ).compose(getIt<Dio>().options, '/rest/v1/rpc/set_user_e2ee_enabled',
+            queryParameters: <String, dynamic>{},
+            data: {
+          'p_enabled': status,
+        })));
+
+    return ResponseModel.fromJson(result.data!);
+  }
 }

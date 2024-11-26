@@ -8,6 +8,7 @@ class UserModel extends User {
       required super.profilePhoto,
       required super.email,
       required super.createdAt,
+      required super.e2eeEnabled,
       required super.publicKey,
       required super.username});
 
@@ -23,6 +24,7 @@ class UserModel extends User {
       profilePhoto: json['profile_photo'] as String?,
       bio: json['bio'] as String?,
       publicKey: json['public_key'] as String?,
+      e2eeEnabled: json['e2ee_enabled'] as bool,
     );
   }
 
@@ -34,6 +36,9 @@ class UserModel extends User {
       'created_at': super.createdAt?.toIso8601String(),
       'profile_photo': super.profilePhoto,
       'phone_number': super.bio,
+      'username': super.username,
+      'public_key': super.publicKey,
+      'e2ee_enabled': super.e2eeEnabled,
     };
   }
 }

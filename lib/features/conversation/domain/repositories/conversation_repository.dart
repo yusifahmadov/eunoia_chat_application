@@ -20,4 +20,5 @@ abstract class ConversationRepository {
 
   Future<Either<ResponseI, List<GroupData>>> getGroupData(int conversationId);
   Future<Either<ResponseI, void>> addGroupPhoto(AddGroupPhotoHelper body);
+  Future<Either<ResponseI, ResponseI>> leaveGroup(int conversationId);
 }
