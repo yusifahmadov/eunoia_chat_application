@@ -1,9 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eunoia_chat_application/core/shared_preferences/shared_preferences_user_manager.dart';
+import 'package:eunoia_chat_application/features/main/presentation/widgets/custom_svg_icon.dart';
+import 'package:eunoia_chat_application/features/message/presentation/pages/information/group_information_provider_state.dart';
 import 'package:eunoia_chat_application/injection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../../../../core/constant/empty_box.dart';
 import '../../../../core/extensions/localization_extension.dart';
@@ -37,83 +41,65 @@ class MessagePage extends StatelessWidget {
             },
           ),
           actions: [
-            ListenableBuilder(
-                listenable: context.state.e2eeNotifier,
-                builder: (context, child) {
-                  return Stack(
-                    children: [
-                      Switch(
-                        value: context.state.e2eeNotifier.value,
-                        onChanged: (value) {
-                          context.state.sendEncryptionRequest();
-                        },
-                      ),
-                      ListenableBuilder(
-                          listenable: context.state.encryptionRequestNotifier,
-                          builder: (context, child) {
-                            return context.state.encryptionRequestNotifier.value != null
-                                ? ContainerIconWidget(
-                                    onTap: () {
-                                      if (context.state.encryptionRequestNotifier.value ==
-                                          null) {
-                                        return;
-                                      }
-                                      showAdaptiveDialog(
-                                          context: context,
-                                          barrierDismissible: true,
-                                          builder: (_) {
-                                            return AlertDialog.adaptive(
-                                              content: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Text(
-                                                    "Encryption request",
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .headlineLarge,
-                                                  ),
-                                                  const SizedBox(
-                                                    height: 20,
-                                                  ),
-                                                  Text(
-                                                      "Sender: ${context.state.encryptionRequestNotifier.value?.senderName}"),
-                                                  const SizedBox(
-                                                    height: 6,
-                                                  ),
-                                                  Text(
-                                                      "Receiver: ${context.state.encryptionRequestNotifier.value?.receiverName}"),
-                                                  const SizedBox(
-                                                    height: 6,
-                                                  ),
-                                                  Text(
-                                                      "End-to-end encryption offer: ${context.state.encryptionRequestNotifier.value?.e2eeOffer == true ? "Opening" : "Closing"}"),
-                                                  const SizedBox(
-                                                    height: 6,
-                                                  ),
-                                                  Text(
-                                                      "Status: ${context.state.encryptionRequestNotifier.value?.status == true ? "Accepted" : "Pending"}"),
-                                                ],
-                                              ),
-                                              actions: const [],
-                                            );
-                                          });
-                                    },
-                                    icon: 'lock-open-outline',
-                                    containerColor:
-                                        Theme.of(context).colorScheme.outlineVariant,
-                                  )
-                                : const SizedBox();
-                          }),
-                    ],
-                  );
-                }),
+            !context.state.widget.conversation.isGroup
+                ? const _e2eeNotifier()
+                : const SizedBox(),
+            context.state.widget.conversation.isGroup
+                ? GestureDetector(
+                    onTap: () async {
+                      final String tmpUserId =
+                          (await SharedPreferencesUserManager.getUser())?.user.id ?? "";
+                      showMaterialModalBottomSheet(
+                          context: context,
+                          builder: (_) {
+                            return GroupInformationProviderWidget(
+                              conversation: context.state.widget.conversation,
+                              userId: tmpUserId,
+                            );
+                          });
+                    },
+                    child: const CustomSvgIcon(text: 'information-circle-outline'))
+                : const SizedBox(),
             const SizedBox(
               width: 20,
-            )
+            ),
           ],
-          title: const _AppBarTitle(),
+          title: context.state.widget.conversation.isGroup
+              ? Row(
+                  children: [
+                    context.state.widget.conversation.groupPhoto != null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(40),
+                            child: CachedNetworkImage(
+                                width: 40,
+                                height: 40,
+                                fit: BoxFit.fill,
+                                imageUrl:
+                                    context.state.widget.conversation.groupPhoto ?? ""),
+                          )
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(40),
+                            child: Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primaryContainer,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Center(
+                                child: Text(context.state.widget.conversation.title?[0]
+                                        .toUpperCase()[0] ??
+                                    "A"),
+                              ),
+                            ),
+                          ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text(context.state.widget.conversation.title ?? ""),
+                  ],
+                )
+              : const _AppBarTitle(),
         ),
         body: CustomScrollView(
           reverse: true,
@@ -122,6 +108,84 @@ class MessagePage extends StatelessWidget {
             _BlocBuilder(),
           ],
         ));
+  }
+}
+
+class _e2eeNotifier extends StatelessWidget {
+  const _e2eeNotifier({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+        listenable: context.state.e2eeNotifier,
+        builder: (context, child) {
+          return Stack(
+            children: [
+              Switch(
+                value: context.state.e2eeNotifier.value,
+                onChanged: (value) {
+                  context.state.sendEncryptionRequest();
+                },
+              ),
+              ListenableBuilder(
+                  listenable: context.state.encryptionRequestNotifier,
+                  builder: (context, child) {
+                    return context.state.encryptionRequestNotifier.value != null
+                        ? ContainerIconWidget(
+                            onTap: () {
+                              if (context.state.encryptionRequestNotifier.value == null) {
+                                return;
+                              }
+                              showAdaptiveDialog(
+                                  context: context,
+                                  barrierDismissible: true,
+                                  builder: (_) {
+                                    return AlertDialog.adaptive(
+                                      content: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Text(
+                                            "Encryption request",
+                                            style:
+                                                Theme.of(context).textTheme.headlineLarge,
+                                          ),
+                                          const SizedBox(
+                                            height: 20,
+                                          ),
+                                          Text(
+                                              "Sender: ${context.state.encryptionRequestNotifier.value?.senderName}"),
+                                          const SizedBox(
+                                            height: 6,
+                                          ),
+                                          Text(
+                                              "Receiver: ${context.state.encryptionRequestNotifier.value?.receiverName}"),
+                                          const SizedBox(
+                                            height: 6,
+                                          ),
+                                          Text(
+                                              "End-to-end encryption offer: ${context.state.encryptionRequestNotifier.value?.e2eeOffer == true ? "Opening" : "Closing"}"),
+                                          const SizedBox(
+                                            height: 6,
+                                          ),
+                                          Text(
+                                              "Status: ${context.state.encryptionRequestNotifier.value?.status == true ? "Accepted" : "Pending"}"),
+                                        ],
+                                      ),
+                                      actions: const [],
+                                    );
+                                  });
+                            },
+                            icon: 'lock-open-outline',
+                            containerColor: Theme.of(context).colorScheme.outlineVariant,
+                          )
+                        : const SizedBox();
+                  }),
+            ],
+          );
+        });
   }
 }
 
@@ -173,15 +237,38 @@ class _MessageContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
-      child: ThemedContainer(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: message.senderId == context.state.widget.userId
-              ? Theme.of(context).colorScheme.primaryContainer
-              : Theme.of(context).colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Text(message.message),
+      child: Row(
+        mainAxisAlignment: message.senderId == context.state.widget.userId
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
+        children: [
+          context.state.widget.conversation.isGroup &&
+                  message.senderId != context.state.widget.userId
+              ? CircleAvatar(
+                  child: ClipRRect(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(message.senderName?[0] ?? "A"),
+                  ),
+                ))
+              : const SizedBox(),
+          SizedBox(
+            width: context.state.widget.conversation.isGroup ? 10 : 0,
+          ),
+          ThemedContainer(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: message.senderId == context.state.widget.userId
+                  ? Theme.of(context).colorScheme.primaryContainer
+                  : Theme.of(context).colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text(message.message),
+          ),
+        ],
       ),
     );
   }

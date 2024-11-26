@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:eunoia_chat_application/features/conversation/domain/entities/conversation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/mixins/cubit_scrolling_mixin.dart';
@@ -56,11 +57,12 @@ class ContactCubit extends Cubit<ContactState>
     );
   }
 
-  Future<int?> checkContact({required String id}) async {
+  Future<Conversation?> checkContact({required String id}) async {
     final response = await checkContactUsecase(id);
-    int? tmpId;
+    Conversation? tmpId;
     response.fold(
       (error) {
+        print(error.message);
         return null;
       },
       (contact) {

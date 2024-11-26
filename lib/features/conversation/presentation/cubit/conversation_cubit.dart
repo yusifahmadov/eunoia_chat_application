@@ -1,6 +1,14 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:eunoia_chat_application/core/encryption/diffie_hellman_encryption.dart';
+import 'package:eunoia_chat_application/features/conversation/domain/entities/group_data.dart';
+import 'package:eunoia_chat_application/features/conversation/domain/entities/helper/add_group_photo_helper.dart';
+import 'package:eunoia_chat_application/features/conversation/domain/entities/helper/add_participants_to_group_helper.dart';
+import 'package:eunoia_chat_application/features/conversation/domain/entities/helper/make_group_conversation_helper.dart';
+import 'package:eunoia_chat_application/features/conversation/domain/usecases/add_group_photo_usecase.dart';
+import 'package:eunoia_chat_application/features/conversation/domain/usecases/add_participants_to_group_usecase.dart';
+import 'package:eunoia_chat_application/features/conversation/domain/usecases/get_group_data_usecase.dart';
+import 'package:eunoia_chat_application/features/conversation/domain/usecases/make_group_conversation_usecase.dart';
 import 'package:eunoia_chat_application/features/message/domain/entities/message.dart';
 
 import '../../../../core/extensions/localization_extension.dart';
@@ -18,10 +26,18 @@ class ConversationCubit extends Cubit<ConversationState>
     with CubitScrollingMixin<Conversation, GetConversationsHelper> {
   GetConversationsUsecase getConversationsUsecase;
   ListenConversationsUsecase listenConversationsUsecase;
+  AddParticipantsToGroupUsecase addParticipantsToGroupUsecase;
+  MakeGroupConversationUsecase makeGroupConversationUsecase;
+  AddGroupPhotoUsecase addGroupPhotoUsecase;
+  GetGroupDataUsecase getGroupDataUsecase;
 
   ConversationCubit({
     required this.getConversationsUsecase,
     required this.listenConversationsUsecase,
+    required this.addParticipantsToGroupUsecase,
+    required this.makeGroupConversationUsecase,
+    required this.getGroupDataUsecase,
+    required this.addGroupPhotoUsecase,
   }) : super(ConversationInitial()) {
     helperClass = GetConversationsHelper();
   }
@@ -33,6 +49,7 @@ class ConversationCubit extends Cubit<ConversationState>
     isLoading = true;
     if (isUIRefresh) {
       emit(ConversationsLoading());
+      await Future.delayed(const Duration(milliseconds: 500));
       emit(ConversationsLoaded(conversations: fetchedData));
     }
     final String? id = (await SharedPreferencesUserManager.getUser())?.user.id;
@@ -117,17 +134,102 @@ class ConversationCubit extends Cubit<ConversationState>
 
   void refreshConversations({required Conversation conversation}) async {
     final String? id = (await SharedPreferencesUserManager.getUser())?.user.id;
+
     if (id == null) {
       return emit(
           ConversationsError(message: mainContext!.localization?.user_not_found ?? ""));
     }
 
     final index = fetchedData.indexWhere((element) => element.id == conversation.id);
+
+    if (conversation.e2eeEnabled &&
+        conversation.lastMessage?.message != null &&
+        conversation.lastMessage?.message != "" &&
+        conversation.lastMessage?.encrypted == true) {
+      conversation = conversation.copyWith(
+          lastMessage:
+              conversation.lastMessage!.copyWith(message: 'Message is encrypted'));
+    }
+
     if (index == -1) return;
-    emit(ConversationsLoading());
 
     fetchedData.removeAt(index);
     fetchedData.insert(0, conversation);
-    emit(ConversationsLoaded(conversations: fetchedData));
+
+    getConversations(isUIRefresh: true);
+  }
+
+  makeGroupConversation(
+      {required MakeGroupConversationHelper body,
+      required AddParticipantsToGroupHelper participantsHelper,
+      required AddGroupPhotoHelper? addGroupPhotoHelper,
+      void Function()? whenSuccess}) async {
+    final response = makeGroupConversationUsecase.call(body);
+
+    response.then((value) {
+      value.fold(
+        (error) {
+          print(error.message);
+        },
+        (response) async {
+          participantsHelper = participantsHelper.copyWith(groupId: response);
+
+          if (addGroupPhotoHelper != null && addGroupPhotoHelper.fileName != '') {
+            print('WE CANNOT BE HERE');
+            await addGroupPhoto(body: addGroupPhotoHelper);
+          }
+
+          addParticipantsToGroupConversation(
+              body: participantsHelper, whenSuccess: whenSuccess);
+        },
+      );
+    });
+  }
+
+  addParticipantsToGroupConversation(
+      {required AddParticipantsToGroupHelper body,
+      void Function()? whenSuccess,
+      bool fromExistingGroup = false}) async {
+    final response = await addParticipantsToGroupUsecase.call(body);
+
+    response.fold(
+      (error) {
+        print(error.message);
+      },
+      (response) {
+        fromExistingGroup
+            ? getGroupData(conversationId: body.groupId)
+            : getConversations(refreshScroll: true);
+        whenSuccess?.call();
+      },
+    );
+  }
+
+  Future<GroupData?> getGroupData({required int conversationId}) async {
+    emit(GroupDataLoading());
+    final response = await getGroupDataUsecase(conversationId);
+    GroupData? tmpGroupData;
+    response.fold(
+      (l) {
+        tmpGroupData = null;
+        emit(GroupDataError(message: l.message));
+      },
+      (r) {
+        tmpGroupData = r.first;
+        emit(GroupDataLoaded(groupData: r));
+      },
+    );
+
+    return tmpGroupData;
+  }
+
+  addGroupPhoto({required AddGroupPhotoHelper body}) async {
+    final response = await addGroupPhotoUsecase(body);
+    response.fold(
+      (l) {
+        print(l.message);
+      },
+      (r) {},
+    );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:eunoia_chat_application/features/conversation/domain/entities/conversation.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/user.dart';
 import 'package:eunoia_chat_application/features/user/presentation/cubit/user_cubit.dart';
 import 'package:eunoia_chat_application/features/user/presentation/pages/edit/edit_user_provider_state.dart';
@@ -58,9 +59,8 @@ class AppRouter {
                     routes: const [],
                     pageBuilder: (context, state) => NoTransitionPage(
                         child: MessageProviderWidget(
+                      conversation: (state.extra as List)[1] as Conversation,
                       userId: (state.extra as List)[0] as String,
-                      conversationId: (state.extra as List)[1] as int?,
-                      e2eeEnabled: (state.extra as List)[2] as bool,
                     )),
                   ),
                 ],

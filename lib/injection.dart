@@ -1,8 +1,13 @@
 import 'package:dio/dio.dart';
+import 'package:eunoia_chat_application/features/conversation/domain/usecases/add_group_photo_usecase.dart';
+import 'package:eunoia_chat_application/features/conversation/domain/usecases/add_participants_to_group_usecase.dart';
+import 'package:eunoia_chat_application/features/conversation/domain/usecases/get_group_data_usecase.dart';
+import 'package:eunoia_chat_application/features/conversation/domain/usecases/make_group_conversation_usecase.dart';
 import 'package:eunoia_chat_application/features/message/domain/usecases/get_encryption_request_usecase.dart';
 import 'package:eunoia_chat_application/features/message/domain/usecases/handle_encryption_request_usecase.dart';
 import 'package:eunoia_chat_application/features/message/domain/usecases/listen_encryption_requests_usecase.dart';
 import 'package:eunoia_chat_application/features/message/domain/usecases/send_encryption_request_usecase.dart';
+import 'package:eunoia_chat_application/features/message/domain/usecases/send_group_message_usecase.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/set_public_key_usecase.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/update_user_information_usecase.dart';
 import 'package:eunoia_chat_application/features/user/domain/usecases/update_user_profile_photo_usecase.dart';
@@ -78,6 +83,7 @@ initCubits() {
   getIt.registerFactory(() => MessageCubit(
         readMessagesUsecase: getIt(),
         handleEncryptionRequestUsecase: getIt(),
+        sendGroupMessageUsecase: getIt(),
         listenEncryptionRequestsUsecase: getIt(),
         getMessagesUsecase: getIt(),
         sendMessageUsecase: getIt(),
@@ -88,8 +94,12 @@ initCubits() {
       ));
 
   getIt.registerFactory(() => ConversationCubit(
+        addGroupPhotoUsecase: getIt(),
         getConversationsUsecase: getIt(),
         listenConversationsUsecase: getIt(),
+        addParticipantsToGroupUsecase: getIt(),
+        getGroupDataUsecase: getIt(),
+        makeGroupConversationUsecase: getIt(),
       ));
 
   getIt.registerFactory(() => AuthenticationCubit());
@@ -113,6 +123,12 @@ initDataSources() {
 
 initUseCases() {
   getIt.registerLazySingleton(() => SetPublicKeyUsecase(userRepository: getIt()));
+  getIt
+      .registerLazySingleton(() => AddGroupPhotoUsecase(conversationRepository: getIt()));
+  getIt.registerLazySingleton(() => GetGroupDataUsecase(repository: getIt()));
+  getIt.registerLazySingleton(() => SendGroupMessageUsecase(messageRepository: getIt()));
+  getIt.registerLazySingleton(() => MakeGroupConversationUsecase(repository: getIt()));
+  getIt.registerLazySingleton(() => AddParticipantsToGroupUsecase(repository: getIt()));
   getIt
       .registerLazySingleton(() => UpdateUserInformationUsecase(userRepository: getIt()));
   getIt.registerLazySingleton(() => UserLoginUsecase(userRepository: getIt()));

@@ -8,52 +8,59 @@ class Conversation extends Equatable {
   final String? title;
   final DateTime createdAt;
   final MessageModel? lastMessage;
-  final String? senderProfilePhoto;
+  final String? otherPartyProfilePhoto;
   final String? creatorId;
   final DateTime updatedAt;
   final int totalMessageCount;
   final String? lastMessageOwnerPublicKey;
+  final bool isGroup;
+  final String? groupPhoto;
 
   final bool e2eeEnabled;
   const Conversation(
       {required this.id,
       required this.title,
+      required this.isGroup,
       required this.createdAt,
       required this.lastMessage,
       required this.updatedAt,
+      required this.groupPhoto,
       required this.totalMessageCount,
       this.creatorId,
-      this.senderProfilePhoto,
+      this.otherPartyProfilePhoto,
       this.lastMessageOwnerPublicKey,
       required this.e2eeEnabled});
 
   @override
   List<Object?> get props =>
-      [id, title, createdAt, lastMessage, senderProfilePhoto, creatorId];
+      [id, title, createdAt, lastMessage, otherPartyProfilePhoto, creatorId];
 
-  ConversationModel copyWith({
-    int? id,
-    String? title,
-    DateTime? createdAt,
-    MessageModel? lastMessage,
-    String? senderProfilePhoto,
-    String? creatorId,
-    DateTime? updatedAt,
-    int? totalMessageCount,
-    String? lastMessageOwnerPublicKey,
-    bool? e2eeEnabled,
-  }) {
+  ConversationModel copyWith(
+      {int? id,
+      String? title,
+      DateTime? createdAt,
+      MessageModel? lastMessage,
+      String? otherPartyProfilePhoto,
+      String? creatorId,
+      DateTime? updatedAt,
+      int? totalMessageCount,
+      String? lastMessageOwnerPublicKey,
+      bool? e2eeEnabled,
+      String? groupPhoto,
+      bool? isGroup}) {
     return ConversationModel(
+      isGroup: isGroup ?? this.isGroup,
       lastMessageOwnerPublicKey:
           lastMessageOwnerPublicKey ?? this.lastMessageOwnerPublicKey,
       id: id ?? this.id,
       creatorId: creatorId ?? this.creatorId,
+      groupPhoto: groupPhoto ?? this.groupPhoto,
       updatedAt: updatedAt ?? this.updatedAt,
       title: title ?? this.title,
       totalMessageCount: totalMessageCount ?? this.totalMessageCount,
       createdAt: createdAt ?? this.createdAt,
       lastMessage: lastMessage ?? this.lastMessage,
-      senderProfilePhoto: senderProfilePhoto ?? this.senderProfilePhoto,
+      otherPartyProfilePhoto: otherPartyProfilePhoto ?? this.otherPartyProfilePhoto,
       e2eeEnabled: e2eeEnabled ?? this.e2eeEnabled,
     );
   }

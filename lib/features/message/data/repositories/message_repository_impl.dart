@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:eunoia_chat_application/features/conversation/domain/entities/helper/send_group_message_helper.dart';
 import 'package:eunoia_chat_application/features/message/domain/entities/encryption_request.dart';
 import 'package:eunoia_chat_application/features/message/domain/entities/helper/handle_encryption_request_helper.dart';
 import 'package:eunoia_chat_application/features/message/domain/entities/helper/listen_encryption_requests_helper.dart';
@@ -105,6 +106,16 @@ class MessageRepositoryImpl implements MessageRepository {
       ListenEncryptionRequestsHelper body) async {
     try {
       return Right(await remoteDataSource.listenEncryptionRequests(body: body));
+    } on DioException catch (e) {
+      print(e.response);
+      return Left(ResponseI(message: e.response.toString()));
+    }
+  }
+
+  @override
+  Future<Either<ResponseI, void>> sendGroupMessage(SendGroupMessageHelper body) async {
+    try {
+      return Right(await remoteDataSource.sendGroupMessage(body: body.toJson()));
     } on DioException catch (e) {
       print(e.response);
       return Left(ResponseI(message: e.response.toString()));
