@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:eunoia_chat_application/features/user/presentation/pages/language/language_provider_state.dart';
+import 'package:eunoia_chat_application/features/user/presentation/pages/qr/qr_provider_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../../../../../core/constant/constants.dart';
 import '../../../../../core/constant/empty_box.dart';
@@ -58,7 +60,12 @@ class ProfilePage extends StatelessWidget {
                     ],
                     title: GestureDetector(
                         onTap: () {
-                          authCubit.logout();
+                          showMaterialModalBottomSheet(
+                              context: context,
+                              useRootNavigator: true,
+                              builder: (context) {
+                                return const QrProviderWidget();
+                              });
                         },
                         child: const CustomSvgIcon(text: 'qr-code-outline')),
                   ),
