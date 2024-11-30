@@ -31,7 +31,7 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
 
   @override
   Future<MessageModel?> listenMessages({required ListenMessageHelper body}) async {
-    return await SupabaseRepository.listenMessages(
+    return await SupabaseRepository.listenMessagesAdvanced(
         callBackFunc: body.callBackFunc, conversationId: body.conversationId);
   }
 

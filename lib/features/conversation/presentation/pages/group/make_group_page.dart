@@ -4,6 +4,7 @@ import 'package:eunoia_chat_application/features/conversation/presentation/pages
 import 'package:eunoia_chat_application/features/main/presentation/utility/custom_input_decoration.dart';
 import 'package:eunoia_chat_application/features/main/presentation/widgets/custom_svg_icon.dart';
 import 'package:eunoia_chat_application/features/main/presentation/widgets/text_form_field.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -19,6 +20,7 @@ class MakeGroupPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: !kIsWeb,
         title: const Text('New Group'),
         actions: [
           GestureDetector(

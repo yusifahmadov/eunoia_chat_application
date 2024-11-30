@@ -10,7 +10,7 @@ class User extends Equatable {
   final String? bio;
   final String? username;
   final String? publicKey;
-  final bool e2eeEnabled;
+  final bool? e2eeEnabled;
   const User(
       {required this.id,
       required this.name,

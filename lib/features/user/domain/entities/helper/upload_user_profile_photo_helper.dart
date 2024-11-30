@@ -1,18 +1,16 @@
-import 'dart:io';
-
 class UploadUserProfilePhotoHelper {
   final String fileName;
-  final File file;
+  final List<int> fileBytes;
 
-  UploadUserProfilePhotoHelper({required this.fileName, required this.file});
+  UploadUserProfilePhotoHelper({required this.fileName, required this.fileBytes});
 
   copyWith({
     String? fileName,
-    File? file,
+    List<int>? fileBytes,
   }) {
     return UploadUserProfilePhotoHelper(
       fileName: fileName ?? this.fileName,
-      file: file ?? this.file,
+      fileBytes: fileBytes ?? this.fileBytes,
     );
   }
 }

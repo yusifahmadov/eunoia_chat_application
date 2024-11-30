@@ -3,6 +3,7 @@ import 'package:eunoia_chat_application/core/shared_preferences/shared_preferenc
 import 'package:eunoia_chat_application/features/main/presentation/widgets/custom_svg_icon.dart';
 import 'package:eunoia_chat_application/features/message/presentation/pages/information/group_information_provider_state.dart';
 import 'package:eunoia_chat_application/injection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -34,12 +35,15 @@ class MessagePage extends StatelessWidget {
         resizeToAvoidBottomInset: true,
         persistentFooterButtons: const [_Footer(), SizedBox()],
         appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              context.pop();
-            },
-          ),
+          automaticallyImplyLeading: !kIsWeb,
+          leading: !kIsWeb
+              ? IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () {
+                    context.pop();
+                  },
+                )
+              : null,
           actions: [
             !context.state.widget.conversation.isGroup
                 ? ValueListenableBuilder(
@@ -200,22 +204,22 @@ class _MessageContainer extends StatelessWidget {
             ? MainAxisAlignment.end
             : MainAxisAlignment.start,
         children: [
-          context.state.widget.conversation.isGroup &&
-                  message.senderId != context.state.widget.myInformation.id
-              ? CircleAvatar(
-                  child: ClipRRect(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primaryContainer,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Text(message.senderName?[0] ?? "A"),
-                  ),
-                ))
-              : const SizedBox(),
-          SizedBox(
-            width: context.state.widget.conversation.isGroup ? 10 : 0,
-          ),
+          // context.state.widget.conversation.isGroup &&
+          //         message.senderId != context.state.widget.myInformation.id
+          //     ? CircleAvatar(
+          //         child: ClipRRect(
+          //         child: Container(
+          //           decoration: BoxDecoration(
+          //             color: Theme.of(context).colorScheme.primaryContainer,
+          //             borderRadius: BorderRadius.circular(10),
+          //           ),
+          //           child: Text(message.senderName?[0] ?? "A"),
+          //         ),
+          //       ))
+          //     : const SizedBox(),
+          // SizedBox(
+          //   width: context.state.widget.conversation.isGroup ? 10 : 0,
+          // ),
           ThemedContainer(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
@@ -224,7 +228,30 @@ class _MessageContainer extends StatelessWidget {
                   : Theme.of(context).colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Text(message.message),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                context.state.widget.conversation.isGroup &&
+                        message.senderId != context.state.widget.myInformation.id
+                    ? Text(
+                        message.senderName != null
+                            ? '${message.senderName}:'
+                            : "Unknown sender:",
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .copyWith(fontStyle: FontStyle.italic),
+                      )
+                    : const SizedBox(),
+                SizedBox(
+                  height: context.state.widget.conversation.isGroup &&
+                          message.senderId != context.state.widget.myInformation.id
+                      ? 10
+                      : 0,
+                ),
+                Text(message.message),
+              ],
+            ),
           ),
         ],
       ),

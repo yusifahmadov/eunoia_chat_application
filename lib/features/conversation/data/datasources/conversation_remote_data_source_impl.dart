@@ -27,7 +27,8 @@ class ConversationRemoteDataSourceImpl implements ConversationRemoteDataSource {
   Future<ConversationModel?> listenConversations(
       {required void Function({required ConversationModel conversation})
           callBackFunc}) async {
-    return await SupabaseRepository.listenConversations(callBackFunc: callBackFunc);
+    return await SupabaseRepository.listenConversationsAdvanced(
+        callBackFunc: callBackFunc);
   }
 
   @override

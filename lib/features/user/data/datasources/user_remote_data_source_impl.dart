@@ -76,8 +76,8 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     final data = FormData();
     data.files.add(MapEntry(
       'body',
-      MultipartFile.fromFileSync(
-        body.file.path,
+      MultipartFile.fromBytes(
+        body.fileBytes,
         filename: '$fileName.jpg',
         contentType: MediaType.parse('image/jpeg'),
       ),

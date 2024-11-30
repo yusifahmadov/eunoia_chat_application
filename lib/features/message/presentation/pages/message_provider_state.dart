@@ -42,7 +42,7 @@ class MessageProviderState extends State<MessageProviderWidget> with PageScrolli
         userPublicKey = BigInt.parse(users[0].userData.publicKey ?? '0');
         messageCubit.helperClass =
             messageCubit.helperClass.copyWith(conversationId: widget.conversation.id);
-        otherPartyE2eeEnabled = users[0].userData.e2eeEnabled;
+        otherPartyE2eeEnabled = users[0].userData.e2eeEnabled!;
         e2eeStatusNotifier.value = widget.myInformation.e2eeEnabled == true &&
             users[0].userData.e2eeEnabled == true;
 
@@ -91,6 +91,7 @@ class MessageProviderState extends State<MessageProviderWidget> with PageScrolli
         encryptMessage: e2eeStatusNotifier.value,
         recieverPublicKey: BigInt.parse(users[0].userData.publicKey!),
         message: SendMessageHelper(
+            conversationId: widget.conversation.id,
             isGroup: widget.conversation.isGroup,
             senderId: '',
             messageText: message,

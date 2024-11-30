@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:eunoia_chat_application/core/encryption/diffie_hellman_encryption.dart';
+import 'package:eunoia_chat_application/features/conversation/data/models/conversation_model.dart';
 import 'package:eunoia_chat_application/features/conversation/domain/entities/group_data.dart';
 import 'package:eunoia_chat_application/features/conversation/domain/entities/helper/add_group_photo_helper.dart';
 import 'package:eunoia_chat_application/features/conversation/domain/entities/helper/add_participants_to_group_helper.dart';
@@ -97,6 +98,7 @@ class ConversationCubit extends Cubit<ConversationState>
 
           hasMore = conversations.isNotEmpty;
           isLoading = false;
+
           emit(ConversationsLoaded(conversations: conversations));
         },
       );
@@ -137,13 +139,14 @@ class ConversationCubit extends Cubit<ConversationState>
 
   void refreshConversations({required Conversation conversation}) async {
     final String? id = (await SharedPreferencesUserManager.getUser())?.user.id;
-
     if (id == null) {
       return emit(
           ConversationsError(message: mainContext!.localization?.user_not_found ?? ""));
     }
 
     final index = fetchedData.indexWhere((element) => element.id == conversation.id);
+
+    if (fetchedData.where((e) => e.id == conversation.id).first == conversation) return;
 
     if (conversation.lastMessage?.message != null &&
         conversation.lastMessage?.message != "" &&
@@ -152,13 +155,26 @@ class ConversationCubit extends Cubit<ConversationState>
           lastMessage:
               conversation.lastMessage!.copyWith(message: 'Message is encrypted'));
     }
+    print('ANY ${fetchedData.any((element) => element.id == conversation.id)}');
+    print('CONVERSATION ID ${conversation.id}');
 
-    if (index == -1) return;
+    /// WE NEED TO add a filter like if the first time the conversation is loaded, then do not add the conversation to the top
+    // if (index == -1 && !fetchedData.any((element) => element.id == conversation.id)) {
+    //   emit(ConversationsLoading());
+
+    //   fetchedData.insert(0, conversation);
+    //   emit(ConversationsLoaded(conversations: fetchedData));
+    //   return;
+    // }
+    emit(ConversationsLoading());
+
+    conversation = (fetchedData[index] as ConversationModel).copyWith(
+      lastMessage: conversation.lastMessage,
+    );
 
     fetchedData.removeAt(index);
     fetchedData.insert(0, conversation);
-
-    getConversations(isUIRefresh: true);
+    emit(ConversationsLoaded(conversations: fetchedData));
   }
 
   makeGroupConversation(

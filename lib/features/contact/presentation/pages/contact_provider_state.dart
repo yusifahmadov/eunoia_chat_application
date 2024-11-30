@@ -37,7 +37,7 @@ class ContactProviderState extends State<ContactProviderWidget>
   checkContact({required String id}) async {
     Conversation? conversation = (await contactCubit.checkContact(id: id));
     context.go('/conversations/details/${conversation?.id}',
-        extra: [(await SharedPreferencesUserManager.getUser())?.user.id, conversation]);
+        extra: [(await SharedPreferencesUserManager.getUser())?.user, conversation]);
   }
 
   @override

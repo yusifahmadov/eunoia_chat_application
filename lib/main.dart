@@ -9,7 +9,7 @@ import 'injection.dart' as di;
 
 void main() async {
   di.init();
-  await dotenv.load(fileName: 'assets/.env');
+  await dotenv.load(fileName: 'assets/dotenv.txt');
   Bloc.observer = AppBlocObserver();
 
   await Supabase.initialize(

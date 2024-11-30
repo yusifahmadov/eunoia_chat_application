@@ -31,8 +31,19 @@ class Conversation extends Equatable {
   });
 
   @override
-  List<Object?> get props =>
-      [id, title, createdAt, lastMessage, otherPartyProfilePhoto, creatorId];
+  List<Object?> get props => [
+        id,
+        title,
+        createdAt,
+        lastMessage,
+        otherPartyProfilePhoto,
+        creatorId,
+        updatedAt,
+        totalMessageCount,
+        lastMessageOwnerPublicKey,
+        isGroup,
+        groupPhoto
+      ];
 
   ConversationModel copyWith(
       {int? id,

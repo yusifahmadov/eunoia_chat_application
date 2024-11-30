@@ -24,7 +24,17 @@ class Message extends Equatable {
     required this.encrypted,
   });
   @override
-  List<Object?> get props => [id, message, createdAt, conversationId];
+  List<Object?> get props => [
+        id,
+        message,
+        createdAt,
+        conversationId,
+        senderId,
+        senderName,
+        isRead,
+        encrypted,
+        otherPartyProfilePhoto
+      ];
 
   MessageModel copyWith(
       {int? id,

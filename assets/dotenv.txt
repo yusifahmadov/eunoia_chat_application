@@ -1,0 +1,5 @@
+SUPABASE_STORAGE_PUBLIC_URL = 'https://fvjwcsohcmmslqwalmyb.supabase.co/storage/v1/object/public/'
+SUPABASE_URL = "https://fvjwcsohcmmslqwalmyb.supabase.co/rest/v1/"
+SUPABASE_API_ENDPOINT = "https://fvjwcsohcmmslqwalmyb.supabase.co"
+SUPABASE_API_REALTIME_ENDPOINT = "fvjwcsohcmmslqwalmyb.supabase.co"
+SUPABASE_API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ2andjc29oY21tc2xxd2FsbXliIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mjc1MTczMzksImV4cCI6MjA0MzA5MzMzOX0.P1k3RwdOcTD_rjGte9Lok7QbbRuJhlrEZwYQFKG8MzI"

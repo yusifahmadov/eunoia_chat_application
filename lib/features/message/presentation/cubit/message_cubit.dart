@@ -145,6 +145,8 @@ class MessageCubit extends Cubit<MessageState>
       ListenMessageHelper(
         conversationId: conversationId,
         callBackFunc: ({required message}) async {
+          if (fetchedData.isEmpty || fetchedData.any((e) => e.id == message.id)) return;
+          print("WE CANNOT BE HERE");
           emit(MessageLoading());
           List<Message> messages = [message];
           if (decryptMessage) {
@@ -189,7 +191,5 @@ class MessageCubit extends Cubit<MessageState>
     required int conversationId,
   }) async {
     await SupabaseRepository.leaveMessageChannel(conversationId: conversationId);
-    await SupabaseRepository.leaveEncryptionRequestChannel(
-        conversationId: conversationId);
   }
 }

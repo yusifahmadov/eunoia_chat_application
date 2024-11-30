@@ -6,6 +6,7 @@ import 'package:eunoia_chat_application/features/user/data/models/auth_response_
 import 'package:eunoia_chat_application/features/user/domain/entities/helper/upload_user_profile_photo_helper.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/user.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../injection.dart';
@@ -26,18 +27,14 @@ class ProfilePageProviderState extends State<ProfilePageProviderWidget> {
   final ValueNotifier<bool> e2eeStatusNotifier = ValueNotifier(false);
 
   UploadUserProfilePhotoHelper uploadUserProfilePhotoHelper =
-      UploadUserProfilePhotoHelper(
-          file: File(
-            '',
-          ),
-          fileName: '');
+      UploadUserProfilePhotoHelper(fileBytes: [], fileName: '');
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       final User? user = await userCubit.getCurrentUserInformation();
       if (user != null) {
-        e2eeStatusNotifier.value = user.e2eeEnabled;
+        e2eeStatusNotifier.value = user.e2eeEnabled!;
       }
     });
     super.initState();
@@ -47,12 +44,17 @@ class ProfilePageProviderState extends State<ProfilePageProviderWidget> {
     final file = await FilePicker.platform.pickFiles(
       type: FileType.image,
     );
+
     if (file != null) {
       await userCubit.updateUserProfilePhoto(
           body: UploadUserProfilePhotoHelper(
-              file: File(file.files.single.path!), fileName: file.files.single.name),
+              fileBytes: file.files.first.bytes!, fileName: file.files.single.name),
           whenSuccess: () async {
-            profilePhotoNotifier.value = File(file.files.single.path!);
+            if (kIsWeb) {
+              userCubit.getCurrentUserInformation();
+            } else {
+              profilePhotoNotifier.value = File(file.files.single.path!);
+            }
           });
     }
   }

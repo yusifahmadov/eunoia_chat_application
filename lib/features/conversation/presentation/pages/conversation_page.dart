@@ -1,10 +1,13 @@
 import 'package:eunoia_chat_application/core/constant/constants.dart';
 import 'package:eunoia_chat_application/features/conversation/presentation/pages/group/make_group_page_provider_state.dart';
 import 'package:eunoia_chat_application/features/main/presentation/utility/custom_cached_network_image.dart';
+import 'package:eunoia_chat_application/features/main/presentation/utility/tooltip_handler.dart';
 import 'package:eunoia_chat_application/features/message/presentation/pages/message_provider_state.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/user.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
@@ -35,6 +38,20 @@ class ConversationPage extends StatelessWidget {
           IconButton(
             icon: const CustomSvgIcon(text: 'create-outline'),
             onPressed: () async {
+              if (kIsWeb) {
+                showAdaptiveDialog(
+                    context: context,
+                    barrierDismissible: kIsWeb,
+                    useRootNavigator: true,
+                    builder: (_) {
+                      return AlertDialog(
+                        content: MakeGroupPageProviderWidget(
+                          conversationCubit: conversationCubit,
+                        ),
+                      );
+                    });
+                return;
+              }
               await showMaterialModalBottomSheet(
                   context: context,
                   useRootNavigator: true,
@@ -66,108 +83,101 @@ class _BlocBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ConversationCubit, ConversationState>(
       bloc: conversationCubit,
-      buildWhen: (previous, current) => (current is ConversationsLoaded ||
-          current is ConversationsError ||
-          current is ConversationsLoading),
+      buildWhen: (previous, current) =>
+          previous != current &&
+          (current is ConversationsLoaded ||
+              current is ConversationsError ||
+              current is ConversationsLoading),
       builder: (context, state) {
-        if (conversationCubit.fetchedData.isEmpty) {
-          return const SliverFillRemaining(
-              child: Center(child: CircularProgressIndicator()));
-        }
         if (state is ConversationsError) {
           return SliverFillRemaining(child: Center(child: Text(state.message)));
         }
 
-        return const _ConversationTile();
-      },
-    );
-  }
-}
-
-class _ConversationTile extends StatelessWidget {
-  const _ConversationTile({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverPadding(
-      padding: const EdgeInsets.all(20),
-      sliver: SliverList.separated(
-          separatorBuilder: (context, index) => const Divider(),
-          itemCount: conversationCubit.fetchedData.length,
-          itemBuilder: (context, index) {
-            final conversation = conversationCubit.fetchedData[index];
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: ListTile(
-                dense: true,
-                visualDensity: const VisualDensity(vertical: 1),
-                contentPadding: const EdgeInsets.all(0),
-                tileColor: Theme.of(context).colorScheme.surface,
-                leading: conversation.isGroup
-                    ? conversation.groupPhoto != null
-                        ? CustomCachedNetworkImage(
+        return SliverPadding(
+          padding: const EdgeInsets.all(20),
+          sliver: SliverList.separated(
+              separatorBuilder: (context, index) => const Divider(),
+              itemCount: conversationCubit.fetchedData.length,
+              itemBuilder: (context, index) {
+                final conversation = conversationCubit.fetchedData[index];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: ListTile(
+                    dense: true,
+                    visualDensity: const VisualDensity(vertical: 1),
+                    contentPadding: const EdgeInsets.all(0),
+                    tileColor: Theme.of(context).colorScheme.surface,
+                    leading: conversation.isGroup
+                        ? conversation.groupPhoto != null
+                            ? CustomCachedNetworkImage(
+                                containerHeight: 50,
+                                containerWidth: 50,
+                                imageUrl: conversation.groupPhoto,
+                              )
+                            : CircleAvatar(
+                                radius: 28,
+                                child: Text(conversation.title![0].toUpperCase(),
+                                    style: Theme.of(context).textTheme.titleSmall),
+                              )
+                        : CustomCachedNetworkImage(
                             containerHeight: 50,
                             containerWidth: 50,
-                            imageUrl: conversation.groupPhoto,
-                          )
-                        : CircleAvatar(
-                            radius: 28,
-                            child: Text(conversation.title![0].toUpperCase(),
-                                style: Theme.of(context).textTheme.titleSmall),
-                          )
-                    : CustomCachedNetworkImage(
-                        containerHeight: 50,
-                        containerWidth: 50,
-                        imageUrl: conversation.lastMessage != null
-                            ? conversation.lastMessage!.otherPartyProfilePhoto
-                            : conversation.otherPartyProfilePhoto,
-                      ),
-                title: Row(
-                  children: [
-                    Text(
-                      conversation.title ?? "",
-                      style: Theme.of(context).textTheme.titleSmall,
+                            imageUrl: conversation.otherPartyProfilePhoto,
+                          ),
+                    title: Row(
+                      children: [
+                        Tooltip(
+                          message: conversation.title ?? "",
+                          child: Text(
+                            TooltipHandler.showCustomTooltip(
+                                value: conversation.title, defaultValue: 'Conversation'),
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
+                        ),
+                        const Spacer(),
+                        Text(
+                            DateFormat("h:mm a").format(conversation.updatedAt.toLocal()),
+                            style: Theme.of(context).textTheme.bodySmall),
+                      ],
                     ),
-                    const Spacer(),
-                    Text(DateFormat("h:mm a").format(conversation.updatedAt.toLocal()),
-                        style: Theme.of(context).textTheme.bodySmall),
-                  ],
-                ),
-                subtitle: Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        conversation.isGroup
-                            ? "${conversation.lastMessage != null ? "${conversation.lastMessage?.senderName}: ${conversation.lastMessage?.message}" : ""} "
-                            : conversation.lastMessage?.message ?? "",
-                        style: Theme.of(context).textTheme.bodySmall,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        softWrap: true,
-                      ),
+                    subtitle: Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            conversation.isGroup
+                                ? "${conversation.lastMessage != null ? "${conversation.lastMessage?.senderName}: ${conversation.lastMessage?.message}" : ""} "
+                                : conversation.lastMessage?.message ?? "",
+                            style: Theme.of(context).textTheme.bodySmall,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            softWrap: true,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                onTap: () async {
-                  User? user = (await SharedPreferencesUserManager.getUser())?.user;
-
-                  if (user != null) {
-                    await showMaterialModalBottomSheet(
-                        context: context,
-                        useRootNavigator: true,
-                        builder: (_) {
-                          return MessageProviderWidget(
-                            conversation: conversation,
-                            myInformation: user,
-                          );
-                        });
-                  }
-                },
-              ),
-            );
-          }),
+                    onTap: () async {
+                      User? user = (await SharedPreferencesUserManager.getUser())?.user;
+                      print(user);
+                      if (user != null && !kIsWeb) {
+                        await showMaterialModalBottomSheet(
+                            context: context,
+                            useRootNavigator: true,
+                            builder: (_) {
+                              return MessageProviderWidget(
+                                conversation: conversation,
+                                myInformation: user,
+                              );
+                            });
+                        return;
+                      }
+                      context.go('/conversations/details/${conversation.id}',
+                          extra: [user, conversation]);
+                    },
+                  ),
+                );
+              }),
+        );
+      },
     );
   }
 }

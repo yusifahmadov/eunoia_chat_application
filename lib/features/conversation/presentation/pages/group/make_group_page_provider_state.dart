@@ -79,7 +79,7 @@ class MakeGroupPageProviderState extends State<MakeGroupPageProviderWidget> {
         addGroupPhotoHelper = addGroupPhotoHelper.copyWith(
           file: File(value.files.single.path!),
           fileName:
-              "${"${makeGroupConversationHelper.title}-${DateTime.now().millisecondsSinceEpoch}"}.jpg",
+              "group_${"${makeGroupConversationHelper.title}-${DateTime.now().millisecondsSinceEpoch}"}.jpg",
         );
       }
     });

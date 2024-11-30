@@ -1,3 +1,5 @@
+import 'package:eunoia_chat_application/core/route/go_router_web.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -69,9 +71,15 @@ class _AppState extends State<App> {
                       locale: Locale(mainCubit.languageValue),
                       theme: ThemeManager.craeteTheme(
                           mainCubit.themeValue ? AppThemeDark() : AppThemeLight()),
-                      routeInformationProvider: AppRouter.router.routeInformationProvider,
-                      routeInformationParser: AppRouter.router.routeInformationParser,
-                      routerDelegate: AppRouter.router.routerDelegate,
+                      routeInformationProvider: kIsWeb
+                          ? AppRouterWeb.router.routeInformationProvider
+                          : AppRouter.router.routeInformationProvider,
+                      routeInformationParser: kIsWeb
+                          ? AppRouterWeb.router.routeInformationParser
+                          : AppRouter.router.routeInformationParser,
+                      routerDelegate: kIsWeb
+                          ? AppRouterWeb.router.routerDelegate
+                          : AppRouter.router.routerDelegate,
                     );
                   });
             },

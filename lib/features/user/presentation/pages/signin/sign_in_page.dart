@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -26,61 +27,63 @@ class SignInPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: BlocListener<AuthenticationCubit, AuthenticationState>(
-              bloc: authCubit,
-              listener: (context, state) {
-                if (state is AuthenticationAuthenticated) {
-                  context.go('/conversations');
-                }
-              },
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "Sign In Account",
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                  const Text("Enter your personal data to login your account"),
-                  const EmptyHeightBox(
-                    height: 30,
-                  ),
-                  const _SocialButtons(),
-                  const EmptyHeightBox(
-                    height: 10,
-                  ),
-                  const _OrDivider(),
-                  const EmptyHeightBox(
-                    height: 20,
-                  ),
-                  const _TextFields(),
-                  const EmptyHeightBox(
-                    height: 20,
-                  ),
-                  const _SignInButton(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Don't have an account?",
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium!
-                              .copyWith(color: Theme.of(context).colorScheme.onSurface)),
-                      TextButton(
-                          onPressed: () {
-                            context.go('/auth/signup');
-                          },
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.all(3),
-                            minimumSize: const Size(0, 0),
-                          ),
-                          child: Text("Sign up",
-                              style: Theme.of(context).textTheme.bodyLarge))
-                    ],
-                  )
-                ],
+        body: Center(
+          heightFactor: kIsWeb ? 2 : 1,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: BlocListener<AuthenticationCubit, AuthenticationState>(
+                bloc: authCubit,
+                listener: (context, state) {
+                  if (state is AuthenticationAuthenticated) {
+                    context.go(kIsWeb ? "/home" : "/conversations");
+                  }
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Sign In Account",
+                      style: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                    const Text("Enter your personal data to login your account"),
+                    const EmptyHeightBox(
+                      height: 30,
+                    ),
+                    const _SocialButtons(),
+                    const EmptyHeightBox(
+                      height: 10,
+                    ),
+                    const _OrDivider(),
+                    const EmptyHeightBox(
+                      height: 20,
+                    ),
+                    const _TextFields(),
+                    const EmptyHeightBox(
+                      height: 20,
+                    ),
+                    const _SignInButton(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Don't have an account?",
+                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface)),
+                        TextButton(
+                            onPressed: () {
+                              context.go('/auth/signup');
+                            },
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.all(3),
+                              minimumSize: const Size(0, 0),
+                            ),
+                            child: Text("Sign up",
+                                style: Theme.of(context).textTheme.bodyLarge))
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
           ),
@@ -95,12 +98,20 @@ class _SignInButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomTextButton(
-      onPressed: () {
-        context.state.signIn();
-      },
-      text: "Signin",
-      maxSize: true,
+    return Row(
+      children: [
+        kIsWeb ? const Expanded(child: SizedBox()) : const SizedBox(),
+        Expanded(
+          child: CustomTextButton(
+            onPressed: () {
+              context.state.signIn();
+            },
+            text: "Signin",
+            maxSize: true,
+          ),
+        ),
+        kIsWeb ? const Expanded(child: SizedBox()) : const SizedBox(),
+      ],
     );
   }
 }
@@ -114,22 +125,38 @@ class _TextFields extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        CustomTextFieldWithTopPlaceHolder(
-            customTextField: CustomTextField(
-                controller: context.state.emailController,
-                decoration: CustomInputDecoration(
-                    context: context, hintText: "eg. johnheight@gmail.com")),
-            text: "Email"),
+        Row(
+          children: [
+            kIsWeb ? const Expanded(child: SizedBox()) : const SizedBox(),
+            Expanded(
+              child: CustomTextFieldWithTopPlaceHolder(
+                  customTextField: CustomTextField(
+                      controller: context.state.emailController,
+                      decoration: CustomInputDecoration(
+                          context: context, hintText: "eg. johnheight@gmail.com")),
+                  text: "Email"),
+            ),
+            kIsWeb ? const Expanded(child: SizedBox()) : const SizedBox(),
+          ],
+        ),
         const EmptyHeightBox(
           height: 20,
         ),
-        CustomTextFieldWithTopPlaceHolder(
-            customTextField: CustomTextField(
-                controller: context.state.passwordController,
-                obscureText: true,
-                decoration: CustomInputDecoration(
-                    context: context, hintText: "Enter your password")),
-            text: "Password"),
+        Row(
+          children: [
+            kIsWeb ? const Expanded(child: SizedBox()) : const SizedBox(),
+            Expanded(
+              child: CustomTextFieldWithTopPlaceHolder(
+                  customTextField: CustomTextField(
+                      controller: context.state.passwordController,
+                      obscureText: true,
+                      decoration: CustomInputDecoration(
+                          context: context, hintText: "Enter your password")),
+                  text: "Password"),
+            ),
+            kIsWeb ? const Expanded(child: SizedBox()) : const SizedBox(),
+          ],
+        ),
       ],
     );
   }
@@ -173,6 +200,7 @@ class _SocialButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
+        kIsWeb ? Expanded(flex: 2, child: Container()) : const SizedBox(),
         Expanded(
           child: ThemedContainer(
             decoration: BoxDecoration(
@@ -190,24 +218,7 @@ class _SocialButtons extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: ThemedContainer(
-            decoration: BoxDecoration(
-              borderRadius: CustomBorderRadius.radius12(),
-            ),
-            padding: const EdgeInsets.all(12),
-            child: const Row(
-              children: [
-                CustomSvgIcon(text: "logo-github"),
-                SizedBox(
-                  width: 10,
-                ),
-                Text("Github"),
-              ],
-            ),
-          ),
-        ),
+        kIsWeb ? Expanded(flex: 2, child: Container()) : const SizedBox()
       ],
     );
   }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -91,12 +92,20 @@ class _SignUpButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomTextButton(
-      onPressed: () {
-        context.inherited.register();
-      },
-      text: context.localization!.sign_up,
-      maxSize: true,
+    return Row(
+      children: [
+        kIsWeb ? const Expanded(child: SizedBox()) : const SizedBox(),
+        Expanded(
+          child: CustomTextButton(
+            onPressed: () {
+              context.inherited.register();
+            },
+            text: context.localization!.sign_up,
+            maxSize: true,
+          ),
+        ),
+        kIsWeb ? const Expanded(child: SizedBox()) : const SizedBox(),
+      ],
     );
   }
 }
@@ -110,6 +119,7 @@ class _TextFields extends StatelessWidget {
       children: [
         Row(
           children: [
+            kIsWeb ? const Expanded(flex: 2, child: SizedBox()) : const SizedBox(),
             Expanded(
               child: CustomTextFieldWithTopPlaceHolder(
                   customTextField: CustomTextField(
@@ -135,48 +145,74 @@ class _TextFields extends StatelessWidget {
                           context: context, hintText: "eg. Ahmadov")),
                   text: "Last Name"),
             ),
+            kIsWeb ? const Expanded(flex: 2, child: SizedBox()) : const SizedBox(),
           ],
         ),
         const EmptyHeightBox(
           height: 20,
         ),
-        CustomTextFieldWithTopPlaceHolder(
-            customTextField: CustomTextField(
-                onChanged: (value) async {
-                  context.inherited.userRegisterHelper =
-                      context.inherited.userRegisterHelper.copyWith(email: value);
-                },
-                decoration: CustomInputDecoration(
-                    context: context, hintText: "eg. johnheight@gmail.com")),
-            text: "Email"),
+        Row(
+          children: [
+            kIsWeb ? const Expanded(child: SizedBox()) : const SizedBox(),
+            Expanded(
+              child: CustomTextFieldWithTopPlaceHolder(
+                  customTextField: CustomTextField(
+                      onChanged: (value) async {
+                        context.inherited.userRegisterHelper =
+                            context.inherited.userRegisterHelper.copyWith(email: value);
+                      },
+                      decoration: CustomInputDecoration(
+                          context: context, hintText: "eg. johnheight@gmail.com")),
+                  text: "Email"),
+            ),
+            kIsWeb ? const Expanded(child: SizedBox()) : const SizedBox(),
+          ],
+        ),
         const EmptyHeightBox(
           height: 20,
         ),
-        CustomTextFieldWithTopPlaceHolder(
-            customTextField: CustomTextField(
-                onChanged: (value) async {
-                  context.inherited.userRegisterHelper =
-                      context.inherited.userRegisterHelper.copyWith(password: value);
-                },
-                obscureText: true,
-                decoration: CustomInputDecoration(
-                    context: context, hintText: "Enter your password")),
-            text: "Password"),
+        Row(
+          children: [
+            kIsWeb ? const Expanded(child: SizedBox()) : const SizedBox(),
+            Expanded(
+              child: CustomTextFieldWithTopPlaceHolder(
+                  customTextField: CustomTextField(
+                      onChanged: (value) async {
+                        context.inherited.userRegisterHelper = context
+                            .inherited.userRegisterHelper
+                            .copyWith(password: value);
+                      },
+                      obscureText: true,
+                      decoration: CustomInputDecoration(
+                          context: context, hintText: "Enter your password")),
+                  text: "Password"),
+            ),
+            kIsWeb ? const Expanded(child: SizedBox()) : const SizedBox(),
+          ],
+        ),
         const EmptyHeightBox(
           height: 20,
         ),
-        CustomTextFieldWithTopPlaceHolder(
-            customTextField: CustomTextField(
-                validatorF: (p0) {
-                  if (p0 != context.inherited.userRegisterHelper.password) {
-                    return "Passwords do not match";
-                  }
-                  return null;
-                },
-                obscureText: true,
-                decoration: CustomInputDecoration(
-                    context: context, hintText: "Confirm your password")),
-            text: "Confirm Password"),
+        Row(
+          children: [
+            kIsWeb ? const Expanded(child: SizedBox()) : const SizedBox(),
+            Expanded(
+              child: CustomTextFieldWithTopPlaceHolder(
+                  customTextField: CustomTextField(
+                      validatorF: (p0) {
+                        if (p0 != context.inherited.userRegisterHelper.password) {
+                          return "Passwords do not match";
+                        }
+                        return null;
+                      },
+                      obscureText: true,
+                      decoration: CustomInputDecoration(
+                          context: context, hintText: "Confirm your password")),
+                  text: "Confirm Password"),
+            ),
+            kIsWeb ? const Expanded(child: SizedBox()) : const SizedBox(),
+          ],
+        ),
       ],
     );
   }
@@ -220,6 +256,7 @@ class _SocialButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
+        kIsWeb ? const Expanded(child: SizedBox()) : const SizedBox(),
         Expanded(
           child: ThemedContainer(
             decoration: BoxDecoration(
@@ -237,24 +274,7 @@ class _SocialButtons extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 10),
-        Expanded(
-          child: ThemedContainer(
-            decoration: BoxDecoration(
-              borderRadius: CustomBorderRadius.radius12(),
-            ),
-            padding: const EdgeInsets.all(12),
-            child: const Row(
-              children: [
-                CustomSvgIcon(text: "logo-github"),
-                SizedBox(
-                  width: 10,
-                ),
-                Text("Github"),
-              ],
-            ),
-          ),
-        ),
+        kIsWeb ? const Expanded(child: SizedBox()) : const SizedBox(),
       ],
     );
   }

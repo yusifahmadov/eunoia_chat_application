@@ -24,7 +24,7 @@ class UserModel extends User {
       profilePhoto: json['profile_photo'] as String?,
       bio: json['bio'] as String?,
       publicKey: json['public_key'] as String?,
-      e2eeEnabled: json['e2ee_enabled'] as bool,
+      e2eeEnabled: json['e2ee_enabled'] as bool?,
     );
   }
 

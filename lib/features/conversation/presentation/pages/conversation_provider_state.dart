@@ -1,4 +1,5 @@
 import 'package:eunoia_chat_application/core/constant/constants.dart';
+import 'package:eunoia_chat_application/core/supabase/supabase_repository.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/mixins/page_scrolling_mixin.dart';
@@ -20,11 +21,13 @@ class ConversationProviderState extends State<ConversationProviderWidget>
       conversationCubit.getConversations();
     });
     conversationCubit.listenConversations();
+    // SupabaseRepository.listenMessagesAdvanced();
     super.initState();
   }
 
   @override
   void dispose() {
+    SupabaseRepository.closeSocket();
     super.dispose();
   }
 
