@@ -25,9 +25,6 @@ class _MainPageViewWebState extends State<MainPageViewWeb> {
           child: Column(
             children: [
               Expanded(child: LeftNavigationPane()),
-              SizedBox(
-                height: 15,
-              ),
             ],
           ),
         ),

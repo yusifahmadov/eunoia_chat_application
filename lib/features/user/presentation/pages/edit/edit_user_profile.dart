@@ -5,6 +5,7 @@ import 'package:eunoia_chat_application/features/main/presentation/widgets/text_
 import 'package:eunoia_chat_application/features/user/presentation/pages/edit/edit_user_provider.dart';
 import 'package:eunoia_chat_application/features/user/presentation/pages/edit/edit_user_provider_state.dart';
 import 'package:eunoia_chat_application/injection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 extension _AdvancedContext on BuildContext {
@@ -21,9 +22,10 @@ class EditUserProfile extends StatelessWidget {
       top: false,
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: !kIsWeb,
           title: const Text('Edit User Profile'),
           actions: [
-            GestureDetector(
+            InkWell(
               onTap: () {
                 context.state.updateUserInformation();
               },

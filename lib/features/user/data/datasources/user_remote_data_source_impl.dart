@@ -5,6 +5,7 @@ import 'package:eunoia_chat_application/features/message/data/models/participant
 import 'package:eunoia_chat_application/features/user/domain/entities/helper/set_public_key_helper.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/helper/upload_user_profile_photo_helper.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 
 import '../../../../injection.dart';
 import '../../domain/entities/helper/user_login_helper.dart';
@@ -20,7 +21,10 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
       '/auth/v1/token?grant_type=password',
       data: body.toJson(),
     );
-
+    supabase.Supabase.instance.client.auth.signInWithPassword(
+      email: body.email,
+      password: body.password,
+    );
     return AuthResponseModel.fromJson(response.data);
   }
 

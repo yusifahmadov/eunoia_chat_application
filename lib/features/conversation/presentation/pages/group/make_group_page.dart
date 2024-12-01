@@ -4,6 +4,7 @@ import 'package:eunoia_chat_application/features/conversation/presentation/pages
 import 'package:eunoia_chat_application/features/main/presentation/utility/custom_input_decoration.dart';
 import 'package:eunoia_chat_application/features/main/presentation/widgets/custom_svg_icon.dart';
 import 'package:eunoia_chat_application/features/main/presentation/widgets/text_form_field.dart';
+import 'package:eunoia_chat_application/features/main/presentation/widgets/themed_container.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -93,14 +94,36 @@ class MakeGroupPage extends StatelessWidget {
               ),
               ListTile(
                 onTap: () {
-                  showMaterialModalBottomSheet(
-                      context: context,
-                      useRootNavigator: true,
-                      builder: (_) {
-                        return AddParticipantsProviderWidget(
-                          updateParticipant: context.state.updateParticipant,
-                        );
-                      });
+                  kIsWeb
+                      ? showGeneralDialog(
+                          context: context,
+                          barrierLabel: "Barrier",
+                          barrierDismissible: true,
+                          useRootNavigator: true,
+                          barrierColor: Colors.black.withOpacity(0.5),
+                          transitionDuration: const Duration(milliseconds: 700),
+                          pageBuilder: (_, animation1, animation2) {
+                            return Center(
+                              child: ThemedContainer(
+                                width: MediaQuery.of(context).size.width * 0.5,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                height: MediaQuery.of(context).size.width * 0.5,
+                                child: AddParticipantsProviderWidget(
+                                  updateParticipant: context.state.updateParticipant,
+                                ),
+                              ),
+                            );
+                          })
+                      : showMaterialModalBottomSheet(
+                          context: context,
+                          useRootNavigator: true,
+                          builder: (_) {
+                            return AddParticipantsProviderWidget(
+                              updateParticipant: context.state.updateParticipant,
+                            );
+                          });
                 },
                 leading: const CustomSvgIcon(text: "person-add-outline"),
                 title: Text(

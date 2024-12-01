@@ -3,6 +3,8 @@ import 'package:eunoia_chat_application/features/user/domain/entities/user.dart'
 import 'package:eunoia_chat_application/features/user/presentation/cubit/user_cubit.dart';
 import 'package:eunoia_chat_application/features/user/presentation/pages/edit/edit_user_profile.dart';
 import 'package:eunoia_chat_application/features/user/presentation/pages/edit/edit_user_provider.dart';
+import 'package:eunoia_chat_application/injection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -34,7 +36,8 @@ class EditUserProviderState extends State<EditUserProviderWidget> {
     }
     widget.userCubit.updateUserInformation(
         whenSuccess: () {
-          context.pop();
+          kIsWeb ? mainContext?.go('/home') : context.pop();
+
           widget.userCubit.getCurrentUserInformation();
         },
         helper: UpdateUserInformationHelper(

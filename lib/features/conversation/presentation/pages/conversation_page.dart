@@ -2,6 +2,7 @@ import 'package:eunoia_chat_application/core/constant/constants.dart';
 import 'package:eunoia_chat_application/features/conversation/presentation/pages/group/make_group_page_provider_state.dart';
 import 'package:eunoia_chat_application/features/main/presentation/utility/custom_cached_network_image.dart';
 import 'package:eunoia_chat_application/features/main/presentation/utility/tooltip_handler.dart';
+import 'package:eunoia_chat_application/features/main/presentation/widgets/themed_container.dart';
 import 'package:eunoia_chat_application/features/message/presentation/pages/message_provider_state.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/user.dart';
 import 'package:flutter/foundation.dart';
@@ -39,14 +40,24 @@ class ConversationPage extends StatelessWidget {
             icon: const CustomSvgIcon(text: 'create-outline'),
             onPressed: () async {
               if (kIsWeb) {
-                showAdaptiveDialog(
+                showGeneralDialog(
                     context: context,
-                    barrierDismissible: kIsWeb,
+                    barrierLabel: "Barrier",
+                    barrierDismissible: true,
                     useRootNavigator: true,
-                    builder: (_) {
-                      return AlertDialog(
-                        content: MakeGroupPageProviderWidget(
-                          conversationCubit: conversationCubit,
+                    barrierColor: Colors.black.withOpacity(0.5),
+                    transitionDuration: const Duration(milliseconds: 700),
+                    pageBuilder: (context, animation1, animation2) {
+                      return Center(
+                        child: ThemedContainer(
+                          width: MediaQuery.of(context).size.width * 0.3,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          height: MediaQuery.of(context).size.width * 0.4,
+                          child: MakeGroupPageProviderWidget(
+                            conversationCubit: conversationCubit,
+                          ),
                         ),
                       );
                     });
@@ -109,13 +120,14 @@ class _BlocBuilder extends StatelessWidget {
                     tileColor: Theme.of(context).colorScheme.surface,
                     leading: conversation.isGroup
                         ? conversation.groupPhoto != null
-                            ? CustomCachedNetworkImage(
-                                containerHeight: 50,
-                                containerWidth: 50,
-                                imageUrl: conversation.groupPhoto,
+                            ? CircleAvatar(
+                                radius: 28,
+                                child: CustomCachedNetworkImage(
+                                  imageUrl: conversation.groupPhoto,
+                                ),
                               )
                             : CircleAvatar(
-                                radius: 28,
+                                radius: 26,
                                 child: Text(conversation.title![0].toUpperCase(),
                                     style: Theme.of(context).textTheme.titleSmall),
                               )

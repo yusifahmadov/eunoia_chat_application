@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:eunoia_chat_application/features/main/presentation/widgets/themed_container.dart';
 import 'package:eunoia_chat_application/features/user/presentation/pages/language/language_provider_state.dart';
 import 'package:eunoia_chat_application/features/user/presentation/pages/qr/qr_provider_state.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -41,7 +43,7 @@ class ProfilePage extends StatelessWidget {
                     pinned: true,
                     centerTitle: false,
                     actions: [
-                      GestureDetector(
+                      InkWell(
                         onTap: () => context.go('/profile/edit-profile', extra: [
                           state.user,
                           context.state.userCubit,
@@ -58,14 +60,16 @@ class ProfilePage extends StatelessWidget {
                         width: 20,
                       )
                     ],
-                    title: GestureDetector(
+                    title: InkWell(
                         onTap: () {
-                          showMaterialModalBottomSheet(
-                              context: context,
-                              useRootNavigator: true,
-                              builder: (context) {
-                                return const QrProviderWidget();
-                              });
+                          kIsWeb
+                              ? showCustomDialog(context)
+                              : showMaterialModalBottomSheet(
+                                  context: context,
+                                  useRootNavigator: true,
+                                  builder: (context) {
+                                    return const QrProviderWidget();
+                                  });
                         },
                         child: const CustomSvgIcon(text: 'qr-code-outline')),
                   ),
@@ -128,12 +132,37 @@ class ProfilePage extends StatelessWidget {
                               ),
                               ListTile(
                                 onTap: () {
-                                  showModalBottomSheet(
-                                      context: context,
-                                      showDragHandle: true,
-                                      builder: (context) {
-                                        return const LanguageProviderWidget();
-                                      });
+                                  kIsWeb
+                                      ? showGeneralDialog(
+                                          context: context,
+                                          barrierLabel: "Barrier",
+                                          barrierDismissible: true,
+                                          useRootNavigator: true,
+                                          barrierColor: Colors.black.withOpacity(0.5),
+                                          transitionDuration:
+                                              const Duration(milliseconds: 700),
+                                          pageBuilder:
+                                              (context, animation, secondaryAnimation) {
+                                            return Center(
+                                              child: ThemedContainer(
+                                                  width:
+                                                      MediaQuery.of(context).size.width *
+                                                          0.3,
+                                                  margin: const EdgeInsets.symmetric(
+                                                      horizontal: 20),
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(40)),
+                                                  child: const LanguageProviderWidget()),
+                                            );
+                                          },
+                                        )
+                                      : showModalBottomSheet(
+                                          context: context,
+                                          showDragHandle: true,
+                                          builder: (context) {
+                                            return const LanguageProviderWidget();
+                                          });
                                 },
                                 minTileHeight: 50,
                                 leading: CustomSvgIcon(
@@ -191,6 +220,45 @@ class ProfilePage extends StatelessWidget {
           },
         ),
       ),
+    );
+  }
+
+  void showCustomDialog(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierLabel: "Barrier",
+      barrierDismissible: true,
+      useRootNavigator: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: const Duration(milliseconds: 700),
+      pageBuilder: (_, __, ___) {
+        return Center(
+          child: Container(
+            height: 440,
+            width: 400,
+            margin: const EdgeInsets.symmetric(horizontal: 20),
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(40)),
+            child: const QrProviderWidget(),
+          ),
+        );
+      },
+      transitionBuilder: (_, anim, __, child) {
+        Tween<Offset> tween;
+        if (anim.status == AnimationStatus.reverse) {
+          tween = Tween(begin: const Offset(-1, 0), end: Offset.zero);
+        } else {
+          tween = Tween(begin: const Offset(1, 0), end: Offset.zero);
+        }
+
+        return SlideTransition(
+          position: tween.animate(anim),
+          child: FadeTransition(
+            opacity: anim,
+            child: child,
+          ),
+        );
+      },
     );
   }
 }

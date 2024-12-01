@@ -1,11 +1,9 @@
 import 'package:eunoia_chat_application/features/main/presentation/utility/custom_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../core/extensions/localization_extension.dart';
 import '../../../main/presentation/utility/custom_input_decoration.dart';
-import '../../../main/presentation/widgets/custom_svg_icon.dart';
 import '../../../main/presentation/widgets/text_form_field.dart';
 import '../cubit/contact_cubit.dart';
 import 'contact_provider.dart';
@@ -23,14 +21,7 @@ class ContactPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(context.localization?.contacts ?? ""),
-        actions: [
-          IconButton(
-            icon: const CustomSvgIcon(text: 'add-outline'),
-            onPressed: () {
-              context.go('/contacts');
-            },
-          ),
-        ],
+        actions: const [],
       ),
       body: CustomScrollView(
         slivers: [
@@ -41,6 +32,7 @@ class ContactPage extends StatelessWidget {
               stretch: true,
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
+                centerTitle: true,
                 title: CustomTextField(
                   onChanged: (value) async {
                     context.state.search(
@@ -88,7 +80,7 @@ class ContactPage extends StatelessWidget {
                         tileColor: Theme.of(context).colorScheme.surface,
                         title: Text(
                             context.state.contactCubit.fetchedData[index].username ?? "",
-                            style: Theme.of(context).textTheme.headlineLarge),
+                            style: Theme.of(context).textTheme.bodyLarge),
                         subtitle: Text(
                             context.state.contactCubit.fetchedData[index].bio ?? "",
                             style: Theme.of(context).textTheme.bodyMedium),

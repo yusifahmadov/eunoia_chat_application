@@ -21,6 +21,7 @@ class QrProviderPage extends StatelessWidget {
       color: Theme.of(context).colorScheme.primary,
       child: SafeArea(
         child: Scaffold(
+          appBar: kIsWeb ? AppBar() : null,
           backgroundColor: Theme.of(context).colorScheme.primary,
           body: Padding(
             padding: const EdgeInsets.all(20.0),
@@ -28,38 +29,42 @@ class QrProviderPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Align(
-                    alignment: Alignment.topRight,
-                    child: ContainerIconWidget(
-                        onTap: () {
-                          context.pop();
-                        },
-                        iconColor: Colors.black,
-                        containerColor: Colors.white,
-                        icon: 'close-outline')),
-                const Spacer(),
-                Container(
-                    width: 250,
-                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: ValueListenableBuilder(
-                            valueListenable: context.state.qrImageNotifier,
-                            builder: (context, value, child) {
-                              return value == null
-                                  ? const CircularProgressIndicator()
-                                  : PrettyQrView(
-                                      decoration: const PrettyQrDecoration(
-                                        image: PrettyQrDecorationImage(
-                                            image: AssetImage(
-                                                'assets/eunoia-logo-small.png')),
-                                      ),
-                                      qrImage: value);
-                            }))),
+                !kIsWeb
+                    ? Align(
+                        alignment: Alignment.topRight,
+                        child: ContainerIconWidget(
+                            onTap: () {
+                              context.pop();
+                            },
+                            iconColor: Colors.black,
+                            containerColor: Colors.white,
+                            icon: 'close-outline'))
+                    : const SizedBox(),
+                !kIsWeb ? const Spacer() : const SizedBox(),
+                Center(
+                  child: Container(
+                      width: 250,
+                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: ValueListenableBuilder(
+                              valueListenable: context.state.qrImageNotifier,
+                              builder: (context, value, child) {
+                                return value == null
+                                    ? const CircularProgressIndicator()
+                                    : PrettyQrView(
+                                        decoration: const PrettyQrDecoration(
+                                          image: PrettyQrDecorationImage(
+                                              image: AssetImage(
+                                                  'assets/eunoia-logo-small.png')),
+                                        ),
+                                        qrImage: value);
+                              }))),
+                ),
                 const SizedBox(
                   height: 10,
                 ),

@@ -4,37 +4,33 @@ class LightColors implements IColors {
   LightColors() {
     colorScheme = const ColorScheme.light().copyWith(
       brightness: Brightness.light,
-      primary: const Color(0xFF000000), // Black - Uber's primary brand color
-      onPrimary: const Color(0xFFFFFFFF),
-      primaryContainer: const Color(0xFFF5F5F5), // Slightly darker gray for containers
-      onPrimaryContainer: const Color(0xFF000000),
-      secondary: const Color(0xFF1FBAD6), // Uber's teal accent color
-      onSecondary: const Color(0xFFFFFFFF),
-      secondaryContainer: const Color(0xFFD1F6F4), // Light teal for containers
-      onSecondaryContainer: const Color(0xFF003832),
-      tertiary: const Color(0xFFAAAAAA), // Lighter gray for subtle elements
-      onTertiary: const Color(0xFFFFFFFF),
-      tertiaryContainer:
-          const Color(0xFFF2F2F2), // Even lighter gray for tertiary containers
-      onTertiaryContainer: const Color(0xFF212121),
-      error: const Color(0xFFB00020),
-      onError: const Color(0xFFFFFFFF),
-      errorContainer: const Color(0xFFFCD5D9),
-      onErrorContainer: const Color(0xFF93000A),
-      surface: const Color(0xFFFFFFFF), // White background
-      onSurface: const Color(0xFF212121),
-      surfaceContainerHighest:
-          const Color(0xFFEEEEEE), // Light gray for subtle containers
-      onSurfaceVariant: const Color(0xFF424242),
-      outline: const Color(0xFFBDBDBD), // Light gray outline
-      outlineVariant: const Color(0xFFE0E0E0), // Even lighter gray outline
-      shadow: const Color(0xFF000000),
-      scrim: const Color(0xFF000000),
-      inverseSurface: const Color(0xFF313033),
-      onInverseSurface: const Color(0xFFF4F0F4),
-      inversePrimary: const Color(0xFF616161),
-      surfaceTint: const Color(0xFF000000),
+      primary: const Color(0xFF0088CC), // Classic Telegram Blue
+      onPrimary: const Color(0xFFFFFFFF), // White for text/icons
+      primaryContainer: const Color(0xFFD1ECF9), // Subtle light blue
+      onPrimaryContainer: const Color(0xFF003348), // Dark contrast for text
+      secondary: const Color(0xFF54A0FF), // Lighter vibrant blue
+      onSecondary: const Color(0xFFFFFFFF), // White for text/icons
+      secondaryContainer: const Color(0xFFB3DBFF), // Softer light blue
+      onSecondaryContainer: const Color(0xFF002A45), // Dark contrast for containers
+      tertiary: const Color(0xFF43C6A2), // Fresh minty green accent
+      onTertiary: const Color(0xFFFFFFFF), // White
+      tertiaryContainer: const Color(0xFFC8F7E8), // Very light green
+      onTertiaryContainer: const Color(0xFF00382B), // Dark contrast for text
+      error: const Color(0xFFE53935), // Standard error red
+      onError: const Color(0xFFFFFFFF), // White
+      errorContainer: const Color(0xFFFFE9E9), // Soft pinkish-red container
+      onErrorContainer: const Color(0xFF5A1A1A), // Dark grey text
+      surface: const Color(0xFFFFFFFF), // White for surfaces
+      onSurface: const Color(0xFF1C1C1E), // Dark grey text
+      surfaceContainerHighest: const Color(0xFFF7F9FC), // Very subtle off-white
+      onSurfaceVariant: const Color(0xFF53565A), // Medium grey for subtler text
+      outline: const Color(0xFFB0BEC5), // Light grey for outlines
+      inverseSurface: const Color(0xFF2E3440), // Dark surface for inverse
+      onInverseSurface: const Color(0xFFFFFFFF), // White for text
+      inversePrimary: const Color(0xFF56C6F7), // Light Telegram Blue
+      surfaceTint: const Color(0xFF0088CC), // Matches primary color
     );
+
     brightness = Brightness.light;
   }
   @override
