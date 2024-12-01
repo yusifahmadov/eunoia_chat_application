@@ -143,10 +143,15 @@ class ConversationCubit extends Cubit<ConversationState>
       return emit(
           ConversationsError(message: mainContext!.localization?.user_not_found ?? ""));
     }
+    print(conversation.lastMessage);
+    if (conversation.lastMessage == null) {
+      emit(ConversationsLoading());
 
+      fetchedData.insert(0, conversation);
+      emit(ConversationsLoaded(conversations: fetchedData));
+      return;
+    }
     final index = fetchedData.indexWhere((element) => element.id == conversation.id);
-
-    if (fetchedData.where((e) => e.id == conversation.id).first == conversation) return;
 
     if (conversation.lastMessage?.message != null &&
         conversation.lastMessage?.message != "" &&
@@ -159,13 +164,7 @@ class ConversationCubit extends Cubit<ConversationState>
     print('CONVERSATION ID ${conversation.id}');
 
     /// WE NEED TO add a filter like if the first time the conversation is loaded, then do not add the conversation to the top
-    // if (index == -1 && !fetchedData.any((element) => element.id == conversation.id)) {
-    //   emit(ConversationsLoading());
 
-    //   fetchedData.insert(0, conversation);
-    //   emit(ConversationsLoaded(conversations: fetchedData));
-    //   return;
-    // }
     emit(ConversationsLoading());
 
     conversation = (fetchedData[index] as ConversationModel).copyWith(

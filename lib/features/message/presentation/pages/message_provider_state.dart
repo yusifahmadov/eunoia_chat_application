@@ -87,6 +87,7 @@ class MessageProviderState extends State<MessageProviderWidget> with PageScrolli
     }
 
     if (message == '' || users[0].userData.publicKey == null) return;
+
     await messageCubit.sendMessage(
         encryptMessage: e2eeStatusNotifier.value,
         recieverPublicKey: BigInt.parse(users[0].userData.publicKey!),

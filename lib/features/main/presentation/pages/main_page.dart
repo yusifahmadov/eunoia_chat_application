@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../../../core/extensions/localization_extension.dart';
 import '../../../../injection.dart';
@@ -33,48 +33,54 @@ class _MainPageViewState extends State<MainPageView> {
         selectedLabelStyle: const TextStyle(fontSize: 12),
         items: [
           BottomNavigationBarItem(
-            activeIcon: SvgPicture.asset(
-              "assets/icons/chatbubbles.svg",
-              width: 25,
-              height: 25,
-              color: Theme.of(context).colorScheme.primary,
+            activeIcon: LottieBuilder.asset(
+              'assets/lottie/chat-bubble-filled.json',
+              width: 30,
+              animate: true,
+              height: 30,
+              fit: BoxFit.cover,
             ),
             label: mainContext?.localization?.messages,
-            icon: SvgPicture.asset(
-              "assets/icons/chatbubbles.svg",
-              width: 25,
-              height: 25,
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+            icon: LottieBuilder.asset(
+              'assets/lottie/chat-bubble.json',
+              width: 30,
+              animate: false,
+              height: 30,
+              fit: BoxFit.cover,
             ),
           ),
           BottomNavigationBarItem(
             label: mainContext?.localization?.search,
-            activeIcon: SvgPicture.asset(
-              "assets/icons/person.svg",
-              width: 25,
-              height: 25,
-              color: Theme.of(context).colorScheme.primary,
+            activeIcon: LottieBuilder.asset(
+              'assets/lottie/avatar-filled-2.json',
+              width: 30,
+              animate: true,
+              height: 30,
+              fit: BoxFit.cover,
             ),
-            icon: SvgPicture.asset(
-              "assets/icons/person.svg",
-              width: 25,
-              height: 25,
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+            icon: LottieBuilder.asset(
+              'assets/lottie/avatar.json',
+              width: 30,
+              animate: false,
+              height: 30,
+              fit: BoxFit.cover,
             ),
           ),
           BottomNavigationBarItem(
             label: mainContext?.localization?.settings,
-            activeIcon: SvgPicture.asset(
-              "assets/icons/cog-outline.svg",
-              width: 25,
-              height: 25,
-              color: Theme.of(context).colorScheme.primary,
+            activeIcon: LottieBuilder.asset(
+              'assets/lottie/setting-2.json',
+              width: 30,
+              animate: true,
+              height: 30,
+              fit: BoxFit.cover,
             ),
-            icon: SvgPicture.asset(
-              "assets/icons/cog-outline.svg",
-              width: 25,
-              height: 25,
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.5),
+            icon: LottieBuilder.asset(
+              'assets/lottie/setting-nofill.json',
+              width: 30,
+              animate: false,
+              height: 30,
+              fit: BoxFit.cover,
             ),
           ),
         ]);

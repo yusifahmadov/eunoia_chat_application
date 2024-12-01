@@ -34,7 +34,11 @@ class ConversationPage extends StatelessWidget {
             onTap: () {
               authCubit.logout();
             },
-            child: Text(context.localization?.messages ?? "")),
+            child: GestureDetector(
+                onTap: () {
+                  authCubit.logout();
+                },
+                child: Text(context.localization?.messages ?? ""))),
         actions: [
           IconButton(
             icon: const CustomSvgIcon(text: 'create-outline'),
@@ -100,6 +104,14 @@ class _BlocBuilder extends StatelessWidget {
               current is ConversationsError ||
               current is ConversationsLoading),
       builder: (context, state) {
+        if (conversationCubit.fetchedData.isEmpty) {
+          return const SliverFillRemaining(
+            child: Center(
+              child: Text('No conversations'),
+            ),
+          );
+        }
+
         if (state is ConversationsError) {
           return SliverFillRemaining(child: Center(child: Text(state.message)));
         }

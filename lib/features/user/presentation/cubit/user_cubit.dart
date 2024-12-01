@@ -88,6 +88,7 @@ class UserCubit extends Cubit<UserState> {
       },
       (data) async {
         await storeUserInformation(body: data);
+        await storeKeyEngine();
         setPublicKey();
         authCubit.authenticate(body: data);
         emit(UserRegisterSuccess(authResponse: data));
