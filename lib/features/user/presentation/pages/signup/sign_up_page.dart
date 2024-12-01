@@ -37,15 +37,7 @@ class SignUpPage extends StatelessWidget {
                 ),
                 const Text("Enter your personal data to create your account"),
                 const EmptyHeightBox(
-                  height: 30,
-                ),
-                const _SocialButtons(),
-                const EmptyHeightBox(
-                  height: 10,
-                ),
-                const _OrDivider(),
-                const EmptyHeightBox(
-                  height: 20,
+                  height: 40,
                 ),
                 const _TextFields(),
                 const EmptyHeightBox(

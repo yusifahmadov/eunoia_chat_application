@@ -38,10 +38,12 @@ class ContactProviderState extends State<ContactProviderWidget>
   checkContact({required String id}) async {
     Conversation? conversation =
         (await contactCubit.checkContact(id: id).whenComplete(() {}));
-    conversationCubit.fetchedData.add(conversation!);
+    if (!conversationCubit.fetchedData.any((e) => e.id == conversation?.id)) {
+      conversationCubit.fetchedData.add(conversation!);
+    }
     conversationCubit.getConversations(isUIRefresh: true);
 
-    context.go('/conversations/details/${conversation.id}',
+    context.go('/conversations/details/${conversation?.id}',
         extra: [(await SharedPreferencesUserManager.getUser())?.user, conversation]);
   }
 

@@ -42,7 +42,7 @@ class Conversation extends Equatable {
         totalMessageCount,
         lastMessageOwnerPublicKey,
         isGroup,
-        groupPhoto
+        groupPhoto,
       ];
 
   ConversationModel copyWith(

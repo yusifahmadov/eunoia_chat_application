@@ -52,7 +52,7 @@ class MessageProviderState extends State<MessageProviderWidget> with PageScrolli
 
         if (users.isNotEmpty && users[0].userData.publicKey != null) {
           messageCubit.listenMessages(
-              decryptMessage: e2eeStatusNotifier.value,
+              decryptMessage: true,
               conversationId: widget.conversation.id,
               otherPartyPublicKey: userPublicKey);
         }
