@@ -8,7 +8,10 @@ import 'package:eunoia_chat_application/features/main/presentation/pages/home_pa
 import 'package:eunoia_chat_application/features/main/presentation/pages/main_page_web.dart';
 import 'package:eunoia_chat_application/features/message/presentation/pages/message_provider_state.dart';
 import 'package:eunoia_chat_application/features/user/domain/entities/user.dart';
+import 'package:eunoia_chat_application/features/user/presentation/cubit/user_cubit.dart';
 import 'package:eunoia_chat_application/features/user/presentation/pages/auth_page.dart';
+import 'package:eunoia_chat_application/features/user/presentation/pages/edit/edit_user_provider_state.dart';
+import 'package:eunoia_chat_application/features/user/presentation/pages/profile/profile_page_provider_state.dart';
 import 'package:eunoia_chat_application/features/user/presentation/pages/signin/signin_provider_state.dart';
 import 'package:eunoia_chat_application/features/user/presentation/pages/signup/signup_provider_state.dart';
 import 'package:eunoia_chat_application/injection.dart';
@@ -79,7 +82,6 @@ class AppRouterWeb {
               },
             ),
           ]),
-
           StatefulShellBranch(navigatorKey: _shellContactsNavigatorKey, routes: [
             GoRoute(
               path: '/contacts',
@@ -88,40 +90,26 @@ class AppRouterWeb {
               },
             ),
           ]),
-          // StatefulShellBranch(navigatorKey: _shellProfileNavigatorKey, routes: [
-          //   ShellRoute(
-          //     builder: (context, state, navigationShell) {
-          //       return MainPageViewWeb(
-          //         body: navigationShell,
-          //       );
-          //     },
-          //     routes: [
-          //       GoRoute(
-          //         path: '/profile',
-          //         parentNavigatorKey: _rootNavigatorKey, // Open as a root-level route
-          //         pageBuilder: (context, state) =>
-          //             const NoTransitionPage(child: ProfilePageProviderWidget()),
-          //         routes: [
-          //           GoRoute(
-          //             path: 'languages',
-          //             parentNavigatorKey: _rootNavigatorKey, // Align with root navigator
-          //             pageBuilder: (context, state) =>
-          //                 const NoTransitionPage(child: LanguageProviderWidget()),
-          //           ),
-          //           GoRoute(
-          //             path: 'edit-profile',
-          //             parentNavigatorKey: _rootNavigatorKey, // Align with root navigator
-          //             pageBuilder: (context, state) => NoTransitionPage(
-          //                 child: EditUserProviderWidget(
-          //               user: (state.extra as List)[0] as User,
-          //               userCubit: (state.extra as List)[1] as UserCubit,
-          //             )),
-          //           ),
-          //         ],
-          //       ),
-          //     ],
-          //   ),
-          // ]),
+          StatefulShellBranch(
+            navigatorKey: _shellProfileNavigatorKey,
+            routes: [
+              GoRoute(
+                path: '/profile',
+                pageBuilder: (context, state) =>
+                    const NoTransitionPage(child: ProfilePageProviderWidget()),
+                routes: [
+                  GoRoute(
+                    path: 'edit-profile',
+                    pageBuilder: (context, state) => NoTransitionPage(
+                        child: EditUserProviderWidget(
+                      user: (state.extra as List)[0] as User,
+                      userCubit: (state.extra as List)[1] as UserCubit,
+                    )),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ],
       ),
       // ShellRoute(

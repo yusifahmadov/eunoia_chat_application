@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "822739428794",
+    "project_id": "eunoia-chat",
+    "storage_bucket": "eunoia-chat.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:822739428794:android:7cf1f5d929bafa9e4f6983",
+        "android_client_info": {
+          "package_name": "com.eunoia.eunoiachat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCx4Vsn0uQGbO9w_hNX3TgxK2fIjFD8zyM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

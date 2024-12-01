@@ -119,7 +119,11 @@ class AddParticipantsPage extends StatelessWidget {
                                           style:
                                               Theme.of(context).textTheme.headlineLarge),
                                       Text(
-                                          '${context.state.contactCubit.fetchedData[index].bio?.substring(0, 20)}...',
+                                          context.state.contactCubit.fetchedData[index]
+                                                      .bio !=
+                                                  null
+                                              ? '${context.state.contactCubit.fetchedData[index].bio?.substring(0, 20)}...'
+                                              : '',
                                           style: Theme.of(context).textTheme.bodyMedium),
                                     ],
                                   ),

@@ -145,16 +145,19 @@ class MessageCubit extends Cubit<MessageState>
       ListenMessageHelper(
         conversationId: conversationId,
         callBackFunc: ({required message}) async {
-          if (fetchedData.isEmpty || fetchedData.any((e) => e.id == message.id)) return;
-          print("WE CANNOT BE HERE");
+          if (fetchedData.any((e) => e.id == message.id)) return;
           emit(MessageLoading());
           List<Message> messages = [message];
           if (decryptMessage) {
             messages = await decryptMessages(
                 messages: [message], otherPartyPublicKey: otherPartyPublicKey);
           }
-
+          if (fetchedData.any((e) => e.id == message.id)) return;
+          print('FETCHED DATA LENGTH - ${fetchedData.length}');
           fetchedData.insert(0, messages[0]);
+
+          /// REMOVE DUPLICATES from Fetched Data
+
           emit(MessageLoaded(messages: fetchedData));
         },
       ),

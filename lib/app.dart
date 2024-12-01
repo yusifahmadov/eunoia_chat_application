@@ -1,9 +1,11 @@
 import 'package:eunoia_chat_application/core/route/go_router_web.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/constant/constants.dart';
 import 'core/route/go_router_mobile.dart';
@@ -20,11 +22,37 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      Future.delayed(const Duration(seconds: 5), () async {});
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {});
+
+    Supabase.instance.client.auth.onAuthStateChange.listen((e) async {
+      if (e.event == AuthChangeEvent.signedIn) {
+        print('asdasd');
+        await FirebaseMessaging.instance.requestPermission();
+
+        final fcmToken = await FirebaseMessaging.instance.getToken();
+        print("FCM Token: $fcmToken");
+        if (fcmToken != null) {
+          await _saveFcmToken(fcmToken);
+        }
+      }
+    });
+    FirebaseMessaging.instance.onTokenRefresh.listen((e) async {
+      await _saveFcmToken(e);
     });
 
     super.initState();
+  }
+
+  Future<void> _saveFcmToken(String fcmToken) async {
+    final userId = Supabase.instance.client.auth.currentUser?.id;
+    print('USER ID: $userId');
+    if (userId == null) {
+      return;
+    }
+
+    await Supabase.instance.client
+        .from('users')
+        .update({'fcm_token': fcmToken}).eq('id', userId);
   }
 
   @override
@@ -70,7 +98,7 @@ class _AppState extends State<App> {
                       ),
                       locale: Locale(mainCubit.languageValue),
                       theme: ThemeManager.craeteTheme(
-                          mainCubit.themeValue ? AppThemeDark() : AppThemeLight()),
+                          mainCubit.themeValue ? AppThemeLight() : AppThemeDark()),
                       routeInformationProvider: kIsWeb
                           ? AppRouterWeb.router.routeInformationProvider
                           : AppRouter.router.routeInformationProvider,

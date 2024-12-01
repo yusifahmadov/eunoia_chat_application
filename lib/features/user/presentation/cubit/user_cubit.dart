@@ -63,6 +63,7 @@ class UserCubit extends Cubit<UserState> {
         await storeUserInformation(body: data);
         await storeKeyEngine();
         setPublicKey();
+
         authCubit.authenticate(body: data);
 
         CustomFlasher.showSuccess(mainContext?.localization?.login_success);

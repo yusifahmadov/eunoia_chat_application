@@ -6,7 +6,7 @@ part 'main_state.dart';
 
 class MainCubit extends Cubit<MainState> {
   MainCubit() : super(MainInitial());
-  final _themeController = BehaviorSubject<bool>.seeded(true);
+  final _themeController = BehaviorSubject<bool>.seeded(false);
   Stream<bool> get isLightMode => _themeController.stream;
   bool get themeValue => _themeController.value;
 
@@ -16,5 +16,9 @@ class MainCubit extends Cubit<MainState> {
 
   updateLanguage(String language) {
     _languageController.add(language);
+  }
+
+  updateTheme(bool isLight) {
+    _themeController.add(isLight);
   }
 }

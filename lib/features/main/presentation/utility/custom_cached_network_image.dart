@@ -8,16 +8,14 @@ class CustomCachedNetworkImage extends StatelessWidget {
   final double? containerHeight;
 
   const CustomCachedNetworkImage(
-      {super.key,
-      required this.imageUrl,
-      required this.containerWidth,
-      required this.containerHeight});
+      {super.key, required this.imageUrl, this.containerWidth, this.containerHeight});
 
   @override
   Widget build(BuildContext context) {
     return imageUrl != null
         ? CachedNetworkImage(
             imageUrl: imageUrl!,
+            fit: BoxFit.fill,
             imageBuilder: (context, imageProvider) => Container(
               width: containerWidth ?? 120.0,
               height: containerHeight ?? 120.0,
