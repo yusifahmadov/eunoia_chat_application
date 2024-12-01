@@ -5,26 +5,28 @@ class UserRegisterHelper extends Equatable {
   final String lastName;
   final String email;
   final String password;
+  final String username;
 
   const UserRegisterHelper({
     this.firstName = '',
     this.lastName = '',
     this.email = '',
     this.password = '',
+    this.username = '',
   });
 
-  copyWith({
-    String? firstName,
-    String? lastName,
-    String? email,
-    String? password,
-  }) {
+  copyWith(
+      {String? firstName,
+      String? lastName,
+      String? email,
+      String? password,
+      String? username}) {
     return UserRegisterHelper(
-      firstName: firstName ?? this.firstName,
-      lastName: lastName ?? this.lastName,
-      email: email ?? this.email,
-      password: password ?? this.password,
-    );
+        firstName: firstName ?? this.firstName,
+        lastName: lastName ?? this.lastName,
+        email: email ?? this.email,
+        password: password ?? this.password,
+        username: username ?? this.username);
   }
 
   @override
@@ -36,7 +38,8 @@ class UserRegisterHelper extends Equatable {
       'email': email,
       'password': password,
       'data': {
-        'name': '$firstName $lastName',
+        "name": "$firstName $lastName",
+        "username": username,
       },
     };
   }

@@ -153,7 +153,7 @@ class MessageCubit extends Cubit<MessageState>
                 messages: [message], otherPartyPublicKey: otherPartyPublicKey);
           }
           if (fetchedData.any((e) => e.id == message.id)) return;
-          print('FETCHED DATA LENGTH - ${fetchedData.length}');
+
           fetchedData.insert(0, messages[0]);
 
           /// REMOVE DUPLICATES from Fetched Data

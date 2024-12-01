@@ -1,6 +1,7 @@
 import 'package:eunoia_chat_application/features/main/presentation/utility/custom_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../../../core/extensions/localization_extension.dart';
 import '../../../main/presentation/utility/custom_input_decoration.dart';
@@ -58,7 +59,15 @@ class ContactPage extends StatelessWidget {
             builder: (context, state) {
               if (context.state.contactCubit.fetchedData.isEmpty) {
                 return SliverFillRemaining(
-                  child: Center(child: Text(context.localization?.search ?? "")),
+                  child: Center(
+                    child: Transform.scale(
+                      scale: 1.5,
+                      child: LottieBuilder.asset(
+                        'assets/lottie/search.json',
+                        repeat: true,
+                      ),
+                    ),
+                  ),
                 );
               }
 

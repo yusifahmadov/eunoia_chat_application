@@ -180,6 +180,27 @@ class _TextFields extends StatelessWidget {
                       onChanged: (value) async {
                         context.inherited.userRegisterHelper = context
                             .inherited.userRegisterHelper
+                            .copyWith(username: value);
+                      },
+                      decoration: CustomInputDecoration(
+                          context: context, hintText: "eg. johnheight892")),
+                  text: "Username"),
+            ),
+            kIsWeb ? const Expanded(child: SizedBox()) : const SizedBox(),
+          ],
+        ),
+        const EmptyHeightBox(
+          height: 20,
+        ),
+        Row(
+          children: [
+            kIsWeb ? const Expanded(child: SizedBox()) : const SizedBox(),
+            Expanded(
+              child: CustomTextFieldWithTopPlaceHolder(
+                  customTextField: CustomTextField(
+                      onChanged: (value) async {
+                        context.inherited.userRegisterHelper = context
+                            .inherited.userRegisterHelper
                             .copyWith(password: value);
                       },
                       obscureText: true,

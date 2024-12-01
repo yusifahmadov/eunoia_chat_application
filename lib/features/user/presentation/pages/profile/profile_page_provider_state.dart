@@ -42,9 +42,9 @@ class ProfilePageProviderState extends State<ProfilePageProviderWidget> {
 
   updateProfilePhoto() async {
     final file = await FilePicker.platform.pickFiles(
+      withData: true,
       type: FileType.image,
     );
-
     if (file != null) {
       await userCubit.updateUserProfilePhoto(
           body: UploadUserProfilePhotoHelper(
