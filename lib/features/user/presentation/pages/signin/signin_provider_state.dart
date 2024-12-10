@@ -17,8 +17,11 @@ class SigninProviderState extends State<SigninProviderWidget> {
   final userCubit = getIt<UserCubit>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   signIn() {
+    if (!formKey.currentState!.validate()) return;
+
     userCubit.login(
         body: UserLoginHelper(
             email: emailController.text, password: passwordController.text));

@@ -28,24 +28,27 @@ class SignUpPage extends StatelessWidget {
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  "Sign Up Account",
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-                const Text("Enter your personal data to create your account"),
-                const EmptyHeightBox(
-                  height: 40,
-                ),
-                const _TextFields(),
-                const EmptyHeightBox(
-                  height: 20,
-                ),
-                const _SignUpButton(),
-                const _SwitchToSignIn()
-              ],
+            child: Form(
+              key: context.inherited.formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "Sign Up Account",
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  const Text("Enter your personal data to create your account"),
+                  const EmptyHeightBox(
+                    height: 40,
+                  ),
+                  const _TextFields(),
+                  const EmptyHeightBox(
+                    height: 20,
+                  ),
+                  const _SignUpButton(),
+                  const _SwitchToSignIn()
+                ],
+              ),
             ),
           ),
         ));
@@ -115,6 +118,12 @@ class _TextFields extends StatelessWidget {
             Expanded(
               child: CustomTextFieldWithTopPlaceHolder(
                   customTextField: CustomTextField(
+                      validatorF: (p0) {
+                        if (p0 == null || p0.isEmpty) {
+                          return "First name is required";
+                        }
+                        return null;
+                      },
                       onChanged: (value) async {
                         context.inherited.userRegisterHelper = context
                             .inherited.userRegisterHelper
@@ -128,6 +137,12 @@ class _TextFields extends StatelessWidget {
             Expanded(
               child: CustomTextFieldWithTopPlaceHolder(
                   customTextField: CustomTextField(
+                      validatorF: (p0) {
+                        if (p0 == null || p0.isEmpty) {
+                          return "Last name is required";
+                        }
+                        return null;
+                      },
                       onChanged: (value) async {
                         context.inherited.userRegisterHelper = context
                             .inherited.userRegisterHelper
@@ -149,6 +164,17 @@ class _TextFields extends StatelessWidget {
             Expanded(
               child: CustomTextFieldWithTopPlaceHolder(
                   customTextField: CustomTextField(
+                      validatorF: (p0) {
+                        if (p0 == null || p0.isEmpty) {
+                          return "Email is required";
+                        }
+                        if (!RegExp(
+                                r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+                            .hasMatch(p0)) {
+                          return 'Please enter a valid email';
+                        }
+                        return null;
+                      },
                       onChanged: (value) async {
                         context.inherited.userRegisterHelper =
                             context.inherited.userRegisterHelper.copyWith(email: value);
@@ -169,6 +195,12 @@ class _TextFields extends StatelessWidget {
             Expanded(
               child: CustomTextFieldWithTopPlaceHolder(
                   customTextField: CustomTextField(
+                      validatorF: (p0) {
+                        if (p0 == null || p0.isEmpty) {
+                          return "Username is required";
+                        }
+                        return null;
+                      },
                       onChanged: (value) async {
                         context.inherited.userRegisterHelper = context
                             .inherited.userRegisterHelper
@@ -190,6 +222,12 @@ class _TextFields extends StatelessWidget {
             Expanded(
               child: CustomTextFieldWithTopPlaceHolder(
                   customTextField: CustomTextField(
+                      validatorF: (p0) {
+                        if (p0 == null || p0.isEmpty) {
+                          return "Password is required";
+                        }
+                        return null;
+                      },
                       onChanged: (value) async {
                         context.inherited.userRegisterHelper = context
                             .inherited.userRegisterHelper

@@ -10,8 +10,6 @@ class DhPrivateKey extends DhKey {
           codec: DhPrivateKeyCodec(),
         );
 
-  /// Constructs a [DhPrivateKey] instance using a PEM string.
-  /// The [parameter] is derived from the decoded key
   factory DhPrivateKey.fromPem(String pem) => DhKey.fromPem(
         pem,
         codec: DhPrivateKeyCodec(),

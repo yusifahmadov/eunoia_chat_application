@@ -143,7 +143,6 @@ class ConversationCubit extends Cubit<ConversationState>
       return emit(
           ConversationsError(message: mainContext!.localization?.user_not_found ?? ""));
     }
-    print(conversation.lastMessage);
     if (conversation.lastMessage == null) {
       emit(ConversationsLoading());
 
@@ -160,10 +159,6 @@ class ConversationCubit extends Cubit<ConversationState>
           lastMessage:
               conversation.lastMessage!.copyWith(message: 'Message is encrypted'));
     }
-    print('ANY ${fetchedData.any((element) => element.id == conversation.id)}');
-    print('CONVERSATION ID ${conversation.id}');
-
-    /// WE NEED TO add a filter like if the first time the conversation is loaded, then do not add the conversation to the top
 
     emit(ConversationsLoading());
 

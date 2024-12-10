@@ -74,6 +74,7 @@ class _AppState extends State<App> {
                   stream: mainCubit.language,
                   builder: (context, snapshot) {
                     return MaterialApp.router(
+                      debugShowCheckedModeBanner: false,
                       localizationsDelegates: const [
                         AppLocalizations.delegate,
                         GlobalMaterialLocalizations.delegate,

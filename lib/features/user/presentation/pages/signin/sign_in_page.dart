@@ -39,42 +39,45 @@ class SignInPage extends StatelessWidget {
                     context.go(kIsWeb ? "/home" : "/conversations");
                   }
                 },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Sign In Account",
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                    const Text("Enter your personal data to login your account"),
-                    const EmptyHeightBox(
-                      height: 40,
-                    ),
-                    const _TextFields(),
-                    const EmptyHeightBox(
-                      height: 20,
-                    ),
-                    const _SignInButton(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Don't have an account?",
-                            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                color: Theme.of(context).colorScheme.onSurface)),
-                        TextButton(
-                            onPressed: () {
-                              context.go('/auth/signup');
-                            },
-                            style: TextButton.styleFrom(
-                              padding: const EdgeInsets.all(3),
-                              minimumSize: const Size(0, 0),
-                            ),
-                            child: Text("Sign up",
-                                style: Theme.of(context).textTheme.bodyLarge))
-                      ],
-                    )
-                  ],
+                child: Form(
+                  key: context.state.formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Sign In Account",
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
+                      const Text("Enter your personal data to login your account"),
+                      const EmptyHeightBox(
+                        height: 40,
+                      ),
+                      const _TextFields(),
+                      const EmptyHeightBox(
+                        height: 20,
+                      ),
+                      const _SignInButton(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Don't have an account?",
+                              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                                  color: Theme.of(context).colorScheme.onSurface)),
+                          TextButton(
+                              onPressed: () {
+                                context.go('/auth/signup');
+                              },
+                              style: TextButton.styleFrom(
+                                padding: const EdgeInsets.all(3),
+                                minimumSize: const Size(0, 0),
+                              ),
+                              child: Text("Sign up",
+                                  style: Theme.of(context).textTheme.bodyLarge))
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -123,6 +126,17 @@ class _TextFields extends StatelessWidget {
             Expanded(
               child: CustomTextFieldWithTopPlaceHolder(
                   customTextField: CustomTextField(
+                      validatorF: (p0) {
+                        if (p0 == null || p0.isEmpty) {
+                          return "Email is required";
+                        }
+                        if (!RegExp(
+                                r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+                            .hasMatch(p0)) {
+                          return 'Please enter a valid email';
+                        }
+                        return null;
+                      },
                       controller: context.state.emailController,
                       decoration: CustomInputDecoration(
                           context: context, hintText: "eg. johnheight@gmail.com")),
@@ -140,6 +154,12 @@ class _TextFields extends StatelessWidget {
             Expanded(
               child: CustomTextFieldWithTopPlaceHolder(
                   customTextField: CustomTextField(
+                      validatorF: (p0) {
+                        if (p0 == null || p0.isEmpty) {
+                          return "Password is required";
+                        }
+                        return null;
+                      },
                       controller: context.state.passwordController,
                       obscureText: true,
                       decoration: CustomInputDecoration(

@@ -16,8 +16,9 @@ class SignupProviderWidget extends StatefulWidget {
 class SignupProviderState extends State<SignupProviderWidget> {
   UserRegisterHelper userRegisterHelper = const UserRegisterHelper();
   final userCubit = getIt<UserCubit>();
-
+  final formKey = GlobalKey<FormState>();
   register() {
+    if (!formKey.currentState!.validate()) return;
     userCubit.register(body: userRegisterHelper);
   }
 

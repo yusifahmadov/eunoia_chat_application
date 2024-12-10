@@ -10,8 +10,6 @@ class DhPublicKey extends DhKey {
           codec: DhPublicKeyCodec(),
         );
 
-  /// Constructs a [DhPublicKey] instance using a PEM string.
-  /// The [parameter] is derived from the decoded key
   factory DhPublicKey.fromPem(String pem) => DhKey.fromPem(
         pem,
         codec: DhPublicKeyCodec(),
